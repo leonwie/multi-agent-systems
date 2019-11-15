@@ -17,7 +17,11 @@ type Agent = {
     Mood : int;
     Energy : float;
     TodaysActivity : Activity * float;
+    Opinions : (string * float) list
     }
+
+let numAgents = 4
+
 
 // Initialise Agent
 let initialiseAgent (id : int) : Agent =
@@ -36,6 +40,7 @@ let initialiseAgent (id : int) : Agent =
         Mood = 100;
         Energy = 100.0;
         TodaysActivity = Nothing, 0.0;
+        Opinions = List.init numAgents (fun el -> "Agent " + (el |> string), 50.0) // Default opinions are 50 and can increase or decrease
     }
 
 // Returns whether the agent will build or hunt based on their skills and how much energy they have left
@@ -59,7 +64,7 @@ let makeFair (allAgents : Agent list) : Agent list =
     let thrd = fun (_, _, c) -> c
     // Function for switching an agents activity
     let switchAgentActivity (agent : Agent) : Agent =
-        match agent.TodaysActivity with
+        match agent.TodaysActivity with // Half mood if swapped
         | Building, x -> {agent with TodaysActivity = Hunting, x; Mood = agent.Mood / 2}
         | Hunting, x -> {agent with TodaysActivity = Building, x; Mood = agent.Mood / 2}
         | Nothing, x -> agent
@@ -105,7 +110,6 @@ let howMuchEnergyToExpend (agent : Agent) : Agent =
 
 // Testing shit
 
-let numAgents = 4
 let agents = List.init numAgents (fun el -> initialiseAgent el)
 let whatToDo (agents : Agent list) =
     agents
