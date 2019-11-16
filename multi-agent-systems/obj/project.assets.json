@@ -112,11 +112,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Josh\\Documents\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
+      "projectUniqueName": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
       "projectName": "multi-agent-systems",
-      "projectPath": "C:\\Users\\Josh\\Documents\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
+      "projectPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
       "packagesPath": "C:\\Users\\Josh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Josh\\Documents\\multi-agent-systems\\multi-agent-systems\\obj\\",
+      "outputPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Josh\\AppData\\Roaming\\NuGet\\NuGet.Config",

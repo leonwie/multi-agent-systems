@@ -31,7 +31,7 @@ let main argv =
     let b = ["b"; "a"; "c";]
     let c = ["c"; "b"; "a";]
     
-    printf "\n bordascores %A" (bordaCount [a; b; c])
+    printf "\nborda winner %A" (bordaCount [a; b; c])
 
 
 
