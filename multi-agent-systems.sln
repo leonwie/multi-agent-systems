@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "multi-agent-systems", "multi-agent-systems\multi-agent-systems.fsproj", "{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7BA3B2F-F0FE-4D12-A052-6B381E0319BB}
+	EndGlobalSection
+EndGlobal
