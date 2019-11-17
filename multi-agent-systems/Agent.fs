@@ -6,7 +6,7 @@ open Voting
 // Initialise Agent
 let initialiseAgent (id : int) (numAgents : int) : Agent =
     let agentParams : float list = // Can change this function to a more complex thing
-        List.init 5 (fun el -> (System.Random().Next(0, 100)) |> float)
+        List.init 5 (fun _ -> (System.Random().Next(0, 100)) |> float)
     {
         Name = "Agent " + (id |> string);
         Selflessness = agentParams.[0] / 100.0; 
@@ -62,7 +62,6 @@ let makeFair (allAgents : Agent list) : Agent list =
             | x when x < -1 -> (Building, abs x / 2)
             | x when x > 1 -> (Hunting, abs x / 2)
             | _ -> (Nothing, 0)
-
     // Changes some agents so that that there is an eben number of agents hunting and building
     List.fold (
         fun acc el -> 
@@ -90,7 +89,7 @@ let voteOnWhatToHunt (votingSystem : VotingSystem) (agents : Agent list) : Fauna
         | Staggi -> [Staggi; Rabbos] // If more animals added then set FavouriteFood as Head and randomise Tail order
         | Rabbos -> [Rabbos; Staggi]       
     agents
-    |> List.map (fun el -> getFaunaRanking el)
+    |> List.map getFaunaRanking
     |> match votingSystem with
         | Borda -> bordaVote
         | Approval -> approvalVote

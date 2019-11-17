@@ -14,7 +14,7 @@ let bordaVote (rankings : Candidate list list) : Candidate  =
         |> List.sort
     let borda = 
         rankings
-        |> List.map (fun el -> getRanking el)
+        |> List.map getRanking
     // Sum all the rankings and return the candiate with the highest score
     borda   
     |> List.tail
@@ -26,9 +26,9 @@ let bordaVote (rankings : Candidate list list) : Candidate  =
 // Plurality voting
 let pluralityVote (votes : Candidate list list) : Candidate  =
     votes
-    |> List.map (fun el -> el.Head)
+    |> List.map List.head
     |> List.countBy id
-    |> List.maxBy (fun el -> snd el)
+    |> List.maxBy snd
     |> fst
 
 // Approval Voting
@@ -36,14 +36,14 @@ let approvalVote (votes : Candidate list list) : Candidate  =
     votes
     |> List.concat
     |> List.countBy id
-    |> List.maxBy (fun el -> snd el)
+    |> List.maxBy snd
     |> fst
 
 // Runoff Voting
 let runOffRound1 (votes : Candidate list list) : Candidate * Candidate =
     // Round 1 involves getting the two most popular candidates
     votes
-    |> List.map (fun el -> el.Head)
+    |> List.map List.head
     |> List.countBy id
     |> function
         | [(x, _)] -> x, x
@@ -73,12 +73,12 @@ let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list l
     // Get the candidate with the least number of first place votes
     let roundLoser (count : (Candidate * int) list) : Candidate =
         count
-        |> List.minBy (fun el -> snd el)
+        |> List.minBy snd
         |> fst
     // Return the list of candidates without the round loser   
     let newRanks (allVotes : Candidate list list) (roundLoser : Candidate) : Candidate list list =
         allVotes
-        |> List.map (List.filter (fun el -> not (el = roundLoser)) )
+        |> List.map (List.filter (fun el -> not (el = roundLoser)))
     // Recursively run the rounds
     let rec runoff (votes : Candidate list list) (remainingCandidates : Candidate list ) : Candidate =
         match countVotes votes remainingCandidates with
