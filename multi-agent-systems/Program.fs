@@ -27,16 +27,11 @@ let main argv =
     printfn "%A" agents
     printfn "\n%A" (whatToDo agents)
 
-    let allCandidates = ["a"; "b"; "c";]
-    let a = ["a";]
-    let b = ["a"; "c"; "b";]
-    let c = ["c"; "b"; "a";]
-    let d = ["b"; "c"; "a";]
     
-    printf "\nborda winner %A" (bordaCount [a; b; c])
-    printf "\nplurality winner %A" (plurality [a; b; c])
-    printf "\napproval winner %A" (approval [a; b; c])
-    printf "\ninstant runnoff winner %A" (instantRunoff [a; b; c; d] allCandidates)
+    printf "\nborda winner %A" (voteOnWhatToHunt Borda agents)
+    printf "\nplurality winner %A" (voteOnWhatToHunt Plurality agents)
+    printf "\napproval winner %A" (voteOnWhatToHunt Approval agents)
+    printf "\ninstant runnoff winner %A" (voteOnWhatToHunt InstantRunoff agents)
 
 
 

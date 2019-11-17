@@ -1,6 +1,7 @@
 ﻿module Agent
 
 open Types
+open Voting
 
 // Initialise Agent
 let initialiseAgent (id : int) (numAgents : int) : Agent =
@@ -82,4 +83,18 @@ let howMuchEnergyToExpend (agent : Agent) : Agent =
         |> (*) (agent.Energy / 100.0)
     {agent with TodaysActivity = agent.TodaysActivity |> fst, energyExpend}
 
+// Vote on what to hunt
+let voteOnWhatToHunt (votingSystem : VotingSystem) (agents : Agent list) : Fauna =
+    let getFaunaRanking (agent : Agent) : Fauna list =
+        match agent.FavouriteFood with
+        | Staggi -> [Staggi; Rabbos] // If more animals added then set FavouriteFood as Head and randomise Tail order
+        | Rabbos -> [Rabbos; Staggi]       
+    agents
+    |> List.map (fun el -> getFaunaRanking el)
+    |> match votingSystem with
+        | Borda -> bordaVote
+        | Approval -> approvalVote
+        | InstantRunoff -> instantRunoffVote [Staggi; Rabbos]
+        | Plurality -> pluralityVote 
+            
 

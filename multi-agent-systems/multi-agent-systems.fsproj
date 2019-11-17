@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include="Agent.fs" />
     <Compile Include="Voting.fs" />
+    <Compile Include="Agent.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

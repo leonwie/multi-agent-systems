@@ -5,7 +5,7 @@ open Types
 // All votes are submitted as a list, even if there is only one value in the list
 
 // Borda Count
-let bordaCount (rankings : Candidate list list) : Candidate  =
+let bordaVote (rankings : Candidate list list) : Candidate  =
     // Get rankings for one list
     let getRanking (ranks : Candidate list) : (Candidate * int) list =
         let n = List.length ranks
@@ -24,7 +24,7 @@ let bordaCount (rankings : Candidate list list) : Candidate  =
     |> fst
 
 // Plurality voting
-let plurality (votes : Candidate list list) : Candidate  =
+let pluralityVote (votes : Candidate list list) : Candidate  =
     votes
     |> List.map (fun el -> el.Head)
     |> List.countBy id
@@ -32,7 +32,7 @@ let plurality (votes : Candidate list list) : Candidate  =
     |> fst
 
 // Approval Voting
-let approval (votes : Candidate list list) : Candidate  =
+let approvalVote (votes : Candidate list list) : Candidate  =
     votes
     |> List.concat
     |> List.countBy id
@@ -54,10 +54,10 @@ let runOffRound1 (votes : Candidate list list) : Candidate * Candidate =
 // This will need to be in a conditional since it only happens if there is no majority in round 1
 let runOffRound2 (votes : Candidate list list) : Candidate  =
     votes
-    |> plurality // Round 2 is just plurality so reuse that
+    |> pluralityVote // Round 2 is just plurality so reuse that
 
 // Instant Runoff
-let instantRunoff (votes : Candidate list list) (allCandidates : Candidate list) : Candidate  =
+let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list list) : Candidate  =
     // Count the number of first place votes everyone has
     let countVotes (votes : Candidate list list) (remainingCandidates : Candidate list) : (Candidate * int) list =
         let initialAcc = 
@@ -81,17 +81,13 @@ let instantRunoff (votes : Candidate list list) (allCandidates : Candidate list)
         |> List.map (List.filter (fun el -> not (el = roundLoser)) )
     // Recursively run the rounds
     let rec runoff (votes : Candidate list list) (remainingCandidates : Candidate list ) : Candidate =
-        printf "\nir %A" votes 
-        printf "\ncv %A" (countVotes votes remainingCandidates)
         match countVotes votes remainingCandidates with
         | [(x, _)] -> x
         | list -> 
             let loser = roundLoser list
             let nextRoundRanks = newRanks votes loser
             let remaining = List.filter (fun el -> not (el = loser)) remainingCandidates
-            printf "\nr %A" remaining 
             runoff nextRoundRanks remaining
-  
     runoff votes allCandidates
 
 

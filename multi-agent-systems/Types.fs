@@ -11,11 +11,11 @@ type Fauna =
 
 type VotingSystem =
     | InstantRunoff
-    | RunOff
     | Approval
     | Borda
+    | Plurality
 
-type Candidate = string
+type Candidate =  Fauna
     
 type Agent = {
     Name : string;
@@ -30,9 +30,4 @@ type Agent = {
     Opinions : (string * float) list    // Perhaps change string to int and add an ID field
     }
 
-type AgentActions = {
-    EnergyPutIn : float;
-    HowVoted : string;  // Change to better type
-    Opinions : (string * float) list
-    }
 
