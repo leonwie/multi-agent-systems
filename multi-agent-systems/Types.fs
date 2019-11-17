@@ -13,7 +13,9 @@ type VotingSystem =
     | InstantRunoff
     | RunOff
     | Approval
-    | Boda
+    | Borda
+
+type Candidate = string
     
 type Agent = {
     Name : string;
@@ -33,7 +35,4 @@ type AgentActions = {
     HowVoted : string;  // Change to better type
     Opinions : (string * float) list
     }
-
-
-
 
