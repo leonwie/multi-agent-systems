@@ -59,8 +59,24 @@ let hunt (whatToHunt : Fauna) (huntLength : float) (agents : Agent list) : Agent
         {agent with Food = agent.HuntingAptitude * (1.0 + agent.HunterLevel / 10.0) * probs.[i]})
     |> List.fold ( // Split up the food
         fun acc agent ->
-            let agentGiveAway = 
+            let agentGiveAway = // Food agent gives away
                 agent.Food * agent.Selflessness
-            let agentKeep = agent.Food - agentGiveAway
-            ((acc |> fst) @ [ {agent with Food = agentKeep} ], (acc |> snd) + agentGiveAway)
+            let agentKeep = // Food agent keeps
+                agent.Food - agentGiveAway
+            // Hunter exp and level updated
+            let hunterExp = 
+                if agent.HunterExp < 100 
+                then agent.HunterExp + 10 
+                else 0
+            let level = 
+                if agent.HunterExp = 0
+                then agent.HunterLevel + 1.0
+                else agent.HunterLevel
+            // New agent values
+            let newAgent = 
+                {agent with 
+                    Food = agentKeep; 
+                    HunterExp = hunterExp; 
+                    HunterLevel = level}
+            ((acc |> fst) @ [ newAgent ], (acc |> snd) + agentGiveAway)
         ) ([], 0.0)
