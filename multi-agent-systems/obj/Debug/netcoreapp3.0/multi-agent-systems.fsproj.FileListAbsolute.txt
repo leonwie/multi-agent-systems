@@ -72,10 +72,7 @@ C:/Users/Josh/Documents/GitHub/multi-agent-systems/multi-agent-systems/bin/Debug
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/tr/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/zh-Hans/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/zh-Hant/FSharp.Core.resources.dll
-/home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/SwiPlCs64.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsprojAssemblyReference.cache
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsproj.CopyComplete
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.pdb
-/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfoInputs.cache
-/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfo.fs

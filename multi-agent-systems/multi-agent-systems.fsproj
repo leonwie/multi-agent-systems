@@ -18,10 +18,4 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="SwiPlCs">
-      <HintPath>..\dev\SwiPlCs64.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
