@@ -66,7 +66,7 @@ let hunt (whatToHunt : Fauna) (huntLength : float) (agents : Agent list) : Agent
             // Hunter exp and level updated
             let hunterExp = 
                 if agent.HunterExp < 100 
-                then agent.HunterExp + 10 
+                then agent.HunterExp + expPerHunt 
                 else 0
             let level = 
                 if agent.HunterExp = 0
