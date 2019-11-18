@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v3.0": {
       "multi-agent-systems/1.0.0": {
         "dependencies": {
-          "FSharp.Core": "4.7.0"
+          "FSharp.Core": "4.7.0",
+          "SwiPlCs64": "1.1.60301.0"
         },
         "runtime": {
           "multi-agent-systems.dll": {}
@@ -62,6 +63,14 @@
             "locale": "zh-Hant"
           }
         }
+      },
+      "SwiPlCs64/1.1.60301.0": {
+        "runtime": {
+          "SwiPlCs64.dll": {
+            "assemblyVersion": "1.1.60301.0",
+            "fileVersion": "1.1.60301.0"
+          }
+        }
       }
     }
   },
@@ -77,6 +86,11 @@
       "sha512": "sha512-6Bf2qzSCaJoP6tTfO+a5muUS7QbyJANqSut73zQvwQ9It5P0ITz9VKseeia2ofco30c55EQ0jA2wf2+A2gpGnw==",
       "path": "fsharp.core/4.7.0",
       "hashPath": "fsharp.core.4.7.0.nupkg.sha512"
+    },
+    "SwiPlCs64/1.1.60301.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

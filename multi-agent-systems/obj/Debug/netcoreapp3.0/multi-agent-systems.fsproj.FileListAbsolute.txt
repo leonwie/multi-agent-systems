@@ -50,3 +50,4 @@ C:\Users\Josh\Documents\GitHub\multi-agent-systems\multi-agent-systems\obj\Debug
 C:\Users\Josh\Documents\GitHub\multi-agent-systems\multi-agent-systems\obj\Debug\netcoreapp3.0\multi-agent-systems.fsproj.CopyComplete
 C:\Users\Josh\Documents\GitHub\multi-agent-systems\multi-agent-systems\obj\Debug\netcoreapp3.0\multi-agent-systems.dll
 C:\Users\Josh\Documents\GitHub\multi-agent-systems\multi-agent-systems\obj\Debug\netcoreapp3.0\multi-agent-systems.pdb
+C:\Users\Josh\Documents\GitHub\multi-agent-systems\multi-agent-systems\bin\Debug\netcoreapp3.0\SwiPlCs64.dll

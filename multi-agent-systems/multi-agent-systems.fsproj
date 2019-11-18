@@ -7,10 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Config.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="WorldState.fs" />
     <Compile Include="Voting.fs" />
     <Compile Include="Agent.fs" />
+    <Compile Include="Activities.fs" />
+    <Compile Include="Hunt.fs" />
+    <Compile Include="Build.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SwiPlCs">
+      <HintPath>..\dev\SwiPlCs64.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

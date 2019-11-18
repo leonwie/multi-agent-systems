@@ -15,7 +15,7 @@ type VotingSystem =
     | Borda
     | Plurality
 
-type Candidate =  Fauna
+type Candidate = string
     
 type Agent = {
     Name : string;
@@ -27,7 +27,16 @@ type Agent = {
     Mood : int;
     Energy : float;
     TodaysActivity : Activity * float;
+    AccessToShelter : bool;
+    Food : float;
+    HunterLevel : int;
+    HunterExp : int;
     Opinions : (string * float) list    // Perhaps change string to int and add an ID field
+    }
+
+type WorldState = {
+    VotingType : VotingSystem;
+    Buildings : float list
     }
 
 
