@@ -80,3 +80,19 @@ let hunt (whatToHunt : Fauna) (huntLength : float) (agents : Agent list) : Agent
                     HunterLevel = level}
             ((acc |> fst) @ [ newAgent ], (acc |> snd) + agentGiveAway)
         ) ([], 0.0)
+
+
+// Assign the excess food to the agents that didn't hunt
+let assignExcessFood (excessFood : float) (nonHunterAgents : Agent list) : Agent list =
+    // Get how many agents need food
+    let numAgents = 
+        nonHunterAgents
+        |> List.length
+    // Get how much food each agent gets
+    let foodSplit = 
+        numAgents 
+        |> float
+        |> (/) excessFood
+
+    nonHunterAgents
+    |> List.map (fun agent -> {agent with Food = foodSplit})
