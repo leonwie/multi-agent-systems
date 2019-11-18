@@ -2,52 +2,55 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.0": {
-      "FSharp.Core/4.7.0": {
+      "FSharp.Core/4.5.2": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/FSharp.Core.dll": {}
+          "lib/netstandard1.6/FSharp.Core.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/FSharp.Core.dll": {}
+          "lib/netstandard1.6/FSharp.Core.dll": {}
         },
         "resource": {
-          "lib/netstandard2.0/cs/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/cs/FSharp.Core.resources.dll": {
             "locale": "cs"
           },
-          "lib/netstandard2.0/de/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/de/FSharp.Core.resources.dll": {
             "locale": "de"
           },
-          "lib/netstandard2.0/es/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/en/FSharp.Core.resources.dll": {
+            "locale": "en"
+          },
+          "lib/netstandard1.6/es/FSharp.Core.resources.dll": {
             "locale": "es"
           },
-          "lib/netstandard2.0/fr/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/fr/FSharp.Core.resources.dll": {
             "locale": "fr"
           },
-          "lib/netstandard2.0/it/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/it/FSharp.Core.resources.dll": {
             "locale": "it"
           },
-          "lib/netstandard2.0/ja/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/ja/FSharp.Core.resources.dll": {
             "locale": "ja"
           },
-          "lib/netstandard2.0/ko/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/ko/FSharp.Core.resources.dll": {
             "locale": "ko"
           },
-          "lib/netstandard2.0/pl/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/pl/FSharp.Core.resources.dll": {
             "locale": "pl"
           },
-          "lib/netstandard2.0/pt-BR/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/pt-BR/FSharp.Core.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/netstandard2.0/ru/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/ru/FSharp.Core.resources.dll": {
             "locale": "ru"
           },
-          "lib/netstandard2.0/tr/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/tr/FSharp.Core.resources.dll": {
             "locale": "tr"
           },
-          "lib/netstandard2.0/zh-Hans/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/zh-Hans/FSharp.Core.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/netstandard2.0/zh-Hant/FSharp.Core.resources.dll": {
+          "lib/netstandard1.6/zh-Hant/FSharp.Core.resources.dll": {
             "locale": "zh-Hant"
           }
         }
@@ -55,21 +58,22 @@
     }
   },
   "libraries": {
-    "FSharp.Core/4.7.0": {
-      "sha512": "6Bf2qzSCaJoP6tTfO+a5muUS7QbyJANqSut73zQvwQ9It5P0ITz9VKseeia2ofco30c55EQ0jA2wf2+A2gpGnw==",
+    "FSharp.Core/4.5.2": {
+      "sha512": "Pe3EDp9oBjQ3c3fvZAJsw7XFLHECS3zn3P7MSqsJy3sFYR6jvTgxxnCFeePR1JHiWyZ3bm+RZAjchqVYk61adA==",
       "type": "package",
-      "path": "fsharp.core/4.7.0",
+      "path": "fsharp.core/4.5.2",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
-        "fsharp.core.4.7.0.nupkg.sha512",
+        "fsharp.core.4.5.2.nupkg.sha512",
         "fsharp.core.nuspec",
         "lib/net45/FSharp.Core.dll",
         "lib/net45/FSharp.Core.optdata",
+        "lib/net45/FSharp.Core.resources.dll",
         "lib/net45/FSharp.Core.sigdata",
         "lib/net45/FSharp.Core.xml",
         "lib/net45/cs/FSharp.Core.resources.dll",
         "lib/net45/de/FSharp.Core.resources.dll",
+        "lib/net45/en/FSharp.Core.resources.dll",
         "lib/net45/es/FSharp.Core.resources.dll",
         "lib/net45/fr/FSharp.Core.resources.dll",
         "lib/net45/it/FSharp.Core.resources.dll",
@@ -81,52 +85,55 @@
         "lib/net45/tr/FSharp.Core.resources.dll",
         "lib/net45/zh-Hans/FSharp.Core.resources.dll",
         "lib/net45/zh-Hant/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/FSharp.Core.dll",
-        "lib/netstandard2.0/FSharp.Core.optdata",
-        "lib/netstandard2.0/FSharp.Core.sigdata",
-        "lib/netstandard2.0/FSharp.Core.xml",
-        "lib/netstandard2.0/cs/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/de/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/es/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/fr/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/it/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/ja/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/ko/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/pl/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/pt-BR/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/ru/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/tr/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/zh-Hans/FSharp.Core.resources.dll",
-        "lib/netstandard2.0/zh-Hant/FSharp.Core.resources.dll"
+        "lib/netstandard1.6/FSharp.Core.dll",
+        "lib/netstandard1.6/FSharp.Core.optdata",
+        "lib/netstandard1.6/FSharp.Core.sigdata",
+        "lib/netstandard1.6/FSharp.Core.xml",
+        "lib/netstandard1.6/cs/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/de/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/en/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/es/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/fr/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/it/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/ja/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/ko/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/pl/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/pt-BR/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/ru/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/tr/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/zh-Hans/FSharp.Core.resources.dll",
+        "lib/netstandard1.6/zh-Hant/FSharp.Core.resources.dll"
       ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
-      "FSharp.Core >= 4.7.0"
+      "FSharp.Core >= 4.5.2"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Josh\\.nuget\\packages\\": {}
+    "/home/josh/.nuget/packages/": {},
+    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
+      "projectUniqueName": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
       "projectName": "multi-agent-systems",
-      "projectPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
-      "packagesPath": "C:\\Users\\Josh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\obj\\",
+      "projectPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+      "packagesPath": "/home/josh/.nuget/packages/",
+      "outputPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Josh\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/josh/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -140,7 +147,7 @@
         "dependencies": {
           "FSharp.Core": {
             "target": "Package",
-            "version": "[4.7.0, )"
+            "version": "[4.5.2, )"
           }
         },
         "imports": [
@@ -152,13 +159,7 @@
           "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "warn": true
       }
     }
   }

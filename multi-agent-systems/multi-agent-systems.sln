@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "multi-agent-systems", "multi-agent-systems.fsproj", "{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

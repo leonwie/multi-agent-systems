@@ -84,23 +84,10 @@ let howMuchEnergyToExpend (agent : Agent) : Agent =
 
 
 // Decide what to do
-let whatToDo (agents : Agent list) =
+let jobAllocation (agents : Agent list) =
     agents
     |> List.map buildOrHunt
     |> makeFair
     |> List.map howMuchEnergyToExpend
 
 
-let allAgents =
-    agents 
-    |> whatToDo
-
-
-let builders =
-    allAgents
-    |> List.filter (fun el -> fst el.TodaysActivity = Building)
-
-
-let hunters =
-    allAgents
-    |> List.filter (fun el -> fst el.TodaysActivity = Hunting)

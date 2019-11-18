@@ -29,7 +29,7 @@ type Agent = {
     TodaysActivity : Activity * float;
     AccessToShelter : bool;
     Food : float;
-    HunterLevel : int;
+    HunterLevel : float;
     HunterExp : int;
     Opinions : (string * float) list    // Perhaps change string to int and add an ID field
     }

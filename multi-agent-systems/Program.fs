@@ -20,6 +20,20 @@ let main argv =
             " will do " + (el.TodaysActivity |> fst |> string) +
             " and expend " + (el.TodaysActivity |> snd |> string) + " energy."
         )
+
+    let allAgents =
+        agents 
+        |> jobAllocation
+
+
+    let builders =
+        allAgents
+        |> List.filter (fun el -> fst el.TodaysActivity = Building)
+
+
+    let hunters =
+        allAgents
+        |> List.filter (fun el -> fst el.TodaysActivity = Hunting)
     
     printfn "%A" agents
     printfn "%A" (whatToDo allAgents)
@@ -29,17 +43,14 @@ let main argv =
     printfn "approval winner %A" (voteOnWhatToHunt Approval hunters)
     printfn "instant runnoff winner %A" (voteOnWhatToHunt InstantRunoff hunters)
 
-    let l = List.init 6 id
-    let shuffle l =
-        let rand = new System.Random()
-        let a = l |> Array.ofList
-        let swap (a: _[]) x y =
-            let tmp = a.[x]
-            a.[x] <- a.[y]
-            a.[y] <- tmp
-        Array.iteri (fun i _ -> swap a i (rand.Next(i, Array.length a))) a
-        a |> Array.toList
-    printfn "list: %A\nshuffle list: %A" (l) (l |> shuffle)
+    let hunting = voteOnWhatToHunt Borda hunters
+
+    let test = 
+        hunters
+        |> hunt hunting huntingTime
+
+
+    printfn "Leftovers: %A" test
 
     0 // return an integer exit code
 

@@ -20,7 +20,7 @@ let initialiseAgent (id : int) (numAgents : int) : Agent =
         TodaysActivity = Nothing, 0.0;
         AccessToShelter = false;
         Food = 0.0;
-        HunterLevel = 0;
+        HunterLevel = 0.0;
         HunterExp = 0;
         Opinions = List.init numAgents (fun el -> "Agent " + (el |> string), 50.0) // Default opinions are 50 and can increase or decrease
     }

@@ -1,0 +1,30 @@
+﻿<Properties StartupConfiguration="{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="multi-agent-systems/Program.fs">
+    <Files>
+      <File FileName="multi-agent-systems/Program.fs" Line="48" Column="9" />
+      <File FileName="multi-agent-systems/Types.fs" Line="32" Column="24" />
+      <File FileName="multi-agent-systems/Hunt.fs" Line="37" Column="9" />
+      <File FileName="multi-agent-systems/Agent.fs" Line="23" Column="26" />
+      <File FileName="multi-agent-systems/Activities.fs" Line="87" Column="18" />
+      <File FileName="multi-agent-systems/Config.fs" Line="27" Column="16" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="multi-agent-systems" expanded="True">
+            <Node name="multi-agent-systems" expanded="True">
+              <Node name="Program.fs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.multi-agent-systems PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
