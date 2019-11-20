@@ -3,11 +3,11 @@
     <Files>
       <File FileName="multi-agent-systems/Program.fs" Line="50" Column="36" />
       <File FileName="multi-agent-systems/Types.fs" Line="32" Column="24" />
-      <File FileName="multi-agent-systems/Hunt.fs" Line="77" Column="29" />
+      <File FileName="multi-agent-systems/Hunt.fs" Line="82" Column="20" />
       <File FileName="multi-agent-systems/Agent.fs" Line="23" Column="26" />
       <File FileName="multi-agent-systems/Activities.fs" Line="87" Column="18" />
       <File FileName="multi-agent-systems/Config.fs" Line="29" Column="15" />
-      <File FileName="multi-agent-systems/Build.fs" Line="1" Column="1" />
+      <File FileName="multi-agent-systems/Build.fs" Line="18" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

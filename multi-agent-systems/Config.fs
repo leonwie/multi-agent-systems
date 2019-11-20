@@ -1,5 +1,7 @@
 ﻿module Config
 
+// This is the config, its the place where you canhnge the values for stuff
+
 let numAgents = 16
 
 let minSelfless = 20

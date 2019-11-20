@@ -27,7 +27,7 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
     {currentWorld with Buildings = newBuildings}
 
 
-// Return all the agents with access to shelter fielf set
+// Return all the agents with access to shelter field set
 let assignShelters (currentWorld : WorldState) (agents : Agent list) : Agent list =
     let availableBuildings = 
         currentWorld.Buildings 

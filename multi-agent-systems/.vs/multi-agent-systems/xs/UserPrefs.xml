@@ -1,18 +1,11 @@
 ﻿<Properties StartupConfiguration="{DD4498C2-DFE1-4037-B0A7-95A6C2CF1271}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Program.fs">
-    <Files>
-      <File FileName="Build Output 3:35 pm 2019-11-17.binlog" />
-      <File FileName="Types.fs" Line="1" Column="1" />
-      <File FileName="Voting.fs" Line="1" Column="1" />
-      <File FileName="Agent.fs" Line="1" Column="1" />
-      <File FileName="Program.fs" Line="1" Column="1" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="multi-agent-systems" expanded="True">
             <Node name="multi-agent-systems" expanded="True">
-              <Node name="Program.fs" selected="True" />
+              <Node name="Build.fs" selected="True" />
             </Node>
           </Node>
         </State>

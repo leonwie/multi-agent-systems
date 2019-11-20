@@ -25,6 +25,14 @@ let voteOnWhatToHunt (votingSystem : VotingSystem) (agents : Agent list) : Fauna
 
 
 // In hunt return list of agents with food and a value that is leftover for the builders to eat
+// For each hunter agent, generate a a poisson distributio that contains the probabilities of catching between
+// zero and ten animals in the given time fram. Then a random number is generated and the closest probability
+// in the list correspponds to the number of animals they agent catches.
+//
+// Then, based on seflessness, the hunter splits their catch between themself and what will be pooled to feed the
+// builders.
+//
+// After each hunt the hunters gain exp and when they reach a new level the probability of catching animals increases.
 let hunt (whatToHunt : Fauna) (huntLength : float) (agents : Agent list) : Agent list * float =
     // Factorial function
     let factorial n =
