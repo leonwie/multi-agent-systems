@@ -52,5 +52,7 @@ let main argv =
 
     printfn "Leftovers: %A" test
 
+    Console.ReadLine() // Wait for user input before closing
+
     0 // return an integer exit code
 

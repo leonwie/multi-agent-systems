@@ -27,7 +27,7 @@ type Agent = {
     Mood : int;
     Energy : float;
     TodaysActivity : Activity * float;
-    AccessToShelter : bool;
+    AccessToShelter : float option;
     Food : float;
     HunterLevel : float;
     HunterExp : int;
@@ -39,4 +39,7 @@ type WorldState = {
     Buildings : float list
     }
 
+type Shelter = {
+    Quality : float
+}
 

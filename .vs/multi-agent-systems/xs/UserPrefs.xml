@@ -1,5 +1,5 @@
 ﻿<Properties StartupConfiguration="{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="multi-agent-systems/Build.fs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../../usr/share/dotnet/sdk/3.0.101/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets">
     <Files>
       <File FileName="multi-agent-systems/Program.fs" Line="50" Column="36" />
       <File FileName="multi-agent-systems/Types.fs" Line="32" Column="24" />
@@ -7,14 +7,17 @@
       <File FileName="multi-agent-systems/Agent.fs" Line="23" Column="26" />
       <File FileName="multi-agent-systems/Activities.fs" Line="87" Column="18" />
       <File FileName="multi-agent-systems/Config.fs" Line="29" Column="15" />
-      <File FileName="multi-agent-systems/Build.fs" Line="18" Column="18" />
+      <File FileName="multi-agent-systems/Build.fs" Line="11" Column="9" />
+      <File FileName="../../../../usr/share/dotnet/sdk/3.0.101/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets" Line="254" Column="8" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="multi-agent-systems" expanded="True">
             <Node name="multi-agent-systems" expanded="True">
-              <Node name="Build.fs" selected="True" />
+              <Node name="Dependencies" expanded="True" selected="True">
+                <Node name="SdkDependencies" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>

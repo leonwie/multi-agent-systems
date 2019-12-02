@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj": {}
+    "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj": {
+    "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
+        "projectUniqueName": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
         "projectName": "multi-agent-systems",
-        "projectPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\multi-agent-systems.fsproj",
-        "packagesPath": "C:\\Users\\Josh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Josh\\Documents\\GitHub\\multi-agent-systems\\multi-agent-systems\\obj\\",
+        "projectPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+        "packagesPath": "/home/josh/.nuget/packages/",
+        "outputPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Josh\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/josh/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -48,12 +46,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.0.0, 3.0.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
         }
       }
     }
