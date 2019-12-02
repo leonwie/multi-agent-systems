@@ -26,10 +26,10 @@ let parseActivity = function
 
 let mutable Agents:List<Agent> = []
 
-type AgentRead = JsonProvider<"default_agent.json">
+type AgentRead = JsonProvider<"Agent-Config/default_agent.json">
 
 let parseAgents number_agents : string =     
-    let file = File.ReadAllLines("../../../default_agent.json") |> String.concat " "
+    let file = File.ReadAllLines("../../../Agent-Config/default_agent.json") |> String.concat " "
     let agentParsed = AgentRead.Parse(file)
     
     for number in agentParsed.IdRange do
