@@ -12,10 +12,17 @@
     <Compile Include="WorldState.fs" />
     <Compile Include="Voting.fs" />
     <Compile Include="Agent.fs" />
+    <Compile Include="Agent1.fs" />
+    <Compile Include="Parsing.fs" />
     <Compile Include="Activities.fs" />
     <Compile Include="Hunt.fs" />
     <Compile Include="Build.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Argu" Version="6.0.0" />
+    <PackageReference Include="FSharp.Data" Version="3.3.2" />
   </ItemGroup>
 
 </Project>

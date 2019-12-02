@@ -1,0 +1,34 @@
+from enum import Enum
+
+class Activity(str, Enum):
+    NONE: str = "NONE"
+    HUNT: str = "HUNT"
+    BUILD: str = "BUILD"
+
+class Agent:
+    '''
+    Inherit this as a base class to develop parameteter initialisation for each agent profile
+    '''
+    def __init__(self, start, end, totalNumAgent):
+        self.Profile = self.__class__.__name__                      # Profile name is the same as the class name
+        self.IDRange = list(range(start, end))                      # ID range assigned to agent of a particular subclass [start, end)
+        self.Selflessness = 50                                      # [0, 100]
+        self.HuntingAptitude = 50                                   # [0, 100]
+        self.Political = 50                                         # [0, 100]
+        self.Mood = 50                                              # [0, 100]
+        self.Energy = 50                                            # [0, 100]
+        self.Activity = Activity.NONE                               # SEE ENUM CLASS ABOVE
+        self.AccessToShelter = 1                                    # [0, 100]
+        self.BuildingAptitude = 50                                  # [0, 100]
+        self.Opinions = {i: 50 for i in range(totalNumAgent)}       # ARRAY OF OPINIONS FOR EACH OTHER AGENT
+
+
+class DefaultAgent(Agent):
+    def __init__(self, start, end, totalNumAgent):
+        super().__init__(start, end, totalNumAgent)
+
+class HuntingAgent(Agent):
+    def __init__(self, start, end, totalNumAgent):
+        super().__init__(start, end, totalNumAgent)
+        self.Activity = Activity.HUNT
+        self.HuntingAptitude = 70
