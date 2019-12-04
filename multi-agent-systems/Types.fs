@@ -34,12 +34,19 @@ type Agent = {
     Opinions : (string * float) list    // Perhaps change string to int and add an ID field
     }
 
-type WorldState = {
-    VotingType : VotingSystem;
-    Buildings : float list
-    }
+
 
 type Shelter = {
     Quality : float
 }
 
+type Rule = string // PlaceHolder
+type ImmutableRule = string // PlaceHolder
+
+type WorldState = {
+    VotingType : VotingSystem;
+    Buildings : float list
+    Policies : (Rule * bool) list;
+    System : ImmutableRule list;
+    CurrentTurn : int;
+    }

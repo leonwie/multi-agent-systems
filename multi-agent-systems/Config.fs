@@ -38,3 +38,5 @@ let rg = 0.0 // shelter quality decay rate
 let es = 0.0 // energy cost per worker to build one shelter
 let ep = 0.0 // maximum shelter energy preservation
 let rb = 0.0 //base energy decay rate
+
+let maxSimulationTurn = infinity

@@ -98,5 +98,3 @@ let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list l
             runoff nextRoundRanks remaining
 
     runoff votes allCandidates
-
-

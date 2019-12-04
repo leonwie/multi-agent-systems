@@ -28,7 +28,6 @@ let initialiseAgent (id : int) (numAgents : int) : Agent =
         Opinions = List.init numAgents (fun el -> "Agent " + (el |> string), 50.0) // Default opinions are 50 and can increase or decrease
     }
 
-
 // Initialise a list of agents
 let agents = 
     List.init numAgents (fun el -> initialiseAgent el numAgents)
