@@ -49,4 +49,6 @@ type WorldState = {
     Policies : (Rule * bool) list;
     System : ImmutableRule list;
     CurrentTurn : int;
+    NumStag: int;
+    NumHare: int;
     }

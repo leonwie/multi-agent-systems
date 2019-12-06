@@ -25,39 +25,48 @@ let main argv =
     // Start of game loop
     let mutable new_agents = Parsing.Agents
     let mutable oldAgents = agents
-
-    // Will probably limit maxSimulation to finite value
-    while float(currentWorld.CurrentTurn) < maxSimulationTurn do
-        
-        new_agents <- 
-            new_agents 
-            |> List.map (fun el -> el) // PlaceHolder for Duma
-            |> List.map (fun el -> 
-                            {el with Activity = match rand.Next(1, 3) with
-                                                | 1 -> NONE
-                                                | 2 -> HUNTING
-                                                | 3 -> BUILDING}) // Placeholder for work allocation
-
-        let hunt = hunt // PlaceHolder
-
-        // To ensure consistency of agent definition, use oldAgents first
-        currentWorld <- newWorldShelters currentWorld oldAgents
         
 
-
-        new_agents <- 
-            new_agents
-            |> List.map (fun el -> {el with AccessToShelter = 0}) // PlaceHolder for sanctioning
-            |> List.map (fun el -> {el with Energy = el.Energy + rand.Next(10)}) // PlaceHolder for food distribution
-        
-        oldAgents <- 
-            oldAgents
-            |> assignShelters currentWorld
-            |> List.map (fun el -> newAgentEnergy el) // Energy Resolution
-
-
-        currentWorld <- {currentWorld with CurrentTurn = currentWorld.CurrentTurn + 1}
     
+    let rec loop (currentWorld : WorldState) : WorldState =
+        if float(currentWorld.CurrentTurn) >= maxSimulationTurn then currentWorld
+        else
+            new_agents <- 
+                new_agents 
+                |> List.map (fun el -> el) // PlaceHolder for Duma
+                |> List.map (fun el -> 
+                                {el with Activity = match rand.Next(1, 3) with
+                                                    | 1 -> NONE
+                                                    | 2 -> HUNTING
+                                                    | 3 -> BUILDING}) // Placeholder for work allocation
+
+            let hunt = hunt // PlaceHolder
+
+            // To ensure consistency of agent definition, use oldAgents first
+            let currentWorld = newWorldShelters currentWorld oldAgents
+            
+
+
+            new_agents <- 
+                new_agents
+                |> List.map (fun el -> {el with AccessToShelter = 0}) // PlaceHolder for sanctioning
+                |> List.map (fun el -> {el with Energy = el.Energy + rand.Next(10)}) // PlaceHolder for food distribution
+            
+            oldAgents <- 
+                oldAgents
+                |> assignShelters currentWorld
+                |> List.map (fun el -> newAgentEnergy el) // Energy Resolution
+
+
+            let currentWorld = 
+                {currentWorld with CurrentTurn = currentWorld.CurrentTurn + 1; NumHare = regenRate 0.1 currentWorld.NumHare maxNumHare; NumStag = regenRate 0.1 currentWorld.NumStag maxNumStag}  // Regeneration
+
+            loop currentWorld
+
+    
+    let finalWorld = loop currentWorld;
+
+    printfn "Final world status: %A" finalWorld;
     
     0
 

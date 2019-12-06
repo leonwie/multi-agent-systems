@@ -40,3 +40,6 @@ let ep = 0.0 // maximum shelter energy preservation
 let rb = 0.0 //base energy decay rate
 
 let maxSimulationTurn = infinity
+
+let maxNumStag = 30
+let maxNumHare = 30
