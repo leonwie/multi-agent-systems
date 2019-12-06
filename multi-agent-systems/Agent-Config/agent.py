@@ -2,8 +2,8 @@ from enum import Enum
 
 class Activity(str, Enum):
     NONE: str = "NONE"
-    HUNT: str = "HUNT"
-    BUILD: str = "BUILD"
+    HUNT: str = "HUNTING"
+    BUILD: str = "BUILDING"
 
 class Agent:
     '''
@@ -20,7 +20,7 @@ class Agent:
         self.Activity = Activity.NONE                               # SEE ENUM CLASS ABOVE
         self.AccessToShelter = 1                                    # [0, 100]
         self.BuildingAptitude = 50                                  # [0, 100]
-        self.Opinions = {i: 50 for i in range(totalNumAgent)}       # ARRAY OF OPINIONS FOR EACH OTHER AGENT
+        self.Opinions = [50] * totalNumAgent                        # ARRAY OF OPINIONS FOR EACH OTHER AGENT
 
 
 class DefaultAgent(Agent):
