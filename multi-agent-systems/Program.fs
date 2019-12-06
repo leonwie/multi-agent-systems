@@ -14,12 +14,12 @@ open multi_agent_systems
 [<EntryPoint>]
 let main argv =
     try
-        printfn "%A" (Parsing.parse argv) |> Parsing.printAgent |> ignore
+        printfn "%A" (Parsing.parse argv)
     with e ->
         printfn "%s" e.Message
     0
 
-//    // Testing shit    
+//    // Testing shit 
 //    let whatToDo (agents : Agent list) =
 //        agents
 //        |> List.map (fun el ->

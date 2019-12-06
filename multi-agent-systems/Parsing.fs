@@ -1,7 +1,6 @@
 ﻿module multi_agent_systems.Parsing
 
 open Argu
-open FSharp.Data.Runtime.BaseTypes
 open FSharp.Data
 open System.IO
 open Agent1
@@ -24,34 +23,26 @@ let parseActivity = function
    | "BUILDING" -> Activity.BUILDING
    | activity -> failwith (sprintf "Wrong activity type! Only supported: NONE, HUNTING, BUILDING. Activity your agent has : %s" activity)
 
-let mutable Agents:List<Agent> = []
-
 type AgentRead = JsonProvider<"Agent-Config/default_agent.json">
 
-let parseProfile (fileName : string) =
+let parseProfile (fileName : string) : Agent list =
     //let file = File.ReadAllLines("../../../Agent-Config/default_agent.json") |> String.concat " "
     let file = File.ReadAllLines(fileName) |> String.concat " "
     let agentParsed = AgentRead.Parse(file)
-    let initialiseAgentHere number = initialiseAgent (agentParsed.Profile, number, agentParsed.Selflessness, agentParsed.BuildingAptitude,
-                                       agentParsed.HuntingAptitude, agentParsed.Political, agentParsed.Mood, agentParsed.Energy,
-                                       parseActivity agentParsed.Activity, agentParsed.AccessToShelter, agentParsed.Opinions)   
-    List.map(fun number -> Agents<-initialiseAgentHere number::Agents) (Array.toList agentParsed.IdRange)
+    let initialiseAgentHere number = initialiseAgent agentParsed.Profile number agentParsed.Selflessness agentParsed.BuildingAptitude
+                                       agentParsed.HuntingAptitude agentParsed.Political agentParsed.Mood agentParsed.Energy
+                                       (parseActivity agentParsed.Activity) agentParsed.AccessToShelter agentParsed.Opinions   
+    List.map(fun number -> initialiseAgentHere number) (Array.toList agentParsed.IdRange)
  
-let parseAgents (numberProfiles : int) =
+let parseAgents (numberProfiles : int) : Agent list=
     let path : string = "../../../Agent-Config/agent_dir/profile"
     let jsonSuffix : string = ".json" 
     let fileNames =  [0..numberProfiles-1] |> List.map string |> List.map (fun key -> path + key + jsonSuffix)
-    List.map(fun file -> parseProfile file) fileNames
+    List.concat (List.map(fun file -> parseProfile file) fileNames)
 
-let parse (argv : string[])  =
+let parse (argv : string[]) : Agent list =
     let parser = ArgumentParser.Create<CLIArguments>(programName = "simulation.exe")
     let inputs = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
     match inputs.Contains Number_Profiles with
     | true -> parseAgents (inputs.GetResult Number_Profiles)
     | false -> (failwith "Must specify number of agents. Please set --number-profiles!")
-
-let getParsedAgents : List<Agent> =
-    Agents
-    
-let printAgent int =
-   printfn "%A" Agents

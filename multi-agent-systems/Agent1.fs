@@ -20,8 +20,8 @@ type Agent = {
     }
 
 // Initialise Agent
-let initialiseAgent (profile : string, id : int,  selflessness : int,  buildingAptitude : int,  huntingAptitude : int, political : int,
-                     mood : int, energy : int, activity : Activity, accessToShelter : int, opinions : (int[]))  : Agent =
+let initialiseAgent (profile : string) (id : int)  (selflessness : int)  (buildingAptitude : int)  (huntingAptitude : int) (political : int)
+                     (mood : int) (energy : int) (activity : Activity) (accessToShelter : int) (opinions : int[])  : Agent =
     {
         Profile = profile;
         ID = id;
