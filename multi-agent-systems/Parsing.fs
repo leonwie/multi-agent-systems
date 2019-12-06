@@ -8,7 +8,6 @@ open Agent1
 
 type CLIArguments =
     | Number_Days of days:int
-    | Number_Agents of agents:int
     | Number_Profiles of profiles:int
     | Defaults
 with
@@ -16,7 +15,6 @@ with
         member s.Usage =
             match s with
             | Number_Days _ -> "specify the number of days the simulation should run for."
-            | Number_Agents _ -> "specify the number of agents you want in your simulation."
             | Number_Profiles _ -> "specify the number of different profiles for agents."
             | Defaults _ -> "only default agents."
 
@@ -48,9 +46,9 @@ let parseAgents (numberProfiles : int) =
 let parse (argv : string[])  =
     let parser = ArgumentParser.Create<CLIArguments>(programName = "simulation.exe")
     let inputs = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
-    match inputs.Contains Number_Agents with
-    | true -> parseAgents (inputs.GetResult Number_Agents)
-    | false -> (failwith "Must specify number of agents. Please set --number-agents!")
+    match inputs.Contains Number_Profiles with
+    | true -> parseAgents (inputs.GetResult Number_Profiles)
+    | false -> (failwith "Must specify number of agents. Please set --number-profiles!")
 
 let getParsedAgents : List<Agent> =
     Agents
