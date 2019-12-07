@@ -3,7 +3,8 @@
 open Argu
 open FSharp.Data
 open System.IO
-open Agent1
+open Agent
+open Types
 
 type CLIArguments =
     | Number_Days of days:int
@@ -18,20 +19,26 @@ with
             | Defaults _ -> "only default agents."
 
 let parseActivity = function
-   | "NONE" -> Activity.NONE
-   | "HUNTING" -> Activity.HUNTING 
-   | "BUILDING" -> Activity.BUILDING
+   | "NONE" -> Types.NONE
+   | "HUNTING" -> Types.HUNTING 
+   | "BUILDING" -> Types.BUILDING
    | activity -> failwith (sprintf "Wrong activity type! Only supported: NONE, HUNTING, BUILDING. Activity your agent has : %s" activity)
 
 type AgentRead = JsonProvider<"Agent-Config/default_agent.json">
+
+let parseOpinions (opinions : decimal[]) : (int * float) list =
+    [0..opinions.Length - 1] |> List.map (fun key -> (key, (float)opinions.[key]))
 
 let parseProfile (fileName : string) : Agent list =
     //let file = File.ReadAllLines("../../../Agent-Config/default_agent.json") |> String.concat " "
     let file = File.ReadAllLines(fileName) |> String.concat " "
     let agentParsed = AgentRead.Parse(file)
-    let initialiseAgentHere number = initialiseAgent agentParsed.Profile number agentParsed.Selflessness agentParsed.BuildingAptitude
-                                       agentParsed.HuntingAptitude agentParsed.Political agentParsed.Mood agentParsed.Energy
-                                       (parseActivity agentParsed.Activity) agentParsed.AccessToShelter agentParsed.Opinions   
+    let initialiseAgentHere number = initialiseAgent agentParsed.Profile number ((float)agentParsed.Selflessness)
+                                       ((float)agentParsed.BuildingAptitude) ((float)agentParsed.HuntingAptitude)
+                                       ((float)agentParsed.Political) agentParsed.Mood ((float)agentParsed.Energy)
+                                       (parseActivity agentParsed.ActivityType, (float)agentParsed.ActivityNumber)
+                                       agentParsed.AccessToShelter (parseOpinions agentParsed.Opinions)   
+    
     List.map(fun number -> initialiseAgentHere number) (Array.toList agentParsed.IdRange)
  
 let parseAgents (numberProfiles : int) : Agent list=

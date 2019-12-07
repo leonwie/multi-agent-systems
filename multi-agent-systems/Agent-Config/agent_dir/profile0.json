@@ -1,0 +1,27 @@
+{
+    "Profile": "Agent",
+    "IDRange": [
+        0,
+        1,
+        2
+    ],
+    "Selflessness": 50.0,
+    "HuntingAptitude": 50.0,
+    "Political": 50.0,
+    "Mood": 50,
+    "Energy": 50.0,
+    "ActivityType": "NONE",
+    "ActivityNumber": 50.0,
+    "AccessToShelter": true,
+    "BuildingAptitude": 50.0,
+    "Opinions": [
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+    ]
+}

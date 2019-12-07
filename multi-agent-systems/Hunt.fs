@@ -5,7 +5,7 @@ open Voting
 open Config
 
 // Vote on what to hunt
-let voteOnWhatToHunt (votingSystem : VotingSystem) (agents : Agent list) : Fauna =
+(*let voteOnWhatToHunt (votingSystem : VotingSystem) (agents : Agent list) : Fauna =
     let getFaunaRanking (agent : Agent) : string list =
         match agent.FavouriteFood with
         | Staggi -> ["Staggi"; "Rabbos"] // If more animals added then set FavouriteFood as Head and randomise Tail order
@@ -103,4 +103,4 @@ let assignExcessFood (excessFood : float) (nonHunterAgents : Agent list) : Agent
         |> (/) excessFood
 
     nonHunterAgents
-    |> List.map (fun agent -> {agent with Food = foodSplit})
+    |> List.map (fun agent -> {agent with Food = foodSplit})*)

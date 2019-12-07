@@ -1,9 +1,9 @@
 ﻿module Types
 
 type Activity =
-    | Building
-    | Hunting
-    | Nothing
+    | NONE
+    | HUNTING
+    | BUILDING
 
 type Fauna = 
     | Rabbos
@@ -18,20 +18,21 @@ type VotingSystem =
 type Candidate = string
     
 type Agent = {
-    Name : string;
+    Profile : string;
+    ID : int;
     Selflessness : float; 
     BuildingAptitude : float;
     HuntingAptitude : float;
     PoliticalApathy : float;
-    FavouriteFood : Fauna;
     Mood : int;
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : bool;
-    Food : float;
-    HunterLevel : float;
-    HunterExp : int;
-    Opinions : (string * float) list    // Perhaps change string to int and add an ID field
+    Opinions : (int * float) list
+    //Food : float;
+    //HunterLevel : float;
+    //HunterExp : int;
+    //FavouriteFood : Fauna;
     }
 
 type WorldState = {
