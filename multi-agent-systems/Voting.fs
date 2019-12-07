@@ -12,16 +12,18 @@ let bordaVote (rankings : Candidate list list) : Candidate  =
         ranks
         |> List.mapi (fun i el -> el, n - i) 
         |> List.sort
+
     let borda = 
         rankings
         |> List.map getRanking
+
     // Sum all the rankings and return the candiate with the highest score
     borda   
-    |> List.tail
-    |> List.fold (fun acc el1 -> 
-        List.mapi (fun i el2 -> fst el2, snd el2 + snd el1.[i]) acc) borda.Head
+    |> List.reduce (fun acc el1 -> 
+        List.mapi (fun i el2 -> fst el2, snd el2 + snd el1.[i]) acc)
     |> List.reduce (fun acc el -> if snd el > snd acc then el else acc)
     |> fst
+
 
 // Plurality voting
 let pluralityVote (votes : Candidate list list) : Candidate  =
@@ -31,6 +33,7 @@ let pluralityVote (votes : Candidate list list) : Candidate  =
     |> List.maxBy snd
     |> fst
 
+
 // Approval Voting
 let approvalVote (votes : Candidate list list) : Candidate  =
     votes
@@ -38,6 +41,7 @@ let approvalVote (votes : Candidate list list) : Candidate  =
     |> List.countBy id
     |> List.maxBy snd
     |> fst
+
 
 // Runoff Voting
 let runOffRound1 (votes : Candidate list list) : Candidate * Candidate =
@@ -56,6 +60,7 @@ let runOffRound2 (votes : Candidate list list) : Candidate  =
     votes
     |> pluralityVote // Round 2 is just plurality so reuse that
 
+
 // Instant Runoff
 let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list list) : Candidate  =
     // Count the number of first place votes everyone has
@@ -70,15 +75,18 @@ let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list l
             let index = List.findIndex (fun el -> fst el = firstPlace) acc
             List.mapi (fun i el -> if i = index then fst el, (snd el) + 1 else el) acc
             ) initialAcc 
+
     // Get the candidate with the least number of first place votes
     let roundLoser (count : (Candidate * int) list) : Candidate =
         count
         |> List.minBy snd
         |> fst
+
     // Return the list of candidates without the round loser   
     let newRanks (allVotes : Candidate list list) (roundLoser : Candidate) : Candidate list list =
         allVotes
         |> List.map (List.filter (fun el -> not (el = roundLoser)))
+
     // Recursively run the rounds
     let rec runoff (votes : Candidate list list) (remainingCandidates : Candidate list ) : Candidate =
         match countVotes votes remainingCandidates with
@@ -88,6 +96,7 @@ let instantRunoffVote (allCandidates : Candidate list) (votes : Candidate list l
             let nextRoundRanks = newRanks votes loser
             let remaining = List.filter (fun el -> not (el = loser)) remainingCandidates
             runoff nextRoundRanks remaining
+
     runoff votes allCandidates
 
 
