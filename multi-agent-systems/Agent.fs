@@ -8,7 +8,7 @@ let rand = System.Random()
 
 // Initialise Agent
 let initialiseAgent (profile : string) (id : int)  (selflessness : float)  (buildingAptitude : float)  (huntingAptitude : float) (political : float)
-                     (mood : int) (energy : float) (todaysActivity : Activity * float) (accessToShelter : bool) (opinions : (int * float) list)  : Agent =
+                     (mood : int) (energy : float) (todaysActivity : Activity * float) (accessToShelter : float option) (opinions : (int * float) list)  : Agent =
     {
         Profile = profile;
         ID = id;

@@ -12,7 +12,7 @@
     "Energy": 50.0,
     "ActivityType": "NONE",
     "ActivityNumber": 50.0,
-    "AccessToShelter": true,
+    "AccessToShelter": 50.0,
     "BuildingAptitude": 50.0,
     "Opinions": [
         50.0,

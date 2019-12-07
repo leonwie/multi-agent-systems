@@ -17,7 +17,7 @@ let costOfBuilding = 50
 let costOfHunting = 30
 
 let shelterEnergySavings = 0.5
-let shelterDecayRate = 25.0 // Shelter lasts 4 days
+// let shelterDecayRate = 25.0 // Shelter lasts 4 days
 
 let staggiEnergyValue = 200
 let staggiProbability = 0.1 // likelihood is 1 in 10 intervals
@@ -29,3 +29,12 @@ let foodSaturation = 40
 let huntingTime = 8.0
 
 let expPerHunt = 15
+
+
+
+let eb = 0.0 // energy cost per worker to build
+let em = 0.0 // energy cost per worker to maintain
+let rg = 0.0 // shelter quality decay rate
+let es = 0.0 // energy cost per worker to build one shelter
+let ep = 0.0 // maximum shelter energy preservation
+let rb = 0.0 //base energy decay rate

@@ -37,7 +37,7 @@ let parseProfile (fileName : string) : Agent list =
                                        ((float)agentParsed.BuildingAptitude) ((float)agentParsed.HuntingAptitude)
                                        ((float)agentParsed.Political) agentParsed.Mood ((float)agentParsed.Energy)
                                        (parseActivity agentParsed.ActivityType, (float)agentParsed.ActivityNumber)
-                                       agentParsed.AccessToShelter (parseOpinions agentParsed.Opinions)   
+                                       (Some ((float)agentParsed.AccessToShelter)) (parseOpinions agentParsed.Opinions)   
     
     List.map(fun number -> initialiseAgentHere number) (Array.toList agentParsed.IdRange)
  

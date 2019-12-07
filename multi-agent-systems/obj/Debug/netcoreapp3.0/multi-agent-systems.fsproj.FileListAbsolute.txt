@@ -60,7 +60,6 @@ C:/Users/Josh/Documents/GitHub/multi-agent-systems/multi-agent-systems/bin/Debug
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/FSharp.Core.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/cs/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/de/FSharp.Core.resources.dll
-/home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/en/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/es/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/fr/FSharp.Core.resources.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/bin/Debug/netcoreapp3.0/it/FSharp.Core.resources.dll
@@ -76,3 +75,5 @@ C:/Users/Josh/Documents/GitHub/multi-agent-systems/multi-agent-systems/bin/Debug
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsproj.CopyComplete
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.dll
 /home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.pdb
+/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfoInputs.cache
+/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfo.fs

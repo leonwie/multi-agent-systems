@@ -19,7 +19,7 @@ class Agent:
         self.Energy = 50.0                                            # [0, 100]
         self.ActivityType = Activity.NONE                             # SEE ENUM CLASS ABOVE
         self.ActivityNumber = 50.0                                    #  [0, 100]
-        self.AccessToShelter = True                                    # [0, 100]
+        self.AccessToShelter = 50.0                                    # [0, 100]
         self.BuildingAptitude = 50.0                                  # [0, 100]
         self.Opinions = [50.0] * totalNumAgent                        # ARRAY OF OPINIONS FOR EACH OTHER AGENT
 
