@@ -104,3 +104,46 @@ let assignExcessFood (excessFood : float) (nonHunterAgents : Agent list) : Agent
 
     nonHunterAgents
     |> List.map (fun agent -> {agent with Food = foodSplit})
+
+
+
+
+// chance of failing a hunt
+let failHunt (chanceFail: float): bool = 
+    let rand = new System.Random()
+    let num = (float (rand.Next(0, 100)))/100.0
+    if  num >= (1.0-chanceFail) then true
+    else false
+
+
+// deterimines how many hares are captured
+let capHare (energyAllocated: float) (energyRequired: float): float = 
+    let numHare = 
+        energyAllocated/energyRequired
+    floor numHare
+    
+
+// determines how many stags are captured based on input list of energy allocated to hunt
+let capStag (energyAllocated: float list) (collectiveThreshold: float): float = 
+    let totalEnergy = 
+        energyAllocated
+        |> List.sum
+    let numStag =
+        totalEnergy/collectiveThreshold
+    floor numStag
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+                                
