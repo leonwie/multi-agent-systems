@@ -15,7 +15,28 @@ type VotingSystem =
     | Borda
     | Plurality
 
-type Candidate = string
+type FoodRule =
+    | Communism // Equal Split
+    | Socialism // Weakest get more
+    | Meritocracy // Biggest contributors get more
+    | Oligarchy // Strongest get more
+
+type ShelterRule =
+    | Random
+    | Socialism // Weakest get more
+    | Meritocracy // Biggest contributors get more
+    | Oligarchy // Strongest get more
+
+type WorkAllocation =
+    | Everyone
+    | Strongest
+    | ByChoice
+
+type Rule =
+    | Shelter of ShelterRule
+    | Food of FoodRule
+    | Voting of VotingSystem
+    | Work of WorkAllocation
     
 type Agent = {
     Profile : string;
@@ -37,10 +58,17 @@ type Agent = {
 
 type WorldState = {
     VotingType : VotingSystem;
-    Buildings : float list
+    Buildings : float list;
+    CurrentChair : Agent option;
+    TimeToNewChair : int;
+    CurrentShelterRule : ShelterRule;
+    CurrentVotingRule : VotingSystem;
+    CurrentFoodRule : FoodRule;
+    CurrentWorkRule : WorkAllocation;
     }
 
 type Shelter = {
     Quality : float
 }
 
+type Proposal = Rule * Agent list

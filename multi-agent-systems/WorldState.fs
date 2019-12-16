@@ -5,6 +5,12 @@ open Types
 // Not much done here yet
 
 let currentWorld = {
-    VotingType = Borda;
-    Buildings = []
+    VotingType = Approval;
+    Buildings = [];
+    CurrentChair = None;
+    TimeToNewChair = 7;
+    CurrentShelterRule = Random;
+    CurrentVotingRule = Approval;
+    CurrentFoodRule = Communism;
+    CurrentWorkRule = Everyone;
     }

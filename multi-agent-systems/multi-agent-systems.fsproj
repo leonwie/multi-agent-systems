@@ -16,6 +16,7 @@
     <Compile Include="Activities.fs" />
     <Compile Include="Hunt.fs" />
     <Compile Include="Build.fs" />
+    <Compile Include="Duma.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
