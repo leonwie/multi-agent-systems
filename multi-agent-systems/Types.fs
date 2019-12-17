@@ -1,9 +1,9 @@
 ﻿module Types
 
 type Activity =
-    | Building
-    | Hunting
-    | Nothing
+    | NONE
+    | HUNTING
+    | BUILDING
 
 type Fauna = 
     | Rabbos
@@ -15,40 +15,61 @@ type VotingSystem =
     | Borda
     | Plurality
 
-type Candidate = string
+type FoodRule =
+    | Communism // Equal Split
+    | Socialism // Weakest get more
+    | Meritocracy // Biggest contributors get more
+    | Oligarchy // Strongest get more
+
+type ShelterRule =
+    | Random
+    | Socialism // Weakest get more
+    | Meritocracy // Biggest contributors get more
+    | Oligarchy // Strongest get more
+
+type WorkAllocation =
+    | Everyone
+    | Strongest
+    | ByChoice
+
+type Rule =
+    | Shelter of ShelterRule
+    | Food of FoodRule
+    | Voting of VotingSystem
+    | Work of WorkAllocation
     
 type Agent = {
-    Name : string;
+    Profile : string;
+    ID : int;
     Selflessness : float; 
     BuildingAptitude : float;
     HuntingAptitude : float;
     PoliticalApathy : float;
-    FavouriteFood : Fauna;
     Mood : int;
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
-    Food : float;
-    HunterLevel : float;
-    HunterExp : int;
-    Opinions : (string * float) list    // Perhaps change string to int and add an ID field
+    Opinions : (int * float) list
+    //Food : float;
+    //HunterLevel : float;
+    //HunterExp : int;
+    //FavouriteFood : Fauna;
     }
 
-
+type WorldState = {
+    VotingType : VotingSystem;
+    Buildings : float list;
+    CurrentChair : Agent option;
+    TimeToNewChair : int;
+    CurrentShelterRule : ShelterRule;
+    CurrentVotingRule : VotingSystem;
+    CurrentFoodRule : FoodRule;
+    CurrentWorkRule : WorkAllocation;
+    }
 
 type Shelter = {
     Quality : float
 }
 
-type Rule = string // PlaceHolder
-type ImmutableRule = string // PlaceHolder
 
-type WorldState = {
-    VotingType : VotingSystem;
-    Buildings : float list
-    Policies : (Rule * bool) list;
-    System : ImmutableRule list;
-    CurrentTurn : int;
-    NumStag: int;
-    NumHare: int;
-    }
+type Proposal = Rule * Agent list

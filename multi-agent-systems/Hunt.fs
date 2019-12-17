@@ -136,14 +136,27 @@ let capStag (energyAllocated: float list) (collectiveThreshold: float): float =
     
 
 
+let capture (actProfile: float list) (weakLink: float) (energyToCapture: float): bool = 
+    let minEnergy actProfile weakLink =
+        if List.min actProfile >= weakLink then true 
+        else false
+    
+    
+    let thresholdEnergy actProfile energyToCapture =
+        if List.sum actProfile >= energyToCapture then true 
+        else false
+            
+    
+    if (minEnergy actProfile weakLink && thresholdEnergy actProfile energyToCapture) then true
+    else false
+    
+let regenRate (rate: float) (totNum: int) (maxCapacity: int) : int =
+    totNum
+    |> float
+    |> (/) (maxCapacity |> float)
+    |> fun x -> 1.0 - x
+    |> (*) rate
+    |> (*) (totNum |> float)
+    |> ceil
+    |> int
 
-
-
-
-
-
-
-
-
-
-                                

@@ -10,9 +10,9 @@ let buildOrHunt (agent : Agent) : Agent =
         agent.BuildingAptitude
         |> (-) agent.HuntingAptitude
         |> function
-            | x when x <= 0.0 && abs agent.Energy > 20.0 -> Building
-            | x when x > 0.0 && abs agent.Energy > 20.0 -> Hunting
-            | _ -> Nothing
+            | x when x <= 0.0 && abs agent.Energy > 20.0 -> BUILDING
+            | x when x > 0.0 && abs agent.Energy > 20.0 -> HUNTING
+            | _ -> NONE
     {agent with TodaysActivity = activity, 0.0}
 
 
@@ -23,17 +23,17 @@ let makeFair (allAgents : Agent list) : Agent list =
     // Function for switching an agents activity
     let switchAgentActivity (agent : Agent) : Agent =
         match agent.TodaysActivity with // Half mood if swapped
-        | Building, x -> {agent with TodaysActivity = Hunting, x; Mood = agent.Mood / 2}
-        | Hunting, x -> {agent with TodaysActivity = Building, x; Mood = agent.Mood / 2}
-        | Nothing, _ -> agent
+        | BUILDING, x -> {agent with TodaysActivity = HUNTING, x; Mood = agent.Mood / 2}
+        | HUNTING, x -> {agent with TodaysActivity = BUILDING, x; Mood = agent.Mood / 2}
+        | NONE, _ -> agent
 
     // Functions for counting the number of each activity
     let activityCount (acc : int * int * int) (x : Agent) : int * int * int =
         let a, b, c = acc |> (fun (a, b, c) -> a, b, c)
         match x.TodaysActivity with
-        | Building, _ -> (a + 1, b, c)
-        | Hunting, _ -> (a, b + 1, c)
-        | Nothing, _ -> (a, b, c + 1)
+        | BUILDING, _ -> (a + 1, b, c)
+        | HUNTING, _ -> (a, b + 1, c)
+        | NONE, _ -> (a, b, c + 1)
 
     let totals =
         List.fold (fun acc x -> activityCount acc x) (0, 0, 0) allAgents
@@ -44,9 +44,9 @@ let makeFair (allAgents : Agent list) : Agent list =
         |> fun (a, _, _) -> a 
         |> (-) (totals |> fun (_, b, _) -> b)
         |> function
-            | x when x < -1 -> (Building, abs x / 2)
-            | x when x > 1 -> (Hunting, abs x / 2)
-            | _ -> (Nothing, 0)
+            | x when x < -1 -> (BUILDING, abs x / 2)
+            | x when x > 1 -> (HUNTING, abs x / 2)
+            | _ -> (NONE, 0)
 
     // Shuffle so that different agents get swapped each day
     let shuffle l =
@@ -75,9 +75,9 @@ let makeFair (allAgents : Agent list) : Agent list =
 let howMuchEnergyToExpend (agent : Agent) : Agent =
     let energyExpend =
         match agent.TodaysActivity with
-            | Building, _ -> agent.BuildingAptitude
-            | Hunting, _ -> agent.HuntingAptitude
-            | Nothing, _ -> 0.0
+            | BUILDING, _ -> agent.BuildingAptitude
+            | HUNTING, _ -> agent.HuntingAptitude
+            | NONE, _ -> 0.0
         |> (*) agent.Selflessness
         |> (*) (agent.Energy / 100.0)
     {agent with TodaysActivity = agent.TodaysActivity |> fst, energyExpend}

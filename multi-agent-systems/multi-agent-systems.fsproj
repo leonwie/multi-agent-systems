@@ -11,12 +11,11 @@
     <Compile Include="Types.fs" />
     <Compile Include="Voting.fs" />
     <Compile Include="Agent.fs" />
-    <Compile Include="Agent1.fs" />
-    <Compile Include="WorldState.fs" />
     <Compile Include="Parsing.fs" />
     <Compile Include="Activities.fs" />
     <Compile Include="Hunt.fs" />
     <Compile Include="Build.fs" />
+    <Compile Include="Duma.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

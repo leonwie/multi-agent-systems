@@ -1,5 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-
+﻿
 open System
 open Agent
 open Agent1
@@ -59,7 +58,9 @@ let main argv =
 
 
             let currentWorld = 
-                {currentWorld with CurrentTurn = currentWorld.CurrentTurn + 1; NumHare = regenRate 0.1 currentWorld.NumHare maxNumHare; NumStag = regenRate 0.1 currentWorld.NumStag maxNumStag}  // Regeneration
+                {currentWorld with CurrentTurn = currentWorld.CurrentTurn + 1; 
+                                    NumHare = regenRate 0.1 currentWorld.NumHare maxNumHare; 
+                                    NumStag = regenRate 0.1 currentWorld.NumStag maxNumStag}  // Regeneration
 
             loop currentWorld
 
@@ -70,45 +71,34 @@ let main argv =
     
     0
 
-//    // Testing shit    
+//open multi_agent_systems
+
+//[<EntryPoint>]
+//let main argv =
+//    // Config tested with arguments "--number-days 20 --number-profiles 2"
+//    let agents = Parsing.parse argv
+
 //    let whatToDo (agents : Agent list) =
 //        agents
 //        |> List.map (fun el ->
-//            "\n" + el.Name +
+//            "\n" + (string)el.ID +
 //            " will do " + (el.TodaysActivity |> fst |> string) +
 //            " and expend " + (el.TodaysActivity |> snd |> string) + " energy."
 //        )
-//
+
 //    let allAgents =
 //        agents 
 //        |> jobAllocation
-//
-//
+
 //    let builders =
 //        allAgents
-//        |> List.filter (fun el -> fst el.TodaysActivity = Building)
-//
-//
+//        |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
+
 //    let hunters =
 //        allAgents
-//        |> List.filter (fun el -> fst el.TodaysActivity = Hunting)
-//    
+//        |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
+    
 //    printfn "%A" agents
 //    printfn "%A" (whatToDo allAgents)
-//
-//    printfn "borda winner %A" (voteOnWhatToHunt Borda hunters)
-//    printfn "plurality winner %A" (voteOnWhatToHunt Plurality hunters)
-//    printfn "approval winner %A" (voteOnWhatToHunt Approval hunters)
-//    printfn "instant runnoff winner %A" (voteOnWhatToHunt InstantRunoff hunters)
-//
-//    let hunting = voteOnWhatToHunt Borda hunters
-//
-//    let test = 
-//        hunters
-//        |> hunt hunting huntingTime
-//
-//
-//    printfn "Leftovers: %A" test
-//
+    
 //    0 // return an integer exit code
-//
