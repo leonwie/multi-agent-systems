@@ -133,6 +133,27 @@ let capStag (energyAllocated: float list) (collectiveThreshold: float): float =
     floor numStag
 
 
+
+let agentAction (ego: float)(sucept: float)(idealism: float)(paySocList: float list)(payIndivList: float list): int*float = 
+    let equation (paySoc: float)(payIndiv: float)= 
+        idealism*paySoc + ego*payIndiv
+        |> (/)(idealism*sucept)
+
+    let combine xs ys = 
+        List.zip xs ys
+        
+    combine paySocList payIndivList 
+    |> List.map (fun (x,y) -> equation x y)
+    |> Seq.mapi (fun i v -> i, v)
+    |> Seq.maxBy snd
+    //|> (fun i v -> v)
+
+
+agentAction 5.0 3.0 2.0 [2.0;3.0][4.0;3.0]
+|> printfn "%A" 
+    
+
+
     
 
 

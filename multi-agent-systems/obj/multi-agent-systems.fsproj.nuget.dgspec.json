@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {}
+    "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {}
   },
   "projects": {
-    "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {
+    "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+        "projectUniqueName": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
         "projectName": "multi-agent-systems",
-        "projectPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
-        "packagesPath": "/home/josh/.nuget/packages/",
-        "outputPath": "/home/josh/Documents/multi-agent-systems/multi-agent-systems/obj/",
+        "projectPath": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+        "packagesPath": "/Users/pedromonteiro/.nuget/packages/",
+        "outputPath": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/obj/",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "/home/josh/.nuget/NuGet/NuGet.Config"
+          "/Users/pedromonteiro/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -31,9 +34,17 @@
       "frameworks": {
         "netcoreapp3.0": {
           "dependencies": {
+            "Argu": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "FSharp.Core": {
               "target": "Package",
-              "version": "[4.7.0, )"
+              "version": "[4.5.2, )"
+            },
+            "FSharp.Data": {
+              "target": "Package",
+              "version": "[3.3.2, )"
             }
           },
           "imports": [
@@ -46,18 +57,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[3.0.0, 3.0.0]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
         }
       }
     }
