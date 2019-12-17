@@ -5,6 +5,7 @@ open Agent1
 
 let currentWorld = {
 <<<<<<< HEAD
+<<<<<<< HEAD
     VotingType = Borda;
     Buildings = [];
     Policies = List.empty<Rule * bool>;
@@ -18,6 +19,8 @@ let energyProfile (agents : Agent1 list) =
     agents
     |> List.map (fun el -> el.ID * el.Energy)
 =======
+=======
+>>>>>>> master
     VotingType = Approval;
     Buildings = [];
     CurrentChair = None;
@@ -26,5 +29,9 @@ let energyProfile (agents : Agent1 list) =
     CurrentVotingRule = Approval;
     CurrentFoodRule = Communism;
     CurrentWorkRule = Everyone;
+<<<<<<< HEAD
+    }
+>>>>>>> master
+=======
     }
 >>>>>>> master

@@ -71,5 +71,4 @@ type Shelter = {
     Quality : float
 }
 
-
 type Proposal = Rule * Agent list

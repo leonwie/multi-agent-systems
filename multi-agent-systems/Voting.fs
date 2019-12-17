@@ -97,5 +97,5 @@ let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
             let remaining = List.filter (fun el -> el <> loser) remaining'as
             runoff nextRoundRanks remaining
 
-
     runoff votes allCandidates
+
