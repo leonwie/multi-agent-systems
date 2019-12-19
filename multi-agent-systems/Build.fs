@@ -65,7 +65,7 @@ let assignShelters (currentWorld : WorldState) (agents : Agent list) : Agent lis
             |> List.sortBy (fun el -> el.Energy) 
         | Meritocracy -> 
             agents // Those who put most energy in at front of list
-            |> List.sortBy (fun el -> el.TodaysEnergyExpended) 
+            |> List.sortBy (fun el -> el.TodaysActivity |> snd) 
             |> List.rev
         | Oligarchy -> 
             agents // Strongest at front of list

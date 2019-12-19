@@ -57,7 +57,6 @@ type Agent = {
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
     Opinions : (int * float) list;
-    TodaysEnergyExpended : float;
     //Food : float;
     //HunterLevel : float;
     //HunterExp : int;
