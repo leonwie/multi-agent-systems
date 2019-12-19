@@ -236,3 +236,13 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
         }
 
 
+let fullDuma (agents : Agent list) (world : WorldState) : WorldState =
+    // Do chair vote
+    let newWorld =
+        agents
+        |> chairVote world
+    // Apply all the duma stuff returning a worldstate containing the new ruleset
+    agents
+    |> getPropositions newWorld
+    |> newRules agents newWorld
+    |> implementNewRules newWorld
