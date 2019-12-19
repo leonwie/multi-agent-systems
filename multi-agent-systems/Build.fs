@@ -2,6 +2,7 @@
 
 open Types
 open Config
+open WorldState
 
 // Based on energy put in decide how many shelters to build 
 let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : WorldState =
@@ -41,14 +42,38 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
 let assignShelters (currentWorld : WorldState) (agents : Agent list) : Agent list =
     let availableBuildings = 
         currentWorld.Buildings 
-        // |> List.length
 
     let assignBuilding (agent : Agent) (shelter : float option) : Agent =
         {agent with AccessToShelter = shelter}
 
-    // Sort so that the agents with the least energy have shelter and give them first access to buildings
+    // Need to arrange list depending on rule
+    let agents = 
+        match currentWorld.CurrentShelterRule with
+        | Random -> 
+            let shuffle l =
+                let rand = new System.Random()
+                let a = l |> Array.ofList
+                let swap (a: _[]) x y =
+                    let tmp = a.[x]
+                    a.[x] <- a.[y]
+                    a.[y] <- tmp
+                Array.iteri (fun i _ -> swap a i (rand.Next(i, Array.length a))) a
+                a |> Array.toList
+            shuffle agents // List of agents is randomised
+        | Socialism -> 
+            agents // Weakest at front of list
+            |> List.sortBy (fun el -> el.Energy) 
+        | Meritocracy -> 
+            agents // Those who put most energy in at front of list
+            |> List.sortBy (fun el -> el.TodaysEnergyExpended) 
+            |> List.rev
+        | Oligarchy -> 
+            agents // Strongest at front of list
+            |> List.sortBy (fun el -> el.Energy) 
+            |> List.rev
+
+    // Assign Shelter
     agents
-    |> List.sortBy (fun el -> el.Energy)
     |> List.fold (
         fun acc el ->
             match (acc |> snd) with

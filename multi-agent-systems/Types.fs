@@ -32,11 +32,18 @@ type WorkAllocation =
     | Strongest
     | ByChoice
 
+type Punishment =
+    | NoFoodAndShelter
+    | Exile
+    | Increment
+    | Decrement
+
 type Rule =
     | Shelter of ShelterRule
     | Food of FoodRule
     | Voting of VotingSystem
     | Work of WorkAllocation
+    | Sanction of Punishment
     
 type Agent = {
     Profile : string;
@@ -49,7 +56,8 @@ type Agent = {
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
-    Opinions : (int * float) list
+    Opinions : (int * float) list;
+    TodaysEnergyExpended : float;
     //Food : float;
     //HunterLevel : float;
     //HunterExp : int;
@@ -65,6 +73,8 @@ type WorldState = {
     CurrentVotingRule : VotingSystem;
     CurrentFoodRule : FoodRule;
     CurrentWorkRule : WorkAllocation;
+    CurrentMaxPunishment : Punishment;
+    CurrentSactionStepSize : float;
     }
 
 type Shelter = {

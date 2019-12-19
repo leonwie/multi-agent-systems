@@ -13,4 +13,6 @@ let currentWorld = {
     CurrentVotingRule = Approval;
     CurrentFoodRule = Communism;
     CurrentWorkRule = Everyone;
+    CurrentMaxPunishment = NoFoodAndShelter;
+    CurrentSactionStepSize = 0.1;
     }
