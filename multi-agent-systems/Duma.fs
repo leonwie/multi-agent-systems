@@ -163,39 +163,39 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
             acc5 @ [el5]
         ) ([], [], [], [], [])
         |> fun (a, b, c, d, e) -> 
-            // Make a list option list into a list list option
+            // Make a 'list option list' into a 'list list option'
             removeNone a,
             removeNone b,
             removeNone c,
             removeNone d,
             removeNone e
-        
-    // Apply current voting system to each of the four voting options
-    agentVotes
-    |> fun (a, b, c, d, e) -> 
-        let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
-            match world.VotingType with
-            | Borda -> 
-                bordaVote candidates
-            | Approval -> 
-                approvalVote candidates
-            | Plurality -> 
-                pluralityVote candidates
-            | InstantRunoff -> 
-                instantRunoffVote allCandidates candidates
-        // Vote can result in an option type if there is nothing to vote for, in that case we ignore it
-        let vote (votingSystem) (allCandidates : 'a list) (candidates : 'a list list option) =
-            match candidates with
-            | Some(x) -> 
-                votingSystem allCandidates x 
-                |> Some
-            | None -> None
-        // vote on stuff
-        vote votingSystem allShelterRules a, 
-        vote votingSystem allWorkRules b, 
-        vote votingSystem allFoodRules c, 
-        vote votingSystem allVotingSystems d,
-        vote votingSystem allSanctionVotes e
+
+    // Apply current voting system to each of the voting options
+    let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
+        match world.VotingType with
+        | Borda -> 
+            bordaVote candidates
+        | Approval -> 
+            approvalVote candidates
+        | Plurality -> 
+            pluralityVote candidates
+        | InstantRunoff -> 
+            instantRunoffVote allCandidates candidates
+    // Vote can result in an option type if there is nothing to vote for, in that case we ignore it
+    let vote (votingSystem) (allCandidates : 'a list) (candidates : 'a list list option) =
+        match candidates with
+        | Some(x) -> 
+            votingSystem allCandidates x 
+            |> Some
+        | None -> None
+    // Get the ballots
+    let shelterVotes, workVotes, foodVotes, votingVotes, sanctionVotes = agentVotes
+    // Calculate winner based on votes and return as a tuple
+    vote votingSystem allShelterRules shelterVotes, 
+    vote votingSystem allWorkRules workVotes, 
+    vote votingSystem allFoodRules foodVotes, 
+    vote votingSystem allVotingSystems votingVotes,
+    vote votingSystem allSanctionVotes sanctionVotes
         
 
 let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule option * WorkAllocation option * FoodRule option * VotingSystem option * Punishment option) : WorldState =
