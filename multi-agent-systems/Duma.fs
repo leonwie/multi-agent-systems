@@ -171,7 +171,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
 
     // Apply current voting system to each of the voting options
     let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
-        match world.VotingType with
+        match world.CurrentVotingRule with
         | Borda ->
             bordaVote candidates
         | Approval ->
@@ -221,10 +221,10 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     match newSanction with
     | x when x = Some(Increment) ->
         {newWorld with
-            CurrentSactionStepSize = newWorld.CurrentSactionStepSize + 0.1}
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize + 0.1}
     | x when x = Some(Decrement) ->
         {newWorld with
-            CurrentSactionStepSize = newWorld.CurrentSactionStepSize - 0.1}
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize - 0.1}
     | _ -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
         {newWorld with
             CurrentMaxPunishment =

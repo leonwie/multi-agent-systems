@@ -86,7 +86,7 @@ type WorldState = {
     CurrentFoodRule : FoodRule;
     CurrentWorkRule : WorkAllocation;
     CurrentMaxPunishment : Punishment;
-    CurrentSactionStepSize : float;
+    CurrentSanctionStepSize : float;
     CurrentDay : int;
     NumHare : int;
     NumStag : int;

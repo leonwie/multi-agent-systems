@@ -2,7 +2,6 @@
 
 open Types
 open Config
-open WorldState
 
 // Based on energy put in decide how many shelters to build 
 let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : WorldState =
