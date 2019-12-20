@@ -9,15 +9,15 @@ open Config
 //    let getFaunaRanking (agent : Agent) : string list =
 //        match agent.FavouriteFood with
 //        | Staggi -> ["Staggi"; "Rabbos"] // If more animals added then set FavouriteFood as Head and randomise Tail order
-//        | Rabbos -> ["Rabbos"; "Staggi"]       
-    
+//        | Rabbos -> ["Rabbos"; "Staggi"]
+
 //    agents
 //    |> List.map getFaunaRanking
 //    |> match votingSystem with
 //        | Borda -> bordaVote
 //        | Approval -> approvalVote
 //        | InstantRunoff -> instantRunoffVote ["Staggi"; "Rabbos"]
-//        | Plurality -> pluralityVote 
+//        | Plurality -> pluralityVote
 //    |> function
 //        | "Staggi" -> Staggi
 //        | "Rabbos" -> Rabbos
@@ -44,22 +44,22 @@ open Config
 //        loop n 1
 
 //    // Poisson distribution:
-//    let lambda = 
+//    let lambda =
 //        match whatToHunt with
 //        | Rabbos -> rabbosProbability * huntLength
 //        | Staggi -> staggiProbability * huntLength
 
 //    // Generate possible animals that are hunted
 //    let maxListSize = 10
-//    let probs = 
-//        List.init maxListSize (fun el -> 
+//    let probs =
+//        List.init maxListSize (fun el ->
 //            lambda ** (float el) * (2.71828182845905 ** lambda) / (float (factorial el)))
 
 //    agents
 //    |> List.map (fun agent ->
 //        let rand = new System.Random()
 //        let x = (float (rand.Next(0, 100))) / 100.0
-//        let i = 
+//        let i =
 //            List.tryFindIndex (fun el -> x > el) probs
 //            |> function
 //                | None -> maxListSize - 1
@@ -72,19 +72,19 @@ open Config
 //            let agentKeep = // Food agent keeps
 //                agent.Food - agentGiveAway
 //            // Hunter exp and level updated
-//            let hunterExp = 
-//                if agent.HunterExp < 100 
-//                then agent.HunterExp + expPerHunt 
+//            let hunterExp =
+//                if agent.HunterExp < 100
+//                then agent.HunterExp + expPerHunt
 //                else 0
-//            let level = 
+//            let level =
 //                if agent.HunterExp = 0
 //                then agent.HunterLevel + 1.0
 //                else agent.HunterLevel
 //            // New agent values
-//            let newAgent = 
-//                {agent with 
-//                    Food = agentKeep; 
-//                    HunterExp = hunterExp; 
+//            let newAgent =
+//                {agent with
+//                    Food = agentKeep;
+//                    HunterExp = hunterExp;
 //                    HunterLevel = level}
 //            ((acc |> fst) @ [ newAgent ], (acc |> snd) + agentGiveAway)
 //        ) ([], 0.0)
@@ -93,12 +93,12 @@ open Config
 //// Assign the excess food to the agents that didn't hunt
 //let assignExcessFood (excessFood : float) (nonHunterAgents : Agent list) : Agent list =
 //    // Get how many agents need food
-//    let numAgents = 
+//    let numAgents =
 //        nonHunterAgents
 //        |> List.length
 //    // Get how much food each agent gets
-//    let foodSplit = 
-//        numAgents 
+//    let foodSplit =
+//        numAgents
 //        |> float
 //        |> (/) excessFood
 
@@ -109,7 +109,7 @@ open Config
 
 
 // chance of failing a hunt
-let failHunt (chanceFail: float): bool = 
+let failHunt (chanceFail: float): bool =
     let rand = new System.Random()
     let num = (float (rand.Next(0, 100)))/100.0
     if  num >= (1.0-chanceFail) then true
@@ -117,38 +117,64 @@ let failHunt (chanceFail: float): bool =
 
 
 // deterimines how many hares are captured
-let capHare (energyRequired: float) (chanceFail: float) (energyAllocated: float): float = 
-    let numHare = 
+let capHare (energyRequired: float) (chanceFail: float) (energyAllocated: float): float =
+    let numHare =
         energyAllocated
         |> (/) energyRequired
         |> floor
         |> int
-    
+        |> List.sum
+
     // Set faile hunts to 0 and find sum
     seq {for _ in 1 .. numHare -> 1}
     |> Seq.map (fun _ -> if failHunt chanceFail then 0.0 else 1.0)
     |> Seq.sum
 
 
+
+let agentAction (ego: float)(sucept: float)(idealism: float)(paySocList: float list)(payIndivList: float list): int*float =
+    let equation (paySoc: float)(payIndiv: float)=
+        idealism*paySoc + ego*payIndiv
+        |> (/)(idealism*sucept)
+
+    let combine xs ys =
+        List.zip xs ys
+
+    combine paySocList payIndivList
+    |> List.map (fun (x,y) -> equation x y)
+    |> Seq.mapi (fun i v -> i, v)
+    |> Seq.maxBy snd
+    //|> (fun i v -> v)
+
+
+agentAction 5.0 3.0 2.0 [2.0;3.0][4.0;3.0]
+|> printfn "%A"
+
+
+
+
+
+
+
 // Check if stag hunt meets criteria for success
-let meetStagCondition (actProfile: float list) (weakLink: float) (energyToCapture: float): bool = 
+let meetStagCondition (actProfile: float list) (weakLink: float) (energyToCapture: float): bool =
     let minEnergy actProfile weakLink =
-        if List.min actProfile >= weakLink then true 
+        if List.min actProfile >= weakLink then true
         else false
-    
-    
+
+
     let thresholdEnergy actProfile energyToCapture =
-        if List.sum actProfile >= energyToCapture then true 
+        if List.sum actProfile >= energyToCapture then true
         else false
-            
-    
+
+
     if (minEnergy actProfile weakLink && thresholdEnergy actProfile energyToCapture) then true
     else false
 
 
 // determines how many stags are captured based on input list of energy allocated to hunt
-let capStag (weakLink: float) (collectiveThreshold: float) (chanceFail: float)  (energyAllocated: float list) : float = 
-    
+let capStag (weakLink: float) (collectiveThreshold: float) (chanceFail: float)  (energyAllocated: float list) : float =
+
     let maxNumStag =
         energyAllocated
         |> List.sum
@@ -156,7 +182,7 @@ let capStag (weakLink: float) (collectiveThreshold: float) (chanceFail: float)  
         |> floor
         |> int
 
-    let numStag = 
+    let numStag =
         seq {for _ in 1 .. maxNumStag -> 1}
         |> Seq.map (fun _ -> if failHunt chanceFail then 0.0 else 1.0)
         |> Seq.sum
@@ -166,8 +192,8 @@ let capStag (weakLink: float) (collectiveThreshold: float) (chanceFail: float)  
     | true -> numStag
 
 
-  
-    
+
+
 let regenRate (rate: float) (totNum: int) (maxCapacity: int) : int =
     totNum
     |> float
