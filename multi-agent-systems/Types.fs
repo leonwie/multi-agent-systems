@@ -41,23 +41,32 @@ type Rule =
 type Agent = {
     Profile : string;
     ID : int;
-    Selflessness : float; 
-    BuildingAptitude : float;
-    HuntingAptitude : float;
-    PoliticalApathy : float;
-    Mood : int;
+    Susceptibility : float; 
+    Idealism : float;
+    Egotism : float;
+    ExplorationProbability : float;
+    AlternativeChoiceProbability : float;
+    Reward : float;
+    Friends : Agent list;
+    Enemies : Agent list;
+    Infamy : float;
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
-    Opinions : (int * float) list
-    //Food : float;
-    //HunterLevel : float;
-    //HunterExp : int;
-    //FavouriteFood : Fauna;
+    Opinions : (int * float) list;
+    BuildingAptitude : float;
+    HuntingAptitude : float;
+    Mood : int;
+    Selflessness : float;
     }
 
+type Reward = float
+type SocialGood = float
+
+type RuleSet = (Rule * Reward * SocialGood) list
+
+
 type WorldState = {
-    VotingType : VotingSystem;
     Buildings : float list;
     CurrentChair : Agent option;
     TimeToNewChair : int;
@@ -65,6 +74,10 @@ type WorldState = {
     CurrentVotingRule : VotingSystem;
     CurrentFoodRule : FoodRule;
     CurrentWorkRule : WorkAllocation;
+    CurrentDay : int;
+    NumHare : int;
+    NumStag : int;
+    //RuleSet : RuleSet;
     }
 
 type Shelter = {
@@ -72,3 +85,5 @@ type Shelter = {
 }
 
 type Proposal = Rule * Agent list
+
+

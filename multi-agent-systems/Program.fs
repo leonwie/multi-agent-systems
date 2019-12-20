@@ -1,7 +1,6 @@
 ﻿
 open System
 open Agent
-open Agent1
 open Types
 open Voting
 open Activities
@@ -9,64 +8,91 @@ open Hunt
 open Build
 open Config
 
-open WorldState
-
 [<EntryPoint>]
 let main argv =
 
     // Agent parsing
+    //let agents = Parsing.parse argv
+    let agents = 
+        [for i in 1..10 -> i]
+        |> List.map (fun el -> initialiseAgent "Default" el 0.5 0.5 0.5 0.5 0.5 0.5 List.empty<Agent> List.empty<Agent> 0.5 50.0 (NONE, 0.0) None List.empty<int * float> 0.5 0.5 1 0.5) 
 
-    try
-        printfn "%A" (Parsing.parse argv) |> Parsing.printAgent |> ignore
-    with e ->
-        printfn "%s" e.Message
-
-
-    // Start of game loop
-    let mutable new_agents = Parsing.Agents
-    let mutable oldAgents = agents
-        
+    let currentWorld = {
+        Buildings = List.Empty;
+        TimeToNewChair = 5;
+        CurrentShelterRule = Random;
+        CurrentFoodRule = Communism;
+        CurrentVotingRule = Borda;
+        CurrentWorkRule = Everyone;
+        CurrentDay = 0;
+        CurrentChair = None;
+        NumHare = 15;
+        NumStag = 15;
+    }
 
     
-    let rec loop (currentWorld : WorldState) : WorldState =
-        if float(currentWorld.CurrentTurn) >= maxSimulationTurn then currentWorld
+    let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =
+        if currentWorld.CurrentDay = maxSimulationTurn then currentWorld
         else
-            new_agents <- 
-                new_agents 
-                |> List.map (fun el -> el) // PlaceHolder for Duma
-                |> List.map (fun el -> 
-                                {el with Activity = match rand.Next(1, 3) with
-                                                    | 1 -> NONE
-                                                    | 2 -> HUNTING
-                                                    | 3 -> BUILDING}) // Placeholder for work allocation
 
-            let hunt = hunt // PlaceHolder
+            let agentsWithJobs = 
+                agents 
+                |> jobAllocation;
+
+            let builders = 
+                agentsWithJobs
+                |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
+
+            // Update shelter
+            let currentWorld = newWorldShelters currentWorld builders
+
+            // Assign shelter
+            let agents = assignShelters currentWorld agents
+
+            let hunters =
+                agentsWithJobs
+                |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
+
+            let hareCaptured = 
+                hunters
+                |> List.map (fun el -> 
+                    rand.Next() 
+                    |> float
+                    |> capHare rabbosMinRequirement rabbosProbability)// PlaceHolder for agent decision
+                |> List.sum
+
+            let stagCaptured = 
+                hunters
+                |> List.map (fun el -> rand.Next() |> float) // PlaceHolder for agent decisions
+                |> capStag staggiMinIndividual staggiMinCollective staggiProbability
+
+            let energyGained = hareCaptured * rabbosEnergyValue + stagCaptured * staggiEnergyValue
+
+            // Resorce Allocation
 
             // To ensure consistency of agent definition, use oldAgents first
-            let currentWorld = newWorldShelters currentWorld oldAgents
+            let currentWorld = newWorldShelters currentWorld agentsWithJobs
             
 
-
-            new_agents <- 
-                new_agents
-                |> List.map (fun el -> {el with AccessToShelter = 0}) // PlaceHolder for sanctioning
-                |> List.map (fun el -> {el with Energy = el.Energy + rand.Next(10)}) // PlaceHolder for food distribution
-            
-            oldAgents <- 
-                oldAgents
+            // event resolution
+            let agentsWithNewEnergy = 
+                agentsWithJobs
                 |> assignShelters currentWorld
-                |> List.map (fun el -> newAgentEnergy el) // Energy Resolution
+                |> List.map (fun el -> newAgentEnergy el)
 
 
             let currentWorld = 
-                {currentWorld with CurrentTurn = currentWorld.CurrentTurn + 1; 
-                                    NumHare = regenRate 0.1 currentWorld.NumHare maxNumHare; 
-                                    NumStag = regenRate 0.1 currentWorld.NumStag maxNumStag}  // Regeneration
+                {currentWorld with CurrentDay = currentWorld.CurrentDay + 1; 
+                                    NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare; 
+                                    NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-            loop currentWorld
+            // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
+            printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
+            printfn "Current world status: %A" currentWorld
+            loop currentWorld agentsWithNewEnergy
 
     
-    let finalWorld = loop currentWorld;
+    let finalWorld = loop currentWorld agents;
 
     printfn "Final world status: %A" finalWorld;
     

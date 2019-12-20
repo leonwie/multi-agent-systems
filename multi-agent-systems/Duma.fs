@@ -8,7 +8,6 @@ module Duma
 
 
 open Types
-open WorldState
 open Voting
 
 // Placeholders for decision making
@@ -58,7 +57,7 @@ let allVotingSystems : VotingSystem list = [
 ]
 
 
-let propositions (agents : Agent list)  =
+let propositions (agents : Agent list) (currentWorld : WorldState) =
     // Get all the agents and the proposals they want to make, filter those allowed to make proposals
     let propositions =
         agents
@@ -95,7 +94,7 @@ let chairVote (agents : Agent list) (currentWorld : WorldState) : WorldState =
     else {currentWorld with TimeToNewChair = currentWorld.TimeToNewChair - 1}
 
 
-let newRules (proposals : Proposal list) (agents : Agent list) : ShelterRule * WorkAllocation * FoodRule * VotingSystem =
+let newRules (proposals : Proposal list) (agents : Agent list) (currentWorld : WorldState) : ShelterRule * WorkAllocation * FoodRule * VotingSystem =
     // Get the rules to vote on
     let rulesToVoteOn =
         proposals
@@ -126,7 +125,7 @@ let newRules (proposals : Proposal list) (agents : Agent list) : ShelterRule * W
     agentVotes
     |> fun (a, b, c, d) -> 
         let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
-            match currentWorld.VotingType with
+            match currentWorld.CurrentVotingRule with
             | Borda -> bordaVote candidates
             | Approval -> approvalVote candidates
             | Plurality -> pluralityVote candidates
@@ -137,7 +136,7 @@ let newRules (proposals : Proposal list) (agents : Agent list) : ShelterRule * W
         votingSystem allVotingSystems d
         
 
-let RuleImplentation (rulesToImplement : ShelterRule * WorkAllocation * FoodRule * VotingSystem) : WorldState =
+let RuleImplentation (rulesToImplement : ShelterRule * WorkAllocation * FoodRule * VotingSystem) (currentWorld : WorldState): WorldState =
     // Implement the new rules
     let newShelterRule, newWorkRule, newFoodRule, newVotingSystem = 
         rulesToImplement
