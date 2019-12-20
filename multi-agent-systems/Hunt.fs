@@ -123,7 +123,6 @@ let capHare (energyRequired: float) (chanceFail: float) (energyAllocated: float)
         |> (/) energyRequired
         |> floor
         |> int
-        |> List.sum
 
     // Set faile hunts to 0 and find sum
     seq {for _ in 1 .. numHare -> 1}
