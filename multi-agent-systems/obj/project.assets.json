@@ -111,7 +111,7 @@
   },
   "libraries": {
     "Argu/6.0.0": {
-      "sha512": "iqF1uE+37uOsH+G4Q4yIQLJ57BgIBQ6ItOIprWynYBVZYJWCduEfdxKKGOYv2MtgHLCLLoeVGjrxwbk5o9WdNw==",
+      "sha512": "4qUKW+JSgkaAVkp43o6krmtW1lSTgDKuyyErnOssko5C9GDJIrzhTeoXJT+jqi3B0C5U1WI56bvg5rW6n0AcZw==",
       "type": "package",
       "path": "argu/6.0.0",
       "files": [
@@ -126,11 +126,10 @@
       ]
     },
     "FSharp.Core/4.5.2": {
-      "sha512": "apbdQOjzsjQ637kTWQuW29jqwY18jsHMyNC5A+TPJZKFEIE2cIfQWf3V7+mXrxlbX69BueYkv293/g70wuXuRw==",
+      "sha512": "Pe3EDp9oBjQ3c3fvZAJsw7XFLHECS3zn3P7MSqsJy3sFYR6jvTgxxnCFeePR1JHiWyZ3bm+RZAjchqVYk61adA==",
       "type": "package",
       "path": "fsharp.core/4.5.2",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "fsharp.core.4.5.2.nupkg.sha512",
         "fsharp.core.nuspec",
@@ -170,12 +169,11 @@
         "lib/netstandard1.6/ru/FSharp.Core.resources.dll",
         "lib/netstandard1.6/tr/FSharp.Core.resources.dll",
         "lib/netstandard1.6/zh-Hans/FSharp.Core.resources.dll",
-        "lib/netstandard1.6/zh-Hant/FSharp.Core.resources.dll",
-        "paket-installmodel.cache"
+        "lib/netstandard1.6/zh-Hant/FSharp.Core.resources.dll"
       ]
     },
     "FSharp.Data/3.3.2": {
-      "sha512": "+jagOGlhAXR78o0V+bR5SxvvScxt6nAVGuoWcr1x9BxQsQvQks8wY860N9Kxt1qviGx87eW7OEIgVg+UHX88kQ==",
+      "sha512": "ihSPA+EXkFxy+kbMurd8rA2pblh/Dmjpxe3JQ3vioTM+H9XhHYGm8ePxjbioPuK2LZWvigPyEzCzLloMOL5y8A==",
       "type": "package",
       "path": "fsharp.data/3.3.2",
       "files": [
@@ -203,7 +201,7 @@
       ]
     },
     "System.Configuration.ConfigurationManager/4.4.0": {
-      "sha512": "gWwQv/Ug1qWJmHCmN17nAbxJYmQBM/E94QxKLksvUiiKB1Ld3Sc/eK1lgmbSjDFxkQhVuayI/cGFZhpBSodLrg==",
+      "sha512": "RLYB3YOmdz9dE3zMhBFGv3GF74upGjH0nF0G9lFFRLNLsCEMIpiuQsMGv2qE0qdp1JdheVNO8RIRpUKdokiK+g==",
       "type": "package",
       "path": "system.configuration.configurationmanager/4.4.0",
       "files": [
@@ -224,7 +222,7 @@
       ]
     },
     "System.Security.Cryptography.ProtectedData/4.4.0": {
-      "sha512": "cJV7ScGW7EhatRsjehfvvYVBvtiSMKgN8bOVI0bQhnF5bU7vnHVIsH49Kva7i7GWaWYvmEzkYVk1TC+gZYBEog==",
+      "sha512": "WwEexvBd+17yfY7fcS+fBGl+HADEfCJuKeDJqBT7D6j6vKwYvfLyGuq2y/MmrKORC6mbYwth7kjinO1mPhTL3g==",
       "type": "package",
       "path": "system.security.cryptography.protecteddata/4.4.0",
       "files": [
@@ -273,23 +271,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/pedromonteiro/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "/home/josh/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+      "projectUniqueName": "/home/josh/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
       "projectName": "multi-agent-systems",
-      "projectPath": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
-      "packagesPath": "/Users/pedromonteiro/.nuget/packages/",
-      "outputPath": "/Users/pedromonteiro/Desktop/development /agent/multi-agent-systems/multi-agent-systems/obj/",
+      "projectPath": "/home/josh/multi-agent-systems/multi-agent-systems/multi-agent-systems.fsproj",
+      "packagesPath": "/home/josh/.nuget/packages/",
+      "outputPath": "/home/josh/multi-agent-systems/multi-agent-systems/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "/Users/pedromonteiro/.config/NuGet/NuGet.Config"
+        "/home/josh/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.0"
@@ -328,13 +322,7 @@
           "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
+        "warn": true
       }
     }
   }
