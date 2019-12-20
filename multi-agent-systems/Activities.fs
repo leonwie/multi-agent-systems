@@ -23,8 +23,8 @@ let makeFair (allAgents : Agent list) : Agent list =
     // Function for switching an agents activity
     let switchAgentActivity (agent : Agent) : Agent =
         match agent.TodaysActivity with // Half mood if swapped
-        | BUILDING, x -> {agent with TodaysActivity = HUNTING, x; Mood = agent.Mood / 2}
-        | HUNTING, x -> {agent with TodaysActivity = BUILDING, x; Mood = agent.Mood / 2}
+        | BUILDING, x -> {agent with TodaysActivity = HUNTING, x; }
+        | HUNTING, x -> {agent with TodaysActivity = BUILDING, x; }
         | NONE, _ -> agent
 
     // Functions for counting the number of each activity
@@ -78,7 +78,6 @@ let howMuchEnergyToExpend (agent : Agent) : Agent =
             | BUILDING, _ -> agent.BuildingAptitude
             | HUNTING, _ -> agent.HuntingAptitude
             | NONE, _ -> 0.0
-        |> (*) agent.Selflessness
         |> (*) (agent.Energy / 100.0)
     {agent with TodaysActivity = agent.TodaysActivity |> fst, energyExpend}
 

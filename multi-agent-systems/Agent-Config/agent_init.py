@@ -3,7 +3,7 @@ import os
 import shutil
 from agent import *
 
-TotalProfiles = [(Agent, 3), (HuntingAgent, 5)]
+TotalProfiles = [(Agent, 3), (Egotist, 5)]
 TotalNumAgent = sum([i[1] for i in TotalProfiles])
 
 # Reset agent definition directory

@@ -1,5 +1,5 @@
 {
-    "Profile": "HuntingAgent",
+    "Profile": "Egotist",
     "IDRange": [
         3,
         4,
@@ -7,24 +7,7 @@
         6,
         7
     ],
-    "Selflessness": 50.0,
-    "HuntingAptitude": 70.0,
-    "Political": 50.0,
-    "Mood": 50,
-    "Energy": 50.0,
-    "ActivityType": "NONE",
-    "ActivityNumber": 50.0,
-    "AccessToShelter": 50.0,
-    "BuildingAptitude": 50.0,
-    "Opinions": [
-        50.0,
-        50.0,
-        50.0,
-        50.0,
-        50.0,
-        50.0,
-        50.0,
-        50.0
-    ],
-    "Activity": "HUNTING"
+    "Susceptibility": 0.1,
+    "Idealism": 0.1,
+    "Egotism": 0.8
 }

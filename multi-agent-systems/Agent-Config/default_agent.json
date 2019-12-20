@@ -1,36 +1,7 @@
 {
-    "Profile": "Default",
-    "IDRange": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9
-    ],
-    "Selflessness": 50.01,
-    "HuntingAptitude": 50.01,
-    "Political": 50.01,
-    "Mood": 50,
-    "Energy": 50.01,
-    "ActivityType": "NONE",
-    "ActivityNumber": 50.0,
-    "AccessToShelter": 50.0,
-    "BuildingAptitude": 50.01,
-    "Opinions": [
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01,
-        50.01
-    ]
+  "Profile": "Agent",
+  "IDRange": [0, 1, 2],
+  "Susceptibility" : 0.5,
+  "Idealism" : 0.5,
+  "Egotism" : 0.5
 }

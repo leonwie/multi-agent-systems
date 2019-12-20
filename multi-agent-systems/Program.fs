@@ -11,12 +11,9 @@ open Config
 [<EntryPoint>]
 let main argv =
 
-    // Agent parsing
-    //let agents = Parsing.parse argv
-    let agents = 
-        [for i in 1..10 -> i]
-        |> List.map (fun el -> initialiseAgent "Default" el 0.5 0.5 0.5 0.5 0.5 0.5 List.empty<Agent> List.empty<Agent> 0.5 50.0 (NONE, 0.0) None List.empty<int * float> 0.5 0.5 1 0.5) 
-
+    // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
+    let agents = Parsing.parse argv
+    
     let currentWorld = {
         Buildings = List.Empty;
         TimeToNewChair = 5;

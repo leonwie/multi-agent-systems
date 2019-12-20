@@ -46,13 +46,11 @@ type Rule =
     | Sanction of Punishment
 
 type Agent = {
-    Profile : string;
     ID : int;
     Susceptibility : float;
     Idealism : float;
     Egotism : float;
-    ExplorationProbability : float;
-    AlternativeChoiceProbability : float;
+    
     Reward : float;
     Friends : Agent list;
     Enemies : Agent list;
@@ -60,15 +58,8 @@ type Agent = {
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
-    Opinions : (int * float) list;
-    //Food : float;
-    //HunterLevel : float;
-    //HunterExp : int;
-    //FavouriteFood : Fauna;
     BuildingAptitude : float;
     HuntingAptitude : float;
-    Mood : int;
-    Selflessness : float;
     }
 
 type Reward = float
