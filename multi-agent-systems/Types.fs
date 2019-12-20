@@ -5,7 +5,7 @@ type Activity =
     | HUNTING
     | BUILDING
 
-type Fauna = 
+type Fauna =
     | Rabbos
     | Staggi
 
@@ -44,15 +44,19 @@ type Rule =
     | Voting of VotingSystem
     | Work of WorkAllocation
     | Sanction of Punishment
-    
+
 type Agent = {
     Profile : string;
     ID : int;
-    Selflessness : float; 
-    BuildingAptitude : float;
-    HuntingAptitude : float;
-    PoliticalApathy : float;
-    Mood : int;
+    Susceptibility : float;
+    Idealism : float;
+    Egotism : float;
+    ExplorationProbability : float;
+    AlternativeChoiceProbability : float;
+    Reward : float;
+    Friends : Agent list;
+    Enemies : Agent list;
+    Infamy : float;
     Energy : float;
     TodaysActivity : Activity * float;
     AccessToShelter : float option;
@@ -61,10 +65,19 @@ type Agent = {
     //HunterLevel : float;
     //HunterExp : int;
     //FavouriteFood : Fauna;
+    BuildingAptitude : float;
+    HuntingAptitude : float;
+    Mood : int;
+    Selflessness : float;
     }
 
+type Reward = float
+type SocialGood = float
+
+type RuleSet = (Rule * Reward * SocialGood) list
+
+
 type WorldState = {
-    VotingType : VotingSystem;
     Buildings : float list;
     CurrentChair : Agent option;
     TimeToNewChair : int;
@@ -74,6 +87,10 @@ type WorldState = {
     CurrentWorkRule : WorkAllocation;
     CurrentMaxPunishment : Punishment;
     CurrentSactionStepSize : float;
+    CurrentDay : int;
+    NumHare : int;
+    NumStag : int;
+    //RuleSet : RuleSet;
     }
 
 type Shelter = {
@@ -81,3 +98,5 @@ type Shelter = {
 }
 
 type Proposal = Rule * Agent list
+
+

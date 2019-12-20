@@ -1,19 +1,18 @@
 module Duma
 
-// TO DO: 
+// TO DO:
 // ANDREI NEEDS TO IMPLEMENT THE DECISION MAKING STUFF
 
 
 open Types
-open WorldState
 open Voting
 
 // Placeholders for decision making
-let decisionMake1 (world : WorldState) (agents : Agent list) : Agent list = 
+let decisionMake1 (world : WorldState) (agents : Agent list) : Agent list =
     failwithf "PLACEHOLDER FOR CHAIR (currentWorld.CurrentChair) TO DECIDE WHO CAN PROPOSE RULE CHANGES"
 
 
-let decisionMake2 (agent : Agent) (world : WorldState) : (Rule option * Agent) list = 
+let decisionMake2 (agent : Agent) (world : WorldState) : (Rule option * Agent) list =
     // NOTE, KEEP A LIST EVEN IF THEY ONLY CHOOSE ONE PROPOSAL
     // RULE OPTION -> AGENT CAN EITHER PROPOSE A RULE OR NOT PROPOSE ANYTHING
     failwithf "PLACEHOLDER FOR DECIDING WHAT PROPOSITIONS (shelter, food, work, voting system, max sanction) TO PROPOSE"
@@ -24,7 +23,7 @@ let decisionMake3 (world : WorldState) (agent : Agent) : Agent list =
 
 
 let decisionMake4 (world : WorldState) (agent : Agent)
-    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option) 
+    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
     : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
     // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
     failwithf "PLACEHOLDER FOR DECIDING WHAT RULES THE AGENT WILL VOTE FOR"
@@ -78,13 +77,13 @@ let getPropositions (world : WorldState) (agents : Agent list)  =
         ) []
     // Turn from an (Agent * Rule list) list to an (Rule * Agent list) list (e.g. Proposal list)
     propositions
-    |> List.fold (fun (acc : Proposal list) el -> 
+    |> List.fold (fun (acc : Proposal list) el ->
         let rule = el |> fst
         if List.contains rule (List.map fst acc)
         then // This whole function can probably be implemented better...
             let index = List.findIndex (fun el -> el |> fst = rule) acc
-            List.mapi (fun i el1 -> 
-                if i = index 
+            List.mapi (fun i el1 ->
+                if i = index
                 then rule, (el1 |> snd) @ [el |> snd]
                 else el1) acc
         else acc @ [el |> fst, [el |> snd]]
@@ -97,7 +96,7 @@ let chairVote (world : WorldState) (agents : Agent list) : WorldState =
     then // Get the opinions of each agent and carry out a vote on the chairman
         let newChair =
            agents
-           |> List.map (decisionMake3 world) 
+           |> List.map (decisionMake3 world)
            |> match world.CurrentVotingRule with
                | Borda -> bordaVote
                | Approval -> approvalVote
@@ -111,18 +110,18 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
     // Get the rules to vote on
     let rulesToVoteOn =
         proposals
-        |> List.fold (fun (acc : ShelterRule list * WorkAllocation list * FoodRule list * VotingSystem list * Punishment list) el -> 
+        |> List.fold (fun (acc : ShelterRule list * WorkAllocation list * FoodRule list * VotingSystem list * Punishment list) el ->
             let acc1, acc2, acc3, acc4, acc5 = acc
             match el |> fst with
-            | Shelter(x) -> 
+            | Shelter(x) ->
                 acc1 @ [x], acc2, acc3, acc4, acc5
-            | Work(x) -> 
+            | Work(x) ->
                 acc1, acc2 @ [x], acc3, acc4, acc5
-            | Food(x) -> 
+            | Food(x) ->
                 acc1, acc2, acc3 @ [x], acc4, acc5
-            | Voting(x) -> 
+            | Voting(x) ->
                 acc1, acc2, acc3, acc4 @ [x], acc5
-            | Sanction(x) -> 
+            | Sanction(x) ->
                 acc1, acc2, acc3, acc4, acc5 @ [x]
         ) ([], [], [], [], []) // Some of these might be empty so need to make option later
     // Get the agent votes
@@ -135,22 +134,22 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
         // Since some lists will be None, we need a way of ignoring those lists when they are concatinated
         let removeNone (list : 'a list option list) : 'a list list option =
             match list with
-            | x when List.contains None x -> None 
+            | x when List.contains None x -> None
             | x -> List.map (
-                    fun el -> 
+                    fun el ->
                         match el with
                         | Some(y) -> y
                         | None -> failwithf "This shouldn't happen since the List should either be all None (already dealt with) or all Some"
                     ) x |> Some
         agents
-        |> List.map (fun agent -> 
+        |> List.map (fun agent ->
             rulesToVoteOn
-            |> fun (a, b, c, d, e) -> 
+            |> fun (a, b, c, d, e) ->
                 // Get rid of empty lists by setting them to None so decision making ahs an easier time
-                optionMake a, 
-                optionMake b, 
-                optionMake c, 
-                optionMake d, 
+                optionMake a,
+                optionMake b,
+                optionMake c,
+                optionMake d,
                 optionMake e
             |> decisionMake4 world agent)
         |> List.fold (fun acc el ->
@@ -162,7 +161,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
             acc4 @ [el4],
             acc5 @ [el5]
         ) ([], [], [], [], [])
-        |> fun (a, b, c, d, e) -> 
+        |> fun (a, b, c, d, e) ->
             // Make a 'list option list' into a 'list list option'
             removeNone a,
             removeNone b,
@@ -173,30 +172,30 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
     // Apply current voting system to each of the voting options
     let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
         match world.VotingType with
-        | Borda -> 
+        | Borda ->
             bordaVote candidates
-        | Approval -> 
+        | Approval ->
             approvalVote candidates
-        | Plurality -> 
+        | Plurality ->
             pluralityVote candidates
-        | InstantRunoff -> 
+        | InstantRunoff ->
             instantRunoffVote allCandidates candidates
     // Vote can result in an option type if there is nothing to vote for, in that case we ignore it
     let vote (votingSystem) (allCandidates : 'a list) (candidates : 'a list list option) =
         match candidates with
-        | Some(x) -> 
-            votingSystem allCandidates x 
+        | Some(x) ->
+            votingSystem allCandidates x
             |> Some
         | None -> None
     // Get the ballots
     let shelterVotes, workVotes, foodVotes, votingVotes, sanctionVotes = agentVotes
     // Calculate winner based on votes and return as a tuple
-    vote votingSystem allShelterRules shelterVotes, 
-    vote votingSystem allWorkRules workVotes, 
-    vote votingSystem allFoodRules foodVotes, 
+    vote votingSystem allShelterRules shelterVotes,
+    vote votingSystem allWorkRules workVotes,
+    vote votingSystem allFoodRules foodVotes,
     vote votingSystem allVotingSystems votingVotes,
     vote votingSystem allSanctionVotes sanctionVotes
-        
+
 
 let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule option * WorkAllocation option * FoodRule option * VotingSystem option * Punishment option) : WorldState =
     // Implement the new rules
@@ -209,26 +208,26 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     // Get all new stuff except max sanctions
     let newWorld = {
         world with
-            CurrentShelterRule = 
+            CurrentShelterRule =
                 applyOptionRule newShelterRule world.CurrentShelterRule;
-            CurrentWorkRule = 
+            CurrentWorkRule =
                 applyOptionRule newWorkRule world.CurrentWorkRule;
-            CurrentFoodRule = 
+            CurrentFoodRule =
                 applyOptionRule newFoodRule world.CurrentFoodRule;
-            CurrentVotingRule = 
+            CurrentVotingRule =
                 applyOptionRule newVotingSystem world.CurrentVotingRule;
         }
-    // Punishment can be either incr or decr or changing max punishment   
+    // Punishment can be either incr or decr or changing max punishment
     match newSanction with
-    | x when x = Some(Increment) -> 
-        {newWorld with 
+    | x when x = Some(Increment) ->
+        {newWorld with
             CurrentSactionStepSize = newWorld.CurrentSactionStepSize + 0.1}
-    | x when x = Some(Decrement) -> 
-        {newWorld with 
+    | x when x = Some(Decrement) ->
+        {newWorld with
             CurrentSactionStepSize = newWorld.CurrentSactionStepSize - 0.1}
     | _ -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
-        {newWorld with 
-            CurrentMaxPunishment = 
+        {newWorld with
+            CurrentMaxPunishment =
                 applyOptionRule newSanction world.CurrentMaxPunishment
         }
 

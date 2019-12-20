@@ -1,4 +1,4 @@
-﻿module multi_agent_systems.Parsing
+﻿module Parsing
 
 open Argu
 open FSharp.Data
@@ -46,6 +46,7 @@ let parseAgents (numberProfiles : int) : Agent list=
     let jsonSuffix : string = ".json" 
     let fileNames =  [0..numberProfiles-1] |> List.map string |> List.map (fun key -> path + key + jsonSuffix)
     List.concat (List.map(fun file -> parseProfile file) fileNames)
+
 
 let parse (argv : string[]) : Agent list =
     let parser = ArgumentParser.Create<CLIArguments>(programName = "simulation.exe")

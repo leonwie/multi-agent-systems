@@ -99,4 +99,3 @@ let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
 
     runoff votes allCandidates
 
-
