@@ -112,19 +112,18 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
     let rulesToVoteOn =
         proposals
         |> List.fold (fun (acc : ShelterRule list * WorkAllocation list * FoodRule list * VotingSystem list * Punishment list) el -> 
-            let a, b, c, d, e = 
-                (fun (a, b, c, d, e) -> a, b, c, d, e) acc
+            let acc1, acc2, acc3, acc4, acc5 = acc
             match el |> fst with
             | Shelter(x) -> 
-                a @ [x], b, c, d, e
+                acc1 @ [x], acc2, acc3, acc4, acc5
             | Work(x) -> 
-                a, b @ [x], c, d, e
+                acc1, acc2 @ [x], acc3, acc4, acc5
             | Food(x) -> 
-                a, b, c @ [x], d, e
+                acc1, acc2, acc3 @ [x], acc4, acc5
             | Voting(x) -> 
-                a, b, c, d @ [x], e
+                acc1, acc2, acc3, acc4 @ [x], acc5
             | Sanction(x) -> 
-                a, b, c, d, e @ [x]
+                acc1, acc2, acc3, acc4, acc5 @ [x]
         ) ([], [], [], [], []) // Some of these might be empty so need to make option later
     // Get the agent votes
     let agentVotes =
@@ -155,15 +154,13 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
                 optionMake e
             |> decisionMake4 world agent)
         |> List.fold (fun acc el ->
-            let acc1, acc2, acc3, acc4, acc5 = 
-                (fun (a, b, c, d, e) -> a, b, c, d, e) acc
-            let el1, el2, el3, el4, el5 = 
-                (fun (a, b, c, d, e) -> [a], [b], [c], [d], [e]) el
-            acc1 @ el1,
-            acc2 @ el2,
-            acc3 @ el3,
-            acc4 @ el4,
-            acc5 @ el5
+            let acc1, acc2, acc3, acc4, acc5 = acc
+            let el1, el2, el3, el4, el5 = el
+            acc1 @ [el1],
+            acc2 @ [el2],
+            acc3 @ [el3],
+            acc4 @ [el4],
+            acc5 @ [el5]
         ) ([], [], [], [], [])
         |> fun (a, b, c, d, e) -> 
             // Make a list option list into a list list option
@@ -203,9 +200,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
 
 let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule option * WorkAllocation option * FoodRule option * VotingSystem option * Punishment option) : WorldState =
     // Implement the new rules
-    let newShelterRule, newWorkRule, newFoodRule, newVotingSystem, newSanction = 
-        rulesToImplement
-        |> fun (a, b, c, d, e) -> a, b, c, d, e
+    let newShelterRule, newWorkRule, newFoodRule, newVotingSystem, newSanction = rulesToImplement
     // If rule is None due to no vote on it, set it to the old rule
     let applyOptionRule (newRule : 'a option) (oldRule : 'a) : 'a =
         match newRule with
@@ -226,9 +221,11 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     // Punishment can be either incr or decr or changing max punishment   
     match newSanction with
     | x when x = Some(Increment) -> 
-        {newWorld with CurrentSactionStepSize = newWorld.CurrentSactionStepSize + 0.1}
+        {newWorld with 
+            CurrentSactionStepSize = newWorld.CurrentSactionStepSize + 0.1}
     | x when x = Some(Decrement) -> 
-        {newWorld with CurrentSactionStepSize = newWorld.CurrentSactionStepSize - 0.1}
+        {newWorld with 
+            CurrentSactionStepSize = newWorld.CurrentSactionStepSize - 0.1}
     | _ -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
         {newWorld with 
             CurrentMaxPunishment = 
