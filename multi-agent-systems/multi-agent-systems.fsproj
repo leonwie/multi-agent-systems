@@ -12,6 +12,7 @@
     <Compile Include="Voting.fs" />
     <Compile Include="Agent.fs" />
     <Compile Include="Parsing.fs" />
+    <Compile Include="Decision.fs" />
     <Compile Include="Activities.fs" />
     <Compile Include="Hunt.fs" />
     <Compile Include="Build.fs" />
@@ -21,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.0.0" />
+    <PackageReference Include="Extreme.Numerics" Version="7.0.10" />
     <PackageReference Include="FSharp.Data" Version="3.3.2" />
   </ItemGroup>
 
