@@ -45,28 +45,34 @@ type Rule =
     | Work of WorkAllocation
     | Sanction of Punishment
 
-type Agent = {
-    ID : int;
-    Susceptibility : float;
-    Idealism : float;
-    Egotism : float;
-    
-    Reward : float;
-    Friends : Agent list;
-    Enemies : Agent list;
-    Infamy : float;
-    Energy : float;
-    TodaysActivity : Activity * float;
-    AccessToShelter : float option;
-    BuildingAptitude : float;
-    HuntingAptitude : float;
+type Opinions =
+    {
+        RuleOpinion : float list;
+        OtherAgentsOpinion : (Agent * float) list;             // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        Friends : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        Enemies : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
+    }
+and Agent =
+    {
+        ID : int;
+        Susceptibility : float;
+        Idealism : float;
+        Egotism : float;
+
+        Reward : float;
+        Infamy : float;
+        Energy : float;
+        TodaysActivity : Activity * float;
+        AccessToShelter : float option;
+        BuildingAptitude : float;
+        HuntingAptitude : float;
+        DecisionOpinions : Opinions option;
     }
 
 type Reward = float
 type SocialGood = float
 
 type RuleSet = (Rule * Reward * SocialGood) list
-
 
 type WorldState = {
     Buildings : float list;
@@ -84,9 +90,10 @@ type WorldState = {
     //RuleSet : RuleSet;
     }
 
-type Shelter = {
-    Quality : float
-}
+type Shelter =
+   {
+        Quality : float
+   }
 
 type Proposal = Rule * Agent list
 

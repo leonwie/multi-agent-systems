@@ -10,7 +10,6 @@ open Config
 
 [<EntryPoint>]
 let main argv =
-
     // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
     let agents = Parsing.parse argv
     
@@ -86,8 +85,8 @@ let main argv =
                                     NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
             // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
-            printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
-            printfn "Current world status: %A" currentWorld
+            //printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
+            //printfn "Current world status: %A" currentWorld
             loop currentWorld agentsWithNewEnergy
 
     
@@ -96,6 +95,7 @@ let main argv =
     printfn "Final world status: %A" finalWorld;
     
     0
+
 
 //open multi_agent_systems
 

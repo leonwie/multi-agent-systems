@@ -29,19 +29,18 @@ type AgentRead = JsonProvider<"Agent-Config/default_agent.json">
 let parseOpinions (opinions : decimal[]) : (int * float) list =
     [0..opinions.Length - 1] |> List.map (fun key -> (key, (float)opinions.[key]))
 
-let parseProfile (fileName : string) : Agent list =
+let private parseProfile (fileName : string) : Agent list =
     //let file = File.ReadAllLines("../../../Agent-Config/default_agent.json") |> String.concat " "
     let file = File.ReadAllLines(fileName) |> String.concat " "
     let agentParsed = AgentRead.Parse(file)
     let initialiseAgentHere number = initialiseAgent number ((float)agentParsed.Susceptibility) ((float)agentParsed.Egotism) ((float)agentParsed.Idealism)
-    
     List.map(fun number -> initialiseAgentHere number) (Array.toList agentParsed.IdRange)
  
-let parseAgents (numberProfiles : int) : Agent list=
+let private parseAgents (numberProfiles : int) : Agent list =
     let path : string = "../../../Agent-Config/agent_dir/profile"
     let jsonSuffix : string = ".json" 
     let fileNames =  [0..numberProfiles-1] |> List.map string |> List.map (fun key -> path + key + jsonSuffix)
-    List.concat (List.map(fun file -> parseProfile file) fileNames)
+    initialiseAgentDecisions (List.concat (List.map(fun file -> parseProfile file) fileNames))
 
 
 let parse (argv : string[]) : Agent list =

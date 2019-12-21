@@ -2,7 +2,7 @@
 
 // This is the config, its the place where you canhnge the values for stuff
 
-let numAgents = 16
+let numAgents = 8
 
 
 let shelterEnergySavings = 0.5
