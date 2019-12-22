@@ -67,6 +67,7 @@ and Agent =
         BuildingAptitude : float;
         HuntingAptitude : float;
         DecisionOpinions : Opinions option;
+        SelfConfidence : float;
     }
 
 type Reward = float

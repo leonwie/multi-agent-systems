@@ -38,7 +38,8 @@ let maxSimulationTurn = -1 // Negative value corresponds to infinity
 let maxNumStag = 30
 let maxNumHare = 30
 
-
+let vetoThreshold = 0.5
+let nominationThreshold = 0.5
 
 // New Spec
 let ExplorationDecay = 0.5

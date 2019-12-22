@@ -33,16 +33,17 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Infamy = 0.0;
         Energy = 100.0;
         TodaysActivity = Activity.NONE, 0.0;
-        AccessToShelter = Some 1.0;
+        AccessToShelter = None;
         BuildingAptitude = 0.0;
         HuntingAptitude = 0.0;
         DecisionOpinions = None;
+        SelfConfidence = 0.5;
     }
 
 // Private function to create the opinion type with only one way friends/enemies
 let private createOpinions (opinions : (Agent * float) list) : Opinions =
     {
-        RuleOpinion = generateRandom 5
+        RuleOpinion = generateRandom 19 // Changed this so that each individual rule has an opinion tied to it rather than just the category
         OtherAgentsOpinion = opinions
         Friends = List.filter (fun (_, op) -> op > 0.5) opinions |> List.map fst
         Enemies = List.filter (fun (_, op) -> op < 0.1) opinions |> List.map fst

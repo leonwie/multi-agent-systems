@@ -1,32 +1,9 @@
 module Duma
 
-// TO DO:
-// ANDREI NEEDS TO IMPLEMENT THE DECISION MAKING STUFF
-
-
 open Types
 open Voting
+open Config
 
-// Placeholders for decision making
-let decisionMake1 (world : WorldState) (agents : Agent list) : Agent list =
-    failwithf "PLACEHOLDER FOR CHAIR (currentWorld.CurrentChair) TO DECIDE WHO CAN PROPOSE RULE CHANGES"
-
-
-let decisionMake2 (agent : Agent) (world : WorldState) : (Rule option * Agent) list =
-    // NOTE, KEEP A LIST EVEN IF THEY ONLY CHOOSE ONE PROPOSAL
-    // RULE OPTION -> AGENT CAN EITHER PROPOSE A RULE OR NOT PROPOSE ANYTHING
-    failwithf "PLACEHOLDER FOR DECIDING WHAT PROPOSITIONS (shelter, food, work, voting system, max sanction) TO PROPOSE"
-
-
-let decisionMake3 (world : WorldState) (agent : Agent) : Agent list =
-    failwithf "PLACEHOLDER FOR DESCIDING ON NEW CHAIRMAN"
-
-
-let decisionMake4 (world : WorldState) (agent : Agent)
-    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
-    : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
-    // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
-    failwithf "PLACEHOLDER FOR DECIDING WHAT RULES THE AGENT WILL VOTE FOR"
 
 // Need all possible rules in a list for instant runoff
 let allShelterRules : ShelterRule list = [
@@ -64,12 +41,164 @@ let allSanctionVotes : Punishment list = [
 ]
 
 
+let getTotalSocialGood (world : WorldState) : float =
+    0.5 // PLACEHOLDER TILL WE HAVE TOTAL SOCIAL GOOD
+    
+
+// SInce opinions on rules is a 19 element array of floats
+let ruleToIndex (rule : Rule) : int =
+    match rule with
+    | Shelter(x) -> 
+        match x with | Random -> 0 | Socialism -> 1 | Meritocracy -> 2 | Oligarchy -> 3
+    | Work(x) ->
+        match x with | Everyone -> 4 | Strongest -> 5 | ByChoice -> 6
+    | Food(x) ->
+        match x with | Communism -> 7 | FoodRule.Socialism -> 8 | FoodRule.Meritocracy -> 9 | FoodRule.Oligarchy -> 10
+    | Voting(x) ->
+        match x with | InstantRunoff -> 11 | Approval -> 12 | Borda -> 13 | Plurality -> 14
+    | Sanction(x) ->
+        match x with | NoFoodAndShelter -> 15 | Exile-> 16 | Increment -> 17 | Decrement -> 18
+
+// Placeholders for decision making
+let chairDecision (world : WorldState) (proposals : (Rule option * Agent) list) : (Rule option * Agent) list =
+    let ruleOpinionDifference (newRule : Rule) (world : WorldState) (chair : Agent) : float =
+        // Get the opinion of the new rule
+        let newRuleOpinion = 
+            ruleToIndex newRule
+        // Get the opinion of the old rule
+        let oldRuleOpinion =
+            match newRule with
+            | Shelter(_) -> 
+                Shelter(world.CurrentShelterRule) |> ruleToIndex
+            | Food(_) -> 
+                Food(world.CurrentFoodRule) |> ruleToIndex
+            | Voting(_) -> 
+                Voting(world.CurrentVotingRule) |> ruleToIndex
+            | Work(_) -> 
+                Work(world.CurrentWorkRule) |> ruleToIndex
+            | Sanction(_) -> 
+                Sanction(world.CurrentMaxPunishment) |> ruleToIndex
+        match chair.DecisionOpinions with
+            | Some(opinions) -> 
+                // Subtract them
+                opinions.RuleOpinion.[oldRuleOpinion] - opinions.RuleOpinion.[newRuleOpinion]
+            | None -> failwithf "Should have opinions."
+    proposals
+    |> List.map (fun proposal ->
+        match world.CurrentChair with
+        | Some(chair) -> 
+            match chair.DecisionOpinions with
+            | Some(opinions) -> 
+                let agentOpinion =
+                    List.find (fun agent -> (agent |> fst) = (proposal |> snd)) opinions.OtherAgentsOpinion
+                    |> snd // Returns the opinion of the agent from the chairs perspective
+                match proposal |> fst with
+                | Some(rule) ->  
+                    let bt =
+                        1.0 - agentOpinion * chair.Susceptibility - (ruleOpinionDifference rule world chair) * chair.SelfConfidence
+                    // Set to none (veto, removes from list) if the difference is greater than the threshold
+                    if bt > vetoThreshold
+                    then None, (proposal |> snd)
+                    else proposal
+                | None -> None, (proposal |> snd)
+            | None -> failwithf "Should have opinions."
+        | None -> failwithf "Need there to be a chair."
+    )
+    
+
+let agentNominatesSelf (world : WorldState) (agent : Agent) : bool =
+    let totalSocialGood = getTotalSocialGood world 
+    let ni = 
+        (agent.Egotism + agent.Idealism / totalSocialGood) * agent.SelfConfidence
+    ni > nominationThreshold // Will nominate self if ni > nT
+
+
+let voteOnChairCandidates (agent : Agent) (allCandidates : Agent list) : Agent list =
+    match agent.DecisionOpinions with
+        | Some(opinions) -> opinions.OtherAgentsOpinion
+        | None -> failwithf "Should have opinions of other agents"
+    |> List.sortBy snd // sort list by size of opinion
+    |> List.rev // Get largest to smallest
+    |> List.filter (fun el -> List.contains (el |> fst) allCandidates) // filter by elements only in both lists
+    |> List.map fst // map agent * float to agent
+
+
+let makeProposals (agent : Agent) (world : WorldState) : (Rule option * Agent) list =
+    // NOTE, KEEP A LIST EVEN IF THEY ONLY CHOOSE ONE PROPOSAL
+    // RULE OPTION -> AGENT CAN EITHER PROPOSE A RULE OR NOT PROPOSE ANYTHING
+    // Agent makes proposal if current rule is their least favourite rule
+    // There is a much better way of doing this if we redefine how stuff works, but I can't be arsed to do that at this point
+    let agentOpinions =
+        match agent.DecisionOpinions with
+        | Some(opinions) -> opinions.RuleOpinion
+        | None -> failwithf "Agent should have opinions."
+    let curShelterMin = 
+        let m = List.min agentOpinions.[0..3]
+        agentOpinions.[Shelter(world.CurrentShelterRule) |> ruleToIndex] <= m, m
+    let curFoodMin =
+        let m = List.min agentOpinions.[4..7]
+        agentOpinions.[Food(world.CurrentFoodRule) |> ruleToIndex] <= m, m
+    let curVoteMin =
+        let m = List.min agentOpinions.[8..11]
+        agentOpinions.[Voting(world.CurrentVotingRule) |> ruleToIndex] <= m, m
+    let curSanctionMin =
+        let m = List.min agentOpinions.[12..15]
+        agentOpinions.[Sanction(world.CurrentMaxPunishment) |> ruleToIndex] <= m, m
+    let curWorkMin =
+        let m = List.min agentOpinions.[16..18]
+        agentOpinions.[Work(world.CurrentWorkRule) |> ruleToIndex] <= m, m
+    let favRules = 
+        let maxIndex (list : 'a list) : int =
+            List.findIndex (fun el -> el = List.max list) list
+        [ // List of rules with (highest opinion float * highest opinion rule)
+            List.max agentOpinions.[0..3], Shelter(allShelterRules.[maxIndex agentOpinions.[0..3]]); // Fav shelter rule
+            List.max agentOpinions.[4..7], Food(allFoodRules.[maxIndex agentOpinions.[4..7] - 4]); // Fav food rule
+            List.max agentOpinions.[8..11], Voting(allVotingSystems.[maxIndex agentOpinions.[8..11] - 8]); // Fav voting system
+            List.max agentOpinions.[12..15], Sanction(allSanctionVotes.[maxIndex agentOpinions.[12..15] - 12]); // Fav sanction
+            List.max agentOpinions.[16..18], Work(allWorkRules.[maxIndex agentOpinions.[16..18] - 16]); // Fav work rule
+        ]
+    let isLeastFavRule = 
+        [curShelterMin; curFoodMin; curVoteMin; curSanctionMin; curWorkMin] // Get list corresponding to whether current rule is least favourite or not
+    let differences = 
+        isLeastFavRule    
+        |> List.mapi (fun i el -> 
+            if el |> fst // = true
+            then Some((favRules.[i] |> fst) - (isLeastFavRule.[i] |> snd), favRules.[i] |> snd) // Float containing the max difference
+            else None)
+    match differences with
+    | [] -> [None, agent] // No new proposal
+    | list -> 
+        match list with 
+        | [h] -> 
+            match h with // One element in list so return that
+            | None -> [None, agent] 
+            | Some(x) -> [Some(x |> snd), agent]
+        | _ -> // more than one element in list
+            let proposal = 
+                list
+                |> List.map (fun el -> 
+                    match el with // Get rid of None values
+                    | Some(x) -> x // Forgot how to map Some(x) to x even if you know there is no None
+                    | None -> (-999.9, Shelter(Random))) // Shouldn't ever happen
+                |> List.filter (fun el -> el <> (-999.9, Shelter(Random)))
+                |> List.maxBy fst // Get one with the biggest difference
+                |> snd
+            [(Some(proposal), agent)]
+
+
+let decisionMake4 (world : WorldState) (agent : Agent)
+    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
+    : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
+    // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
+    failwithf "PLACEHOLDER FOR DECIDING WHAT RULES THE AGENT WILL VOTE FOR"
+
+
 let getPropositions (world : WorldState) (agents : Agent list)  =
     // Get all the agents and the proposals they want to make, filter those allowed to make proposals
     let propositions =
         agents
-        |> decisionMake1 world // Chair decides which agents can vote
-        |> List.collect (fun el -> decisionMake2 el world)
+        |> List.collect (fun el -> makeProposals el world)
+        |> chairDecision world // Chair decides which agents can vote
         |> List.fold (fun acc el ->
             match el with // Filter out None types so that only the new rule propositions remain
             | Some(x), l -> acc @ [x, l]
@@ -94,10 +223,13 @@ let chairVote (world : WorldState) (agents : Agent list) : WorldState =
     // Vote on the new chair person
     if world.TimeToNewChair = 0 // Only change chaiman if necessary
     then // Get the opinions of each agent and carry out a vote on the chairman
+        let candidates = 
+            agents // Does an agent nominate itself
+            |> List.filter (fun agent -> agentNominatesSelf world agent)
         let newChair =
-           agents
-           |> List.map (decisionMake3 world)
-           |> match world.CurrentVotingRule with
+            agents
+            |> List.map (fun agent -> voteOnChairCandidates agent candidates)
+            |> match world.CurrentVotingRule with
                | Borda -> bordaVote
                | Approval -> approvalVote
                | InstantRunoff -> instantRunoffVote agents
@@ -145,7 +277,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
         |> List.map (fun agent ->
             rulesToVoteOn
             |> fun (a, b, c, d, e) ->
-                // Get rid of empty lists by setting them to None so decision making ahs an easier time
+                // Get rid of empty lists by setting them to None so decision making has an easier time
                 optionMake a,
                 optionMake b,
                 optionMake c,
