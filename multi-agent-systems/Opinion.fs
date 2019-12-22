@@ -1,13 +1,6 @@
 ﻿module multi_agent_systems.Opinion
-open Agent
 open Config
 open Types
-
-let rec private lookUpInTuple tupleList toFind =
-    match tupleList with
-    | [] -> None
-    | (x, y) :: _ when x.ID = toFind -> Some y
-    | _ :: tail -> lookUpInTuple tail toFind
 
 let rec private lookForAgentByID (agentList : Agent list) (id : int) : Agent option =
     match agentList with
@@ -26,30 +19,32 @@ let private median list =
 // Calculated g_i aka g_agent where i = agent.ID
 let g (agent : Agent) : float = max (1.0 - 1.2 * agent.Susceptibility) 0.0
 
-// Returns agent with modified agent RuleOpinion = G * X(0) + (I - G) * A * X(t)
 let private updateRuleOpinionPerAgent (agents : Agent list) (agent : Agent) : Agent =
     // g * X(0)
     let initialRuleOpinion = g agent * agent.DecisionOpinions.Value.InitialRuleOpinion.[agent.ID]
-    let ruleOpinion = agent.DecisionOpinions.Value.RuleOpinion
+    let ruleOpinion = agent.DecisionOpinions.Value.CurrentRulesOpinion
     let otherOpinion index = List.map snd (lookForAgentByID agents index).Value.DecisionOpinions.Value.OtherAgentsOpinion    
     // (1 - g) * a[row] * X(t)
     let oneRuleChange row = initialRuleOpinion + List.sum (List.map (fun index ->
         (1.0 - g agent) * ruleOpinion.[index] * (otherOpinion row).[index]) [0..numberOfRules - 1])
     let updatedRuleOpinion = List.map (fun row -> oneRuleChange row) [0..numAgents - 1]
-    let updatedDecision = {agent.DecisionOpinions.Value with RuleOpinion = updatedRuleOpinion}
+    let updatedDecision = {agent.DecisionOpinions.Value with CurrentRulesOpinion = updatedRuleOpinion}
     {agent with DecisionOpinions = Some updatedDecision}
 
 let private updateReward (agent : Agent) : Agent =
     let newReward = (float)agent.Gain - agent.EnergyConsumed
     {agent with Reward = newReward}
-        
+
+// Returns agents with modified agent RuleOpinion = G * X(0) + (I - G) * A * X(t)        
 let updateRuleOpinion (agents : Agent list) : Agent list =
     let applyFunction agent = updateRuleOpinionPerAgent agents agent
     List.map applyFunction agents
-    
+
+// reward_i=gain_i-energyConsumed_i    
 let calculateUpdatedRewards (agents : Agent list) : Agent list =
     List.map updateReward agents
-    
+
+// socialGood= MedianOf(reward_i-energyDepreciation_i)    
 let calculateGlobalSocialGood (agents : Agent list) (state : WorldState) : WorldState =
     let rewEnergyDepDiff = List.map (fun agent -> agent.Reward - agent.EnergyDeprecation) agents
     {state with GlobalSocialGood = median rewEnergyDepDiff}

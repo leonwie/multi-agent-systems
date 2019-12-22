@@ -45,6 +45,15 @@ type Rule =
     | Work of WorkAllocation
     | Sanction of Punishment
 
+// I assummed in some places that the rules have an index
+// e.g. CurrentRulesOpinion - the first element in list is for SHELTER, second FOOD etc
+type RuleTypes =
+    | SHELTER = 1
+    | FOOD = 2
+    | WORK = 3
+    | VOTING = 4
+    | SANCTION = 5
+
 type Reward = float
 type SocialGood = float
 
@@ -52,9 +61,10 @@ type RuleSet = (Rule * Reward * SocialGood) list
 
 type Opinions =
     {
-        RewardPerRule : Reward list;                          // changes after each day/time slice = X(t)
-        RuleOpinion : float list;                             // changes after each day/time slice = X(t)
+        CurrentRewardPerRule : Reward list;                   // changes after each day/time slice = X(t)
+        CurrentRulesOpinion : float list;                     // changes after each day/time slice = X(t)
         InitialRuleOpinion : float list;                      // does not change after initialisation = X(0)
+        PastRulesOpinion : (RuleTypes * Rule * float) list;   // changes every time an opinion changes - put here the old ones
         OtherAgentsOpinion : (Agent * float) list;            // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Friends : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Enemies : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None

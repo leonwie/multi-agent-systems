@@ -13,7 +13,9 @@ let main argv =
     // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
     let agents = Parsing.parse argv
     
+    // WARNING: Order matters
     let initialiseRuleSet = [(Shelter(Random), 0.5, 0.5); (Food(Communism), 0.5, 0.5); (Work(Everyone), 0.5, 0.5); (Voting(Borda), 0.5, 0.5); (Sanction(Exile), 0.5, 0.5)]
+    
     let currentWorld =
         {
             Buildings = List.Empty;
@@ -90,8 +92,8 @@ let main argv =
                                     NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
             // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
-            //printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
-            //printfn "Current world status: %A" currentWorld
+            printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
+            printfn "Current world status: %A" currentWorld
             loop currentWorld agentsWithNewEnergy
 
     
