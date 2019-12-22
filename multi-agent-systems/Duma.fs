@@ -59,6 +59,17 @@ let ruleToIndex (rule : Rule) : int =
     | Sanction(x) ->
         match x with | NoFoodAndShelter -> 15 | Exile-> 16 | Increment -> 17 | Decrement -> 18
 
+
+// Why did I implement it like this, this was a huge mistake but I don't have time to make this actually nice...
+let indexToRule (index : int) : Rule =
+    match index with
+    | 0 -> Shelter(Random) | 1 -> Shelter(Socialism) | 2 -> Shelter(Meritocracy) | 3 -> Shelter(Oligarchy)
+    | 4 -> Work(Everyone) | 5 -> Work(Strongest) | 6 -> Work(ByChoice)
+    | 7 -> Food(Communism) | 8 -> Food(FoodRule.Socialism) | 9 -> Food(FoodRule.Meritocracy) | 10 -> Food(FoodRule.Oligarchy)
+    | 11 -> Voting(InstantRunoff) | 12 -> Voting(Approval) | 13 -> Voting(Borda) | 14 -> Voting(Plurality)
+    | 15 -> Sanction(NoFoodAndShelter) | 16 -> Sanction(Exile) | 17 -> Sanction(Increment) | 18 -> Sanction(Decrement)
+    | _ -> failwith "This is greater than the number of possible opinions"
+
 // Placeholders for decision making
 let chairDecision (world : WorldState) (proposals : (Rule option * Agent) list) : (Rule option * Agent) list =
     let ruleOpinionDifference (newRule : Rule) (world : WorldState) (chair : Agent) : float =
@@ -120,7 +131,7 @@ let voteOnChairCandidates (agent : Agent) (allCandidates : Agent list) : Agent l
     |> List.sortBy snd // sort list by size of opinion
     |> List.rev // Get largest to smallest
     |> List.filter (fun el -> List.contains (el |> fst) allCandidates) // filter by elements only in both lists
-    |> List.map fst // map agent * float to agent
+    |> List.map fst // map agent * float to agent    
 
 
 let makeProposals (agent : Agent) (world : WorldState) : (Rule option * Agent) list =
@@ -136,26 +147,26 @@ let makeProposals (agent : Agent) (world : WorldState) : (Rule option * Agent) l
         let m = List.min agentOpinions.[0..3]
         agentOpinions.[Shelter(world.CurrentShelterRule) |> ruleToIndex] <= m, m
     let curFoodMin =
-        let m = List.min agentOpinions.[4..7]
-        agentOpinions.[Food(world.CurrentFoodRule) |> ruleToIndex] <= m, m
-    let curVoteMin =
-        let m = List.min agentOpinions.[8..11]
-        agentOpinions.[Voting(world.CurrentVotingRule) |> ruleToIndex] <= m, m
-    let curSanctionMin =
-        let m = List.min agentOpinions.[12..15]
-        agentOpinions.[Sanction(world.CurrentMaxPunishment) |> ruleToIndex] <= m, m
-    let curWorkMin =
-        let m = List.min agentOpinions.[16..18]
+        let m = List.min agentOpinions.[4..6]
         agentOpinions.[Work(world.CurrentWorkRule) |> ruleToIndex] <= m, m
+    let curVoteMin =
+        let m = List.min agentOpinions.[7..10]
+        agentOpinions.[Food(world.CurrentFoodRule) |> ruleToIndex] <= m, m
+    let curSanctionMin =
+        let m = List.min agentOpinions.[11..14]
+        agentOpinions.[Voting(world.CurrentVotingRule) |> ruleToIndex] <= m, m
+    let curWorkMin =
+        let m = List.min agentOpinions.[15..18]
+        agentOpinions.[Sanction(world.CurrentMaxPunishment) |> ruleToIndex] <= m, m
     let favRules = 
         let maxIndex (list : 'a list) : int =
             List.findIndex (fun el -> el = List.max list) list
         [ // List of rules with (highest opinion float * highest opinion rule)
             List.max agentOpinions.[0..3], Shelter(allShelterRules.[maxIndex agentOpinions.[0..3]]); // Fav shelter rule
-            List.max agentOpinions.[4..7], Food(allFoodRules.[maxIndex agentOpinions.[4..7] - 4]); // Fav food rule
-            List.max agentOpinions.[8..11], Voting(allVotingSystems.[maxIndex agentOpinions.[8..11] - 8]); // Fav voting system
-            List.max agentOpinions.[12..15], Sanction(allSanctionVotes.[maxIndex agentOpinions.[12..15] - 12]); // Fav sanction
-            List.max agentOpinions.[16..18], Work(allWorkRules.[maxIndex agentOpinions.[16..18] - 16]); // Fav work rule
+            List.max agentOpinions.[4..6], Work(allWorkRules.[maxIndex agentOpinions.[4..6] - 4]); // Fav work rule
+            List.max agentOpinions.[7..10], Food(allFoodRules.[maxIndex agentOpinions.[7..10] - 7]); // Fav food rule
+            List.max agentOpinions.[11..14], Voting(allVotingSystems.[maxIndex agentOpinions.[11..14] - 11]); // Fav voting system
+            List.max agentOpinions.[15..18], Sanction(allSanctionVotes.[maxIndex agentOpinions.[15..18] - 15]); // Fav sanction
         ]
     let isLeastFavRule = 
         [curShelterMin; curFoodMin; curVoteMin; curSanctionMin; curWorkMin] // Get list corresponding to whether current rule is least favourite or not
@@ -186,11 +197,106 @@ let makeProposals (agent : Agent) (world : WorldState) : (Rule option * Agent) l
             [(Some(proposal), agent)]
 
 
-let decisionMake4 (world : WorldState) (agent : Agent)
+let voteOnProposals (world : WorldState) (agent : Agent)
     (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
     : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
     // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
-    failwithf "PLACEHOLDER FOR DECIDING WHAT RULES THE AGENT WILL VOTE FOR"
+    // Reorder the lists of stuff to vote on by the agents opinions
+    // This whole thing is horrible but i'm tired and it should work
+    let mapToShelterRule (rule : Rule * float) : ShelterRule * float =
+        match rule with
+        | Shelter(x), f -> x, f
+        | _ -> failwithf "This should be a shelter rule."
+    let mapToWorkRule (rule : Rule * float) : WorkAllocation * float =
+        match rule with
+        | Work(x), f -> x, f
+        | _ -> failwithf "This should be a work rule."
+    let mapToFoodRule (rule : Rule * float) : FoodRule * float =
+        match rule with
+        | Food(x), f -> x, f
+        | _ -> failwithf "This should be a food rule."
+    let mapToVotingSystem (rule : Rule * float) : VotingSystem * float =
+        match rule with
+        | Voting(x), f -> x, f
+        | _ -> failwithf "This should be a voting system."
+    let mapToSanction (rule : Rule * float) : Punishment * float =
+        match rule with
+        | Sanction(x), f -> x, f
+        | _ -> failwithf "This should be a sanction thing."
+    // ^ Can't use discriminated union since they need to be the sepcific rule types, not just ruls
+    let allRules =
+        match agent.DecisionOpinions with
+            | Some(opinions) -> 
+                opinions.RuleOpinion
+                |> List.map (fun el -> (indexToRule (List.findIndex (fun el1 -> el = el1) opinions.RuleOpinion), el))
+            | None -> failwithf "Should have opinions of rules"
+    let shelterRules, workRules, foodRules, votingSystems, sanctions = toVote
+    let shelterVotes = 
+        allRules.[0..3]
+        |> List.sortBy snd
+        |> List.rev // Largest to smallers  
+        |> List.map mapToShelterRule
+        |> fun list -> 
+            match shelterRules with
+            | Some(rules) ->
+                List.filter (fun el -> List.contains (el |> fst) rules) list
+            | None -> []
+        |> function
+            | [] -> None
+            | list -> Some(List.map fst list)
+    let workVotes = 
+        allRules.[4..6]
+        |> List.sortBy snd
+        |> List.rev // Largest to smallers 
+        |> List.map mapToWorkRule 
+        |> fun list -> 
+            match workRules with
+            | Some(rules) ->
+                List.filter (fun el -> List.contains (el |> fst) rules) list
+            | None -> []
+        |> function
+            | [] -> None
+            | list -> Some(List.map fst list)
+    let foodVotes = 
+        allRules.[7..10]
+        |> List.sortBy snd
+        |> List.rev // Largest to smallers  
+        |> List.map mapToFoodRule
+        |> fun list -> 
+            match foodRules with
+            | Some(rules) ->
+                List.filter (fun el -> List.contains (el |> fst) rules) list
+            | None -> []
+        |> function
+            | [] -> None
+            | list -> Some(List.map fst list)
+    let votingVotes = 
+        allRules.[11..14]
+        |> List.sortBy snd
+        |> List.rev // Largest to smallers  
+        |> List.map mapToVotingSystem
+        |> fun list -> 
+            match votingSystems with
+            | Some(rules) ->
+                List.filter (fun el -> List.contains (el |> fst) rules) list
+            | None -> []
+        |> function
+            | [] -> None
+            | list -> Some(List.map fst list)
+    let sanctionVotes = 
+        allRules.[15..18]
+        |> List.sortBy snd
+        |> List.rev // Largest to smallers   
+        |> List.map mapToSanction
+        |> fun list -> 
+            match sanctions with
+            | Some(rules) ->
+                List.filter (fun el -> List.contains (el |> fst) rules) list
+            | None -> []
+        |> function
+            | [] -> None
+            | list -> Some(List.map fst list)        
+    shelterVotes, workVotes, foodVotes, votingVotes, sanctionVotes
 
 
 let getPropositions (world : WorldState) (agents : Agent list)  =
@@ -273,8 +379,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
                         | Some(y) -> y
                         | None -> failwithf "This shouldn't happen since the List should either be all None (already dealt with) or all Some"
                     ) x |> Some
-        agents
-        |> List.map (fun agent ->
+        let rulesToVoteOn1 =
             rulesToVoteOn
             |> fun (a, b, c, d, e) ->
                 // Get rid of empty lists by setting them to None so decision making has an easier time
@@ -283,7 +388,10 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
                 optionMake c,
                 optionMake d,
                 optionMake e
-            |> decisionMake4 world agent)
+        agents
+        |> List.map (fun agent ->
+            rulesToVoteOn1
+            |> voteOnProposals world agent)
         |> List.fold (fun acc el ->
             let acc1, acc2, acc3, acc4, acc5 = acc
             let el1, el2, el3, el4, el5 = el
