@@ -88,6 +88,7 @@ and Agent =
         AccessToShelter : float option;
         BuildingAptitude : float;
         HuntingAptitude : float;
+        SelfConfidence : float;
     }
 
 type WorldState =

@@ -37,10 +37,11 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Energy = 100.0;
         
         TodaysActivity = Activity.NONE, 0.0;
-        AccessToShelter = Some 1.0;
+        AccessToShelter = None;
         BuildingAptitude = 0.0;
         HuntingAptitude = 0.0;
         DecisionOpinions = None;
+        SelfConfidence = 0.5;
     }
 
 // Make sure we have the same initial values for InitialRuleOpinion and RuleOpinion between [0.4, 0.6]
