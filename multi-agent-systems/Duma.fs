@@ -4,6 +4,13 @@ open Types
 open Voting
 open Config
 
+// To Do:
+// Improve makeProposals
+// Improve voteOnProposals
+// Try and get rid of IndexToRule and ruleToIndex
+// Try and merge the rule lists into one
+// Implement socialGood Function
+// Actually test it...
 
 // Need all possible rules in a list for instant runoff
 let allShelterRules : ShelterRule list = [
@@ -79,16 +86,11 @@ let chairDecision (world : WorldState) (proposals : (Rule option * Agent) list) 
         // Get the opinion of the old rule
         let oldRuleOpinion =
             match newRule with
-            | Shelter(_) -> 
-                Shelter(world.CurrentShelterRule) |> ruleToIndex
-            | Food(_) -> 
-                Food(world.CurrentFoodRule) |> ruleToIndex
-            | Voting(_) -> 
-                Voting(world.CurrentVotingRule) |> ruleToIndex
-            | Work(_) -> 
-                Work(world.CurrentWorkRule) |> ruleToIndex
-            | Sanction(_) -> 
-                Sanction(world.CurrentMaxPunishment) |> ruleToIndex
+            | Shelter(_) -> Shelter(world.CurrentShelterRule) |> ruleToIndex
+            | Food(_) -> Food(world.CurrentFoodRule) |> ruleToIndex
+            | Voting(_) -> Voting(world.CurrentVotingRule) |> ruleToIndex
+            | Work(_) -> Work(world.CurrentWorkRule) |> ruleToIndex
+            | Sanction(_) -> Sanction(world.CurrentMaxPunishment) |> ruleToIndex
         match chair.DecisionOpinions with
             | Some(opinions) -> 
                 // Subtract them
@@ -101,12 +103,14 @@ let chairDecision (world : WorldState) (proposals : (Rule option * Agent) list) 
             match chair.DecisionOpinions with
             | Some(opinions) -> 
                 let agentOpinion =
-                    List.find (fun agent -> (agent |> fst) = (proposal |> snd)) opinions.OtherAgentsOpinion
+                    List.find (fun agent -> fst agent = snd proposal) opinions.OtherAgentsOpinion
                     |> snd // Returns the opinion of the agent from the chairs perspective
                 match proposal |> fst with
                 | Some(rule) ->  
                     let bt =
-                        1.0 - agentOpinion * chair.Susceptibility - (ruleOpinionDifference rule world chair) * chair.SelfConfidence
+                        1.0 
+                        - agentOpinion * chair.Susceptibility 
+                        - chair.SelfConfidence * ruleOpinionDifference rule world chair
                     // Set to none (veto, removes from list) if the difference is greater than the threshold
                     if bt > vetoThreshold
                     then None, (proposal |> snd)
@@ -408,7 +412,6 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
             removeNone c,
             removeNone d,
             removeNone e
-
     // Apply current voting system to each of the voting options
     let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
         match world.CurrentVotingRule with
@@ -448,14 +451,10 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     // Get all new stuff except max sanctions
     let newWorld = {
         world with
-            CurrentShelterRule =
-                applyOptionRule newShelterRule world.CurrentShelterRule;
-            CurrentWorkRule =
-                applyOptionRule newWorkRule world.CurrentWorkRule;
-            CurrentFoodRule =
-                applyOptionRule newFoodRule world.CurrentFoodRule;
-            CurrentVotingRule =
-                applyOptionRule newVotingSystem world.CurrentVotingRule;
+            CurrentShelterRule = applyOptionRule newShelterRule world.CurrentShelterRule;
+            CurrentWorkRule = applyOptionRule newWorkRule world.CurrentWorkRule;
+            CurrentFoodRule = applyOptionRule newFoodRule world.CurrentFoodRule;
+            CurrentVotingRule = applyOptionRule newVotingSystem world.CurrentVotingRule;
         }
     // Punishment can be either incr or decr or changing max punishment
     match newSanction with
