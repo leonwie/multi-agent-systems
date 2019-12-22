@@ -13,20 +13,25 @@ let main argv =
     // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
     let agents = Parsing.parse argv
     
-    let currentWorld = {
-        Buildings = List.Empty;
-        TimeToNewChair = 5;
-        CurrentShelterRule = Random;
-        CurrentFoodRule = Communism;
-        CurrentVotingRule = Borda;
-        CurrentWorkRule = Everyone;
-        CurrentMaxPunishment = Exile;
-        CurrentSanctionStepSize = 0.1;
-        CurrentDay = 0;
-        CurrentChair = None;
-        NumHare = 15;
-        NumStag = 15;
-    }
+    let initialiseRuleSet = [(Shelter(Random), 0.5, 0.5); (Food(Communism), 0.5, 0.5); (Work(Everyone), 0.5, 0.5); (Voting(Borda), 0.5, 0.5); (Sanction(Exile), 0.5, 0.5)]
+    let currentWorld =
+        {
+            Buildings = List.Empty;
+            TimeToNewChair = 5;
+            CurrentShelterRule = Random;
+            CurrentFoodRule = Communism;
+            CurrentVotingRule = Borda;
+            CurrentWorkRule = Everyone;
+            CurrentMaxPunishment = Exile;
+            CurrentSanctionStepSize = 0.1;
+            CurrentDay = 0;
+            CurrentChair = None;
+            NumHare = 15;
+            NumStag = 15;
+            RuleSet = initialiseRuleSet;
+            GlobalSocialGood = 0.0;
+            AverageSocialGood = 0.0;
+        }
 
     
     let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =

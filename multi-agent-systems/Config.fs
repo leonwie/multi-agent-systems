@@ -3,7 +3,7 @@
 // This is the config, its the place where you canhnge the values for stuff
 
 let numAgents = 8
-
+let numberOfRules = 5
 
 let shelterEnergySavings = 0.5
 // let shelterDecayRate = 25.0 // Shelter lasts 4 days

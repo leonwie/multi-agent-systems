@@ -45,10 +45,17 @@ type Rule =
     | Work of WorkAllocation
     | Sanction of Punishment
 
+type Reward = float
+type SocialGood = float
+
+type RuleSet = (Rule * Reward * SocialGood) list
+
 type Opinions =
     {
-        RuleOpinion : float list;
-        OtherAgentsOpinion : (Agent * float) list;             // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        RewardPerRule : Reward list;                          // changes after each day/time slice = X(t)
+        RuleOpinion : float list;                             // changes after each day/time slice = X(t)
+        InitialRuleOpinion : float list;                      // does not change after initialisation = X(0)
+        OtherAgentsOpinion : (Agent * float) list;            // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Friends : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Enemies : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
     }
@@ -60,34 +67,36 @@ and Agent =
         Egotism : float;
 
         Reward : float;
+        Gain : int;
+        EnergyDeprecation : float;
+        EnergyConsumed : float;
         Infamy : float;
         Energy : float;
+        DecisionOpinions : Opinions option;
+
         TodaysActivity : Activity * float;
         AccessToShelter : float option;
         BuildingAptitude : float;
         HuntingAptitude : float;
-        DecisionOpinions : Opinions option;
     }
 
-type Reward = float
-type SocialGood = float
-
-type RuleSet = (Rule * Reward * SocialGood) list
-
-type WorldState = {
-    Buildings : float list;
-    CurrentChair : Agent option;
-    TimeToNewChair : int;
-    CurrentShelterRule : ShelterRule;
-    CurrentVotingRule : VotingSystem;
-    CurrentFoodRule : FoodRule;
-    CurrentWorkRule : WorkAllocation;
-    CurrentMaxPunishment : Punishment;
-    CurrentSanctionStepSize : float;
-    CurrentDay : int;
-    NumHare : int;
-    NumStag : int;
-    //RuleSet : RuleSet;
+type WorldState =
+    {
+        Buildings : float list;
+        CurrentChair : Agent option;
+        TimeToNewChair : int;
+        CurrentShelterRule : ShelterRule;
+        CurrentVotingRule : VotingSystem;
+        CurrentFoodRule : FoodRule;
+        CurrentWorkRule : WorkAllocation;
+        CurrentMaxPunishment : Punishment;
+        CurrentSanctionStepSize : float;
+        CurrentDay : int;
+        NumHare : int;
+        NumStag : int;
+        RuleSet : RuleSet;
+        GlobalSocialGood : float;
+        AverageSocialGood : float;
     }
 
 type Shelter =
