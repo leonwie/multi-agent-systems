@@ -1,4 +1,4 @@
-﻿module multi_agent_systems.Election
+﻿module Election
 open Config
 open Types
 
