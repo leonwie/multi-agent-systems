@@ -1,8 +1,6 @@
-﻿
-open System
+﻿module Program
 open Agent
 open Types
-open Voting
 open Activities
 open Hunt
 open Build
@@ -14,7 +12,6 @@ let main argv =
     let agents = Parsing.parse argv
     
     // WARNING: Order matters
-    let initialiseRuleSet = [(Shelter(Random), 0.5, 0.5); (Food(Communism), 0.5, 0.5); (Work(Everyone), 0.5, 0.5); (Voting(Borda), 0.5, 0.5); (Sanction(Exile), 0.5, 0.5)]
     
     let currentWorld =
         {
@@ -30,9 +27,8 @@ let main argv =
             CurrentChair = None;
             NumHare = 15;
             NumStag = 15;
-            RuleSet = initialiseRuleSet;
-            GlobalSocialGood = 0.0;
-            AverageSocialGood = 0.0;
+            CurrentRuleSet = initialiseRuleSet;
+            AllRules = initialiseAllRules;
         }
 
     

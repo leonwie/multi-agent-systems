@@ -25,7 +25,7 @@ let rec private intersect xs ys =
 let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (threshold : float): bool =
     let a_ii = (lookUpInTuple agent.DecisionOpinions.Value.AllOtherAgentsOpinion agent.ID).Value
     let likelihood = agent.Egotism + agent.Susceptibility * ((float)numberOfRules /
-                                            List.sum (List.map(fun (_, _, socialGood) -> socialGood) ruleSet)) * a_ii
+                                            List.sum (List.map(fun (_, _, socialGood, _) -> socialGood) ruleSet)) * a_ii
     likelihood > threshold                                        
 
 // Return a sorted desc list of candidate preferences for 'agent'    
@@ -45,9 +45,12 @@ let private proposalOfRuleChangesForOneTopic (agent : Agent) (currentRule : Rule
 
 // Returns a Rule list with either 1 element or empty - run this for every agent
 let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : Rule list =
-    let currentRules = List.map (fun (rule, _, _) -> rule) state.RuleSet
-    let scores = List.map (fun ruleType -> proposalOfRuleChangesForOneTopic agent currentRules.[(int)ruleType] ruleType)[RuleTypes.SHELTER; RuleTypes.FOOD; RuleTypes.WORK; RuleTypes.VOTING; RuleTypes.SANCTION]
-    let ruleProposals = List.filter (fun (x, y) -> y <> 0.0) scores
+    let currentRules = List.map (fun (_, rule, _, _) -> rule) state.CurrentRuleSet
+    let scores = List.map (fun ruleType ->
+        proposalOfRuleChangesForOneTopic agent currentRules.[(int)ruleType] ruleType)[RuleTypes.SHELTER; RuleTypes.FOOD;
+                                                                                      RuleTypes.WORK; RuleTypes.VOTING;
+                                                                                      RuleTypes.SANCTION]
+    let ruleProposals = List.filter (fun (_, y) -> y <> 0.0) scores
     match List.length ruleProposals with
     | 0 -> []
     | 1 -> [ruleProposals |> List.head |> fst]
