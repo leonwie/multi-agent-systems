@@ -10,6 +10,7 @@
     <Compile Include="Config.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Voting.fs" />
+    <Compile Include="Election.fs" />
     <Compile Include="Agent.fs" />
     <Compile Include="Parsing.fs" />
     <Compile Include="Decision.fs" />

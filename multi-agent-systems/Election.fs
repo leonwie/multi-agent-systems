@@ -1,4 +1,4 @@
-﻿module multi_agent_systems.Election
+﻿module Election
 open Config
 open Types
 
@@ -22,7 +22,7 @@ let rec private intersect xs ys =
     | _ -> []
     
 // n_i= (μ_Ri +(size(k))/(∑_k s_k )∙μ_Si)∙ a_ii  k = set of rules currently in use 
-let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (threshold : float): bool =
+let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (threshold : float) : bool =
     let a_ii = (lookUpInTuple agent.DecisionOpinions.Value.OtherAgentsOpinion agent.ID).Value
     let likelihood = agent.Egotism + agent.Susceptibility * ((float)numberOfRules /
                                             List.sum (List.map(fun (_, _, socialGood) -> socialGood) ruleSet)) * a_ii
