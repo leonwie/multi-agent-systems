@@ -22,13 +22,13 @@ let g (agent : Agent) : float = max (1.0 - 1.2 * agent.Susceptibility) 0.0
 let private updateRuleOpinionPerAgent (agents : Agent list) (agent : Agent) : Agent =
     // g * X(0)
     let initialRuleOpinion = g agent * agent.DecisionOpinions.Value.InitialRuleOpinion.[agent.ID]
-    let ruleOpinion = agent.DecisionOpinions.Value.CurrentRulesOpinion
-    let otherOpinion index = List.map snd (lookForAgentByID agents index).Value.DecisionOpinions.Value.OtherAgentsOpinion    
+    let ruleOpinion = agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
+    let otherOpinion index = List.map snd (lookForAgentByID agents index).Value.DecisionOpinions.Value.AllOtherAgentsOpinion    
     // (1 - g) * a[row] * X(t)
     let oneRuleChange row = initialRuleOpinion + List.sum (List.map (fun index ->
         (1.0 - g agent) * ruleOpinion.[index] * (otherOpinion row).[index]) [0..numberOfRules - 1])
     let updatedRuleOpinion = List.map (fun row -> oneRuleChange row) [0..numAgents - 1]
-    let updatedDecision = {agent.DecisionOpinions.Value with CurrentRulesOpinion = updatedRuleOpinion}
+    let updatedDecision = {agent.DecisionOpinions.Value with PersonalCurrentRulesOpinion = updatedRuleOpinion}
     {agent with DecisionOpinions = Some updatedDecision}
 
 let private updateReward (agent : Agent) : Agent =

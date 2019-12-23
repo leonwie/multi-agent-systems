@@ -62,10 +62,11 @@ type RuleSet = (Rule * Reward * SocialGood) list
 type Opinions =
     {
         CurrentRewardPerRule : Reward list;                   // changes after each day/time slice = X(t)
-        CurrentRulesOpinion : float list;                     // changes after each day/time slice = X(t)
+        PersonalCurrentRulesOpinion : float list;             // changes after each day/time slice = X(t)
         InitialRuleOpinion : float list;                      // does not change after initialisation = X(0)
-        PastRulesOpinion : (RuleTypes * Rule * float) list;   // changes every time an opinion changes - put here the old ones
-        OtherAgentsOpinion : (Agent * float) list;            // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        PastRulesOpinion : (RuleTypes * Rule * float) list;   // this is O from the spec (past) changes every time an opinion changes - put here the old ones
+        AllOtherAgentsOpinion : (Agent * float) list;         // this is A from the spec warning: Agent here is a shallow copy - has DecisionOpinions : None
+        OverallCurrentRuleOpinion : float list;               // this is O from the spec (current)
         Friends : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Enemies : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
     }

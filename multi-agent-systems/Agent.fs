@@ -52,9 +52,10 @@ let private createOpinions (opinions : (Agent * float) list) : Opinions =
     {
         InitialRuleOpinion = initialRuleOpinion
         CurrentRewardPerRule = [ for _ in 1 .. numberOfRules -> 0.5 ]
-        CurrentRulesOpinion = initialRuleOpinion
+        PersonalCurrentRulesOpinion = initialRuleOpinion
         PastRulesOpinion = []
-        OtherAgentsOpinion = opinions
+        OverallCurrentRuleOpinion = []
+        AllOtherAgentsOpinion = opinions
         Friends = List.filter (fun (_, op) -> op > 0.5) opinions |> List.map fst
         Enemies = List.filter (fun (_, op) -> op < 0.1) opinions |> List.map fst
     }
