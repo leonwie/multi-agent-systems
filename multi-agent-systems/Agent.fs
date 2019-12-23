@@ -29,7 +29,6 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Egotism = egotism;                      // in [0, 1]
         Idealism = idealism;                    // in [0, 1]
        
-        Reward = 0.5;
         EnergyDeprecation = 0.0;
         Gain = 0;
         EnergyConsumed = 0.0;
@@ -47,14 +46,17 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
 // Make sure we have the same initial values for InitialRuleOpinion and RuleOpinion between [0.4, 0.6]
 let private initialRuleOpinion = List.map (fun x -> x * (0.6 - 0.4) + 0.4) (generateRandom numberOfRules)   
 
+let private initialRewardRule = List.map (fun (_, y, _, _) -> (y, 0.5, 0)) initialiseAllRules
+
 // Private function to create the opinion type with only one way friends/enemies
 let private createOpinions (opinions : (Agent * float) list) : Opinions =
     {
         InitialRuleOpinion = initialRuleOpinion
-        CurrentRewardPerRule = [ for _ in 1 .. numberOfRules -> 0.5 ]
-        CurrentRulesOpinion = initialRuleOpinion
+        RewardPerRule = initialRewardRule
+        PersonalCurrentRulesOpinion = initialRuleOpinion
         PastRulesOpinion = []
-        OtherAgentsOpinion = opinions
+        OverallCurrentRuleOpinion = []
+        AllOtherAgentsOpinion = opinions
         Friends = List.filter (fun (_, op) -> op > 0.5) opinions |> List.map fst
         Enemies = List.filter (fun (_, op) -> op < 0.1) opinions |> List.map fst
     }

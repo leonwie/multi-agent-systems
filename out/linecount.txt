@@ -1,0 +1,89 @@
+===============================================================================
+EXTENSION NAME : linecount
+EXTENSION VERSION : 0.1.7
+-------------------------------------------------------------------------------
+count time : 2019-12-22 17:31:35
+count workspace : /home/josh/multi-agent-systems
+total files : 77
+total code lines : 2740
+total comment lines : 217
+total blank lines : 209
+
+.gitignore, code is 3, comment is 0, blank is 0.
+.idea/.gitignore, code is 2, comment is 0, blank is 1.
+.idea/.idea.multi-agent-systems/.idea/contentModel.xml, code is 28, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/.idea/encodings.xml, code is 4, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/.idea/indexLayout.xml, code is 8, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/.idea/modules.xml, code is 8, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/.idea/projectSettingsUpdater.xml, code is 6, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/.idea/vcs.xml, code is 6, comment is 0, blank is 0.
+.idea/.idea.multi-agent-systems/riderModule.iml, code is 7, comment is 0, blank is 0.
+.ionide/symbolCache.db, it is a binary file.
+.vs/multi-agent-systems/DesignTimeBuild/.dtbcache, it is a binary file.
+.vs/multi-agent-systems/v16/.suo, it is a binary file.
+.vs/multi-agent-systems/xs/UserPrefs.xml, code is 34, comment is 0, blank is 0.
+multi-agent-systems.sln, code is 25, comment is 0, blank is 0.
+multi-agent-systems/.vs/multi-agent-systems/xs/UserPrefs.xml, code is 22, comment is 0, blank is 0.
+multi-agent-systems/Activities.fs, code is 66, comment is 12, blank is 15.
+multi-agent-systems/Agent-Config/__pycache__/agent.cpython-38.pyc, it is a binary file.
+multi-agent-systems/Agent-Config/agent.py, code is 17, comment is 3, blank is 3.
+multi-agent-systems/Agent-Config/agent_dir/profile0.json, code is 11, comment is 0, blank is 0.
+multi-agent-systems/Agent-Config/agent_dir/profile1.json, code is 13, comment is 0, blank is 0.
+multi-agent-systems/Agent-Config/agent_init.py, code is 15, comment is 3, blank is 3.
+multi-agent-systems/Agent-Config/default_agent.json, code is 7, comment is 0, blank is 0.
+multi-agent-systems/Agent.fs, code is 56, comment is 13, blank is 9.
+multi-agent-systems/bin/Debug/netcoreapp3.0/Argu.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/cs/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/de/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/en/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/es/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/Extreme.Numerics.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/fr/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/FSharp.Core.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/FSharp.Data.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/it/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/ja/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/ko/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems.deps.json, code is 340, comment is 0, blank is 0.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems.pdb, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems.runtimeconfig.dev.json, code is 7, comment is 0, blank is 1.
+multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems.runtimeconfig.json, code is 9, comment is 0, blank is 0.
+multi-agent-systems/bin/Debug/netcoreapp3.0/pl/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/pt-BR/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/ru/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/System.Configuration.ConfigurationManager.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/System.Security.Cryptography.ProtectedData.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/tr/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/zh-Hans/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/bin/Debug/netcoreapp3.0/zh-Hant/FSharp.Core.resources.dll, it is a binary file.
+multi-agent-systems/Build.fs, code is 69, comment is 16, blank is 13.
+multi-agent-systems/Config.fs, code is 27, comment is 12, blank is 15.
+multi-agent-systems/Decision.fs, code is 30, comment is 37, blank is 3.
+multi-agent-systems/Duma.fs, code is 351, comment is 51, blank is 31.
+multi-agent-systems/Hunt.fs, code is 51, comment is 5, blank is 12.
+multi-agent-systems/HuntActions.fs, code is 1, comment is 0, blank is 0.
+multi-agent-systems/multi-agent-systems.fsproj, code is 25, comment is 0, blank is 4.
+multi-agent-systems/multi-agent-systems.sln, code is 16, comment is 0, blank is 1.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems, it is a binary file.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfo.fs, code is 11, comment is 3, blank is 3.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.AssemblyInfoInputs.cache, code is 1, comment is 0, blank is 0.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.assets.cache, it is a binary file.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.dll, it is a binary file.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsproj.CopyComplete, code is 0, comment is 0, blank is 0.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsproj.FileListAbsolute.txt, code is 33, comment is 0, blank is 0.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.fsprojAssemblyReference.cache, it is a binary file.
+multi-agent-systems/obj/Debug/netcoreapp3.0/multi-agent-systems.pdb, it is a binary file.
+multi-agent-systems/obj/fsac.cache, code is 2, comment is 0, blank is 0.
+multi-agent-systems/obj/multi-agent-systems.fsproj.nuget.cache, code is 5, comment is 0, blank is 0.
+multi-agent-systems/obj/multi-agent-systems.fsproj.nuget.g.props, code is 15, comment is 0, blank is 0.
+multi-agent-systems/obj/multi-agent-systems.fsproj.nuget.g.targets, code is 6, comment is 0, blank is 0.
+multi-agent-systems/obj/project.assets.json, code is 1153, comment is 0, blank is 22.
+multi-agent-systems/Parsing.fs, code is 41, comment is 1, blank is 9.
+multi-agent-systems/Program.fs, code is 65, comment is 36, blank is 32.
+multi-agent-systems/Types.fs, code is 83, comment is 11, blank is 17.
+multi-agent-systems/Voting.fs, code is 59, comment is 14, blank is 15.
+README.md, code is 2, comment is 0, blank is 0.
+===============================================================================

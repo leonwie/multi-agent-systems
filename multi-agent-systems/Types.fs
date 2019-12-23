@@ -54,20 +54,32 @@ type RuleTypes =
     | VOTING = 4
     | SANCTION = 5
 
-type Reward = float
 type SocialGood = float
-
-type RuleSet = (Rule * Reward * SocialGood) list
-
+type LastUpdate = int
+type RuleSet = (RuleTypes * Rule * SocialGood * LastUpdate) list
+let initialiseRuleSet = [(RuleTypes.SHELTER, Shelter(Random), 0.5, 0); (RuleTypes.FOOD, Food(Communism), 0.5, 0);
+                             (RuleTypes.WORK, Work(Everyone), 0.5, 0); (RuleTypes.VOTING, Voting(Borda), 0.5, 0);
+                             (RuleTypes.SANCTION, Sanction(Exile), 0.5, 0)]
+let initialiseAllRules = [(RuleTypes.SHELTER, Shelter(Random), 0.5, 0); (RuleTypes.SHELTER, Shelter(Oligarchy), 0.5, 0);
+                          (RuleTypes.SHELTER, Shelter(Meritocracy), 0.5, 0); (RuleTypes.SHELTER, Shelter(Socialism), 0.5, 0);
+                          (RuleTypes.FOOD, Food(Communism), 0.5, 0); (RuleTypes.FOOD, Food(FoodRule.Oligarchy), 0.5, 0);
+                          (RuleTypes.FOOD, Food(FoodRule.Socialism), 0.5, 0); (RuleTypes.FOOD, Food(FoodRule.Meritocracy), 0.5, 0);
+                          (RuleTypes.WORK, Work(Everyone), 0.5, 0); (RuleTypes.WORK, Work(ByChoice), 0.5, 0);
+                          (RuleTypes.WORK, Work(Strongest), 0.5, 0); (RuleTypes.VOTING, Voting(Borda), 0.5, 0);
+                          (RuleTypes.VOTING, Voting(Approval), 0.5, 0); (RuleTypes.VOTING, Voting(InstantRunoff), 0.5, 0);
+                          (RuleTypes.VOTING, Voting(Plurality), 0.5, 0); (RuleTypes.SANCTION, Sanction(Exile), 0.5, 0);
+                          (RuleTypes.SANCTION, Sanction(NoFoodAndShelter), 0.5, 0); (RuleTypes.SANCTION, Sanction(Increment), 0.5, 0);
+                          (RuleTypes.SANCTION, Sanction(Decrement), 0.5, 0);]
 type Opinions =
     {
-        CurrentRewardPerRule : Reward list;                   // changes after each day/time slice = X(t)
-        CurrentRulesOpinion : float list;                     // changes after each day/time slice = X(t)
-        InitialRuleOpinion : float list;                      // does not change after initialisation = X(0)
-        PastRulesOpinion : (RuleTypes * Rule * float) list;   // changes every time an opinion changes - put here the old ones
-        OtherAgentsOpinion : (Agent * float) list;            // warning: Agent here is a shallow copy - has DecisionOpinions : None
-        Friends : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
-        Enemies : Agent list;                                 // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        RewardPerRule : (Rule * float * LastUpdate) list;         // reward per rule - has all rules
+        PersonalCurrentRulesOpinion : float list;                // this is X from the spec; changes after each day/time slice = X(t)
+        InitialRuleOpinion : float list;                         // does not change after initialisation = X(0)
+        OverallCurrentRuleOpinion : float list;                  // this is O from the spec (current)
+        PastRulesOpinion : (RuleTypes * Rule * float) list;      // this is O from the spec (past) changes every time an opinion changes - put here the old ones
+        AllOtherAgentsOpinion : (Agent * float) list;            // this is A from the spec warning: Agent here is a shallow copy - has DecisionOpinions : None
+        Friends : Agent list;                                    // warning: Agent here is a shallow copy - has DecisionOpinions : None
+        Enemies : Agent list;                                    // warning: Agent here is a shallow copy - has DecisionOpinions : None
     }
 and Agent =
     {
@@ -76,7 +88,6 @@ and Agent =
         Idealism : float;
         Egotism : float;
 
-        Reward : float;
         Gain : int;
         EnergyDeprecation : float;
         EnergyConsumed : float;
@@ -105,9 +116,8 @@ type WorldState =
         CurrentDay : int;
         NumHare : int;
         NumStag : int;
-        RuleSet : RuleSet;
-        GlobalSocialGood : float;
-        AverageSocialGood : float;
+        CurrentRuleSet : RuleSet;
+        AllRules : RuleSet;
     }
 
 type Shelter =
