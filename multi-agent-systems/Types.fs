@@ -45,38 +45,34 @@ type Rule =
     | Work of WorkAllocation
     | Sanction of Punishment
 
-// I assummed in some places that the rules have an index
-// e.g. CurrentRulesOpinion - the first element in list is for SHELTER, second FOOD etc
-type RuleTypes =
-    | SHELTER = 1
-    | FOOD = 2
-    | WORK = 3
-    | VOTING = 4
-    | SANCTION = 5
-
 type SocialGood = float
 type LastUpdate = int
-type RuleSet = (RuleTypes * Rule * SocialGood * LastUpdate) list
-let initialiseRuleSet = [(RuleTypes.SHELTER, Shelter(Random), 0.5, 0); (RuleTypes.FOOD, Food(Communism), 0.5, 0);
-                             (RuleTypes.WORK, Work(Everyone), 0.5, 0); (RuleTypes.VOTING, Voting(Borda), 0.5, 0);
-                             (RuleTypes.SANCTION, Sanction(Exile), 0.5, 0)]
-let initialiseAllRules = [(RuleTypes.SHELTER, Shelter(Random), 0.5, 0); (RuleTypes.SHELTER, Shelter(Oligarchy), 0.5, 0);
-                          (RuleTypes.SHELTER, Shelter(Meritocracy), 0.5, 0); (RuleTypes.SHELTER, Shelter(Socialism), 0.5, 0);
-                          (RuleTypes.FOOD, Food(Communism), 0.5, 0); (RuleTypes.FOOD, Food(FoodRule.Oligarchy), 0.5, 0);
-                          (RuleTypes.FOOD, Food(FoodRule.Socialism), 0.5, 0); (RuleTypes.FOOD, Food(FoodRule.Meritocracy), 0.5, 0);
-                          (RuleTypes.WORK, Work(Everyone), 0.5, 0); (RuleTypes.WORK, Work(ByChoice), 0.5, 0);
-                          (RuleTypes.WORK, Work(Strongest), 0.5, 0); (RuleTypes.VOTING, Voting(Borda), 0.5, 0);
-                          (RuleTypes.VOTING, Voting(Approval), 0.5, 0); (RuleTypes.VOTING, Voting(InstantRunoff), 0.5, 0);
-                          (RuleTypes.VOTING, Voting(Plurality), 0.5, 0); (RuleTypes.SANCTION, Sanction(Exile), 0.5, 0);
-                          (RuleTypes.SANCTION, Sanction(NoFoodAndShelter), 0.5, 0); (RuleTypes.SANCTION, Sanction(Increment), 0.5, 0);
-                          (RuleTypes.SANCTION, Sanction(Decrement), 0.5, 0);]
+type RuleSet = (Rule * SocialGood * LastUpdate) list
+let initialiseRuleSet = [(Shelter(Random), 0.5, 0); (Food(Communism), 0.5, 0); (Work(Everyone), 0.5, 0);
+                         (Voting(Borda), 0.5, 0); (Sanction(Exile), 0.5, 0)]
+let initialiseAllRules = [(Shelter(Random), 0.5, 0); (Shelter(Random), 0.5, 0);
+                          (Shelter(Meritocracy), 0.5, 0); (Shelter(Socialism), 0.5, 0);
+                          (Food(Communism), 0.5, 0); (Food(FoodRule.Oligarchy), 0.5, 0);
+                          (Food(FoodRule.Socialism), 0.5, 0); (Food(FoodRule.Meritocracy), 0.5, 0);
+                          (Work(Everyone), 0.5, 0); (Work(ByChoice), 0.5, 0);
+                          (Work(Strongest), 0.5, 0); (Voting(Borda), 0.5, 0);
+                          (Voting(Approval), 0.5, 0); (Voting(InstantRunoff), 0.5, 0);
+                          (Voting(Plurality), 0.5, 0); (Sanction(Exile), 0.5, 0);
+                          (Sanction(NoFoodAndShelter), 0.5, 0); (Sanction(Increment), 0.5, 0);
+                          (Sanction(Decrement), 0.5, 0);]
+let ShelterRuleList = [Shelter(Random); Shelter(Random); Shelter(Meritocracy); Shelter(Socialism)]
+let FoodRuleList = [Food(FoodRule.Communism); Food(FoodRule.Meritocracy); Food(FoodRule.Oligarchy); Food(FoodRule.Socialism)]
+let PunishmentList = [Sanction(NoFoodAndShelter); Sanction(Increment); Sanction(Decrement); Sanction(Exile)]
+let VotingSystemList = [Voting(Approval); Voting(InstantRunoff); Voting(Borda); Voting(Plurality)]
+let WorkAllocationList = [Work(Everyone); Work(ByChoice); Work(Strongest)]
+
+
 type Opinions =
     {
-        RewardPerRule : (Rule * float * LastUpdate) list;         // reward per rule - has all rules
-        PersonalCurrentRulesOpinion : float list;                // this is X from the spec; changes after each day/time slice = X(t)
-        InitialRuleOpinion : float list;                         // does not change after initialisation = X(0)
-        OverallCurrentRuleOpinion : float list;                  // this is O from the spec (current)
-        PastRulesOpinion : (RuleTypes * Rule * float) list;      // this is O from the spec (past) changes every time an opinion changes - put here the old ones
+        RewardPerRule : (Rule * float * LastUpdate) list;        // reward per rule - has all rules
+        PersonalCurrentRulesOpinion : (Rule * float) list;       // this is X from the spec; changes after each day/time slice = X(t)
+        InitialRuleOpinion : (Rule * float) list;                // does not change after initialisation = X(0)
+        OverallRuleOpinion : (Rule * float) list;                // this is O from the spec
         AllOtherAgentsOpinion : (Agent * float) list;            // this is A from the spec warning: Agent here is a shallow copy - has DecisionOpinions : None
         Friends : Agent list;                                    // warning: Agent here is a shallow copy - has DecisionOpinions : None
         Enemies : Agent list;                                    // warning: Agent here is a shallow copy - has DecisionOpinions : None

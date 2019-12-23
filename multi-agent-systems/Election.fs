@@ -25,7 +25,7 @@ let rec private intersect xs ys =
 let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (threshold : float): bool =
     let a_ii = (lookUpInTuple agent.DecisionOpinions.Value.AllOtherAgentsOpinion agent.ID).Value
     let likelihood = agent.Egotism + agent.Susceptibility * ((float)numberOfRules /
-                                            List.sum (List.map(fun (_, _, socialGood, _) -> socialGood) ruleSet)) * a_ii
+                                            List.sum (List.map(fun (_, socialGood, _) -> socialGood) ruleSet)) * a_ii
     likelihood > threshold                                        
 
 // Return a sorted desc list of candidate preferences for 'agent'    
@@ -34,22 +34,27 @@ let agentVoteForChair (candidates : Agent list) (agent : Agent) : Agent list =
     let orderedAgentPreference = List.map fst (List.sortBy (fun (_, y) -> -y) opinions)
     intersect orderedAgentPreference (candidates |> List.sortDescending)
 
-let private checkOpinionsPastRulesInTopic (pastOpinions : (RuleTypes * Rule * float) list) (ruleType : RuleTypes) (currentRule : Rule) : (RuleTypes * Rule * float) =
-    let pastRules = List.filter (fun (ruleT, rule, _) -> ruleT = ruleType && rule <> currentRule) pastOpinions
-    List.sortBy (fun (_, _, y) -> -y) pastRules |> List.head
+let private checkOptionsPastRules (rules : Rule list)  (pastOpinions : (Rule * float) list) (currentRule : Rule) : (Rule * float) =
+    let pastRules = List.filter (fun (rule, _) -> rule <> currentRule && List.contains rule rules) pastOpinions
+    List.sortBy (fun (_, y) -> -y) pastRules |> List.head
     
-let private proposalOfRuleChangesForOneTopic (agent : Agent) (currentRule : Rule) (ruleType : RuleTypes) : (Rule * float) =
-    let currentOpinionOnRule = agent.DecisionOpinions.Value.OverallCurrentRuleOpinion.[(int)ruleType]
-    let (_, pastRule, num) = checkOpinionsPastRulesInTopic agent.DecisionOpinions.Value.PastRulesOpinion ruleType currentRule
+let private checkOpinionsPastRulesInTopic (pastOpinions : (Rule * float) list) (currentRule : Rule) : (Rule * float) =
+    match currentRule with
+    | Shelter(x) -> checkOptionsPastRules ShelterRuleList pastOpinions currentRule  
+    | Food(x) -> checkOptionsPastRules FoodRuleList pastOpinions currentRule
+    | Voting(x) -> checkOptionsPastRules VotingSystemList pastOpinions currentRule
+    | Work(x) -> checkOptionsPastRules WorkAllocationList pastOpinions currentRule
+    | Sanction(x) -> checkOptionsPastRules PunishmentList pastOpinions currentRule
+    
+let private proposalOfRuleChangesForOneTopic (agent : Agent) (currentRule : Rule) : (Rule * float) =
+    let (_, currentOpinionOnRule) = List.filter (fun (rule, _) -> currentRule = rule) agent.DecisionOpinions.Value.OverallRuleOpinion |> List.head
+    let (pastRule, num) = checkOpinionsPastRulesInTopic agent.DecisionOpinions.Value.OverallRuleOpinion currentRule
     if num > currentOpinionOnRule then (pastRule, num - currentOpinionOnRule) else (currentRule, 0.0)
 
 // Returns a Rule list with either 1 element or empty - run this for every agent
 let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : Rule list =
-    let currentRules = List.map (fun (_, rule, _, _) -> rule) state.CurrentRuleSet
-    let scores = List.map (fun ruleType ->
-        proposalOfRuleChangesForOneTopic agent currentRules.[(int)ruleType] ruleType)[RuleTypes.SHELTER; RuleTypes.FOOD;
-                                                                                      RuleTypes.WORK; RuleTypes.VOTING;
-                                                                                      RuleTypes.SANCTION]
+    let currentRules = List.map (fun (rule, _, _) -> rule) state.CurrentRuleSet
+    let scores = List.map (proposalOfRuleChangesForOneTopic agent) currentRules
     let ruleProposals = List.filter (fun (_, y) -> y <> 0.0) scores
     match List.length ruleProposals with
     | 0 -> []
@@ -57,22 +62,22 @@ let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : Rule li
     | _ -> [List.sortBy (fun (_, y) -> -y) ruleProposals |> List.head |> fst]
     
 // F_j=a_ij∙μ_Xi+O_ik∙a_ii
-let private choiceOfProposalForOneAgent (chair : Agent) (currentRuleIndex : RuleTypes) (agentProposingRule : Agent) : float=
+let private choiceOfProposalForOneAgent (chair : Agent) (currentRule : Rule) (agentProposingRule : Agent) : float=
     let a_ii = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion chair.ID).Value
     let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule.ID).Value
-    let opinionOnRule = chair.DecisionOpinions.Value.OverallCurrentRuleOpinion.[(int)currentRuleIndex]
-    a_ij * chair.Susceptibility + a_ii * opinionOnRule
+    let (_, currentOpinionOnRule) = List.filter (fun (rule, _) -> currentRule = rule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
+    a_ij * chair.Susceptibility + a_ii * currentOpinionOnRule
 
 // Returns agent allowed to speak for one topic (need to call this method 5 times for the diff 5 topics with currentRuleIndex = [1..5])
-let chairChoiceOfProposalForTopic (chair : Agent) (agentsProposingRulesInTopic : Agent list) (currentRuleIndex : RuleTypes) : Agent =
-    let fForAgentsInTopic = List.zip agentsProposingRulesInTopic (List.map (choiceOfProposalForOneAgent chair currentRuleIndex) agentsProposingRulesInTopic)
+let chairChoiceOfProposalForTopic (chair : Agent) (agentsProposingRulesInTopic : Agent list) (currentRule : Rule) : Agent =
+    let fForAgentsInTopic = List.zip agentsProposingRulesInTopic (List.map (choiceOfProposalForOneAgent chair currentRule) agentsProposingRulesInTopic)
     List.map fst (List.sortBy (fun (_, y) -> -y) fForAgentsInTopic) |> List.head
     
 // Returns true is chair vetoes the new rule    
 let doesTheChairUseVeto (chair : Agent) (agentProposingRule : Agent)
-                        (currentRuleIndex : int) (newRule : Rule) (threshold : float) : bool =
-    let oldRuleOpinion = chair.DecisionOpinions.Value.OverallCurrentRuleOpinion.[(int)currentRuleIndex]
-    let (_, _, newRuleOpinion) = List.filter (fun (_, rule, _) -> rule = newRule) chair.DecisionOpinions.Value.PastRulesOpinion |> List.head
+                        (currentRule : Rule) (newRule : Rule) (threshold : float) : bool =
+    let (_, oldRuleOpinion) = List.filter (fun (rule, _) -> rule = currentRule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
+    let (_, newRuleOpinion) = List.filter (fun (rule, _) -> rule = newRule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
     let opinionDifferenceBetweenRuleChange = oldRuleOpinion - newRuleOpinion
     let a_ii = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion chair.ID).Value
     let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule.ID).Value
