@@ -100,6 +100,10 @@ and Agent =
         BuildingAptitude : float;
         HuntingAptitude : float;
         SelfConfidence : float;
+        
+        R : float list;
+        Rsharing : float list;
+        S : float list;
     }
 
 type WorldState =
@@ -120,6 +124,11 @@ type WorldState =
         AllRules : RuleSet;
     }
 
+type WorldProperties =
+    {
+        Tau : float;
+        Gamma : float;
+    }
 type Shelter =
    {
         Quality : float

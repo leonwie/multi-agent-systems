@@ -41,6 +41,10 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         HuntingAptitude = 0.0;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
+        
+        R = [0.5; 0.5];
+        S = [0.5; 0.5];
+        Rsharing = [0.5; 0.5];
     }
 
 // Make sure we have the same initial values for InitialRuleOpinion and RuleOpinion between [0.4, 0.6]
