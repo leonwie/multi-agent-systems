@@ -41,6 +41,10 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         HuntingAptitude = 0.0;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
+        
+        R = [0.5; 0.5];
+        S = [0.5; 0.5];
+        Rsharing = [0.5; 0.5];
     }
 
 let private initialRewardRule = List.map (fun (y, _, _) -> (y, 0.5, 0)) initialiseAllRules
