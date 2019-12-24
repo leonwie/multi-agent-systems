@@ -1,13 +1,8 @@
 ﻿module multi_agent_systems.Opinion
+open System.Data
 open Config
 open Types
 open Decision
-
-let rec private lookForAgentByID (agentList : Agent list) (id : int) : Agent option =
-    match agentList with
-    | [] -> None
-    | a :: _ when a.ID = id -> Some a
-    | _ :: tail -> lookForAgentByID tail id
 
 // Computes median of a sequence    
 let private median list = 
@@ -75,13 +70,16 @@ let updateSocialGoodForEveryCurrentRule (agents : Agent list) (state : WorldStat
     {state with CurrentRuleSet = updatedRules}
 
 let private normaliseTheAgentArraysPerAgent (agent : Agent) : Agent =
-    let rewardList = List.map (fun (_, reward, _) -> reward) agent.DecisionOpinions.Value.RewardPerRule
+    let rewardList = standardize (List.map (fun (_, reward, _) -> reward) agent.DecisionOpinions.Value.RewardPerRule)
     let restList = List.map (fun (rule, _, time) -> (rule, time)) agent.DecisionOpinions.Value.RewardPerRule
     let updatedPayoff = List.map (fun ((rule, time), reward) -> (rule, reward, time)) (List.zip restList rewardList) 
-    let rewardList = List.map (fun (_, reward) -> reward) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
+    let rewList = standardize (List.map (fun (_, reward) -> reward) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion)
     let ruleList = List.map (fun (rule, _) -> rule) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
-    let updatedCurrentRules = List.zip ruleList rewardList 
-    let updatedDecision = {agent.DecisionOpinions.Value with RewardPerRule = updatedPayoff; PersonalCurrentRulesOpinion = updatedCurrentRules}
+    let updatedCurrentRules = List.zip ruleList rewList
+    let opinionList = standardize (List.map (fun(_, opinion) -> opinion) agent.DecisionOpinions.Value.AllOtherAgentsOpinion)
+    let agentList = List.map (fun(agent, _) -> agent) agent.DecisionOpinions.Value.AllOtherAgentsOpinion
+    let updatedAllOpinion = List.zip agentList opinionList
+    let updatedDecision = {agent.DecisionOpinions.Value with RewardPerRule = updatedPayoff; PersonalCurrentRulesOpinion = updatedCurrentRules; AllOtherAgentsOpinion = updatedAllOpinion}
     {agent with DecisionOpinions = Some updatedDecision}
 
 // sec 3.3 in Overleaf    
@@ -107,3 +105,63 @@ let private updateAggregationArray (state : WorldState) (agent : Agent)  : Agent
 // Call to generate O for every agent - sec 3.4 in Overleaf
 let updateAggregationArrayForAgent (agents : Agent list) (state : WorldState) : Agent list =
     List.map (updateAggregationArray state) agents
+
+let private updateOpinion (agent : Agent) (rewardPerDay : float) (averageReward : float) (otherAgentOpinion : (Agent * float)) : (Agent * float)=
+    let opinion = otherAgentOpinion|> snd
+    let newOpinion =
+        if rewardPerDay > averageReward then
+            opinion + agent.Susceptibility * ((rewardPerDay - averageReward) / averageReward) * (1.0 - opinion) 
+        else
+            opinion * (1.0 - agent.Susceptibility * ((averageReward - rewardPerDay) / averageReward))
+    (otherAgentOpinion |> fst, newOpinion)        
+
+let private updateWorkingAgentsOpinion (state : WorldState) (agent : Agent) (workingAgents : (Agent * float) list) : (Agent * float) list =
+    let huntingAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = HUNTING) workingAgents
+    let buildingAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = BUILDING) workingAgents
+    let huntingList = List.map (updateOpinion agent state.HuntingRewardPerDay state.HuntingAverageTotalReward) huntingAgents
+    let buildingList = List.map (updateOpinion agent state.BuildingRewardPerDay state.BuildingAverageTotalReward) buildingAgents
+    huntingList @ buildingList
+
+let private updateNonWorking (agent : Agent) (otherAgent : Agent * float) : (Agent * float) =
+    let opinion = otherAgent |> snd
+    let newOpinion =
+        if (otherAgent |> fst).Energy < agent.Energy then
+            opinion
+        else
+            opinion * (1.0 - agent.Susceptibility * (((otherAgent |> fst).Energy - agent.Energy) / agent.Energy))
+    (otherAgent |> fst, newOpinion)
+
+let private updateNonWorkingAgentsOpinion (agent : Agent) (nonWorkingAgents : (Agent * float) list) : (Agent * float) list=
+    List.map (updateNonWorking agent) nonWorkingAgents
+    
+// Ollie's part in the Agent-Decision-Making doc - for work
+let updateWorkOpinionAdjustment (agent : Agent) (state : WorldState) : Agent =
+    let agentsOpinions = agent.DecisionOpinions.Value.AllOtherAgentsOpinion;
+    let workingAgents = List.filter (fun (ag, _) -> not(ag.TodaysActivity |> fst = NONE)) agentsOpinions
+    let nonWorkingAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = NONE) agentsOpinions
+    let workingOpinion = updateWorkingAgentsOpinion state agent workingAgents
+    let nonWorkingOpinion = updateNonWorkingAgentsOpinion agent nonWorkingAgents
+    let updatedDecision = {agent.DecisionOpinions.Value with AllOtherAgentsOpinion = workingOpinion @ nonWorkingOpinion}
+    {agent with DecisionOpinions = Some updatedDecision}
+    
+// Ollie's part in the Agent-Decision-Making doc - for voting    
+let votingOpinionAdjustment (agent : Agent) (otherAgent : Agent) (currentRule : Rule) (proposedRule : Rule) (voteA : bool) (voteO : bool) : (Agent * float) =
+    let currentOpinion = List.filter (fun (ag, _) -> ag = otherAgent)  agent.DecisionOpinions.Value.AllOtherAgentsOpinion |> List.head |> snd
+    let ruleOpinion rule = List.filter (fun (ru, _) -> ru = rule)  agent.DecisionOpinions.Value.OverallRuleOpinion |> List.head |> snd
+    let newOpinion =
+        if voteA = voteO then
+            currentOpinion + (1.0 - currentOpinion) * abs (ruleOpinion currentRule - ruleOpinion proposedRule) * agent.Egotism 
+        else
+            currentOpinion * (1.0 - abs (ruleOpinion currentRule - ruleOpinion proposedRule) * agent.Egotism)
+    (otherAgent, newOpinion)
+    
+// Ollie's part in the Agent-Decision-Making doc - for self-confidence    
+let selfConfidenceUpdate (agents : Agent list) : Agent list =
+    let energySum = List.sum (List.map (fun agent -> agent.Energy) agents)
+    let relativeWellbeing energy = energy / (energySum / (float)numAgents)
+    let listWellbeing = List.map relativeWellbeing (List.map (fun agent -> agent.Energy) agents)
+    let normalised = standardize listWellbeing
+    let zipped = List.zip agents normalised
+    let updatedSelfConfidence = List.map (fun (agent, relativeWellb) -> (agent, 0.5 * agent.Egotism + 0.5 * relativeWellb)) zipped
+    List.map (fun (agent, selfConfidence) -> {agent with SelfConfidence = selfConfidence}) updatedSelfConfidence
+    

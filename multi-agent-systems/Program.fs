@@ -11,8 +11,6 @@ let main argv =
     // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
     let agents = Parsing.parse argv
     
-    // WARNING: Order matters
-    
     let currentWorld =
         {
             Buildings = List.Empty;
@@ -29,6 +27,10 @@ let main argv =
             NumStag = 15;
             CurrentRuleSet = initialiseRuleSet;
             AllRules = initialiseAllRules;
+            BuildingRewardPerDay = 0.0;
+            HuntingRewardPerDay = 0.0;
+            BuildingAverageTotalReward = 0.0;
+            HuntingAverageTotalReward = 0.0;
         }
 
     

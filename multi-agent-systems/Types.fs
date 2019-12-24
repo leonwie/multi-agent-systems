@@ -118,6 +118,10 @@ type WorldState =
         NumStag : int;
         CurrentRuleSet : RuleSet;
         AllRules : RuleSet;
+        BuildingRewardPerDay : float;
+        HuntingRewardPerDay : float;
+        BuildingAverageTotalReward : float;
+        HuntingAverageTotalReward : float;
     }
 
 type WorldProperties =

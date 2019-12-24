@@ -9,7 +9,7 @@ let private numberOfRuleTypes = 5;
 let rec private lookUpInTuple tupleList toFind =
     match tupleList with
     | [] -> None
-    | (x, y) :: _ when x.ID = toFind -> Some y
+    | (x, y) :: _ when x = toFind -> Some y
     | _ :: tail -> lookUpInTuple tail toFind
 
 // Intersection of two sorted lists
@@ -23,7 +23,7 @@ let rec private intersect xs ys =
     
 // n_i= (μ_Ri +(size(k))/(∑_k s_k )∙μ_Si)∙ a_ii  k = set of rules currently in use 
 let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (threshold : float): bool =
-    let a_ii = (lookUpInTuple agent.DecisionOpinions.Value.AllOtherAgentsOpinion agent.ID).Value
+    let a_ii = agent.SelfConfidence
     let likelihood = agent.Egotism + agent.Susceptibility * ((float)numberOfRules /
                                             List.sum (List.map(fun (_, socialGood, _) -> socialGood) ruleSet)) * a_ii
     likelihood > threshold                                        
@@ -63,8 +63,8 @@ let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : (Agent 
     
 // F_j=a_ij∙μ_Xi+O_ik∙a_ii
 let private choiceOfProposalForOneAgent (chair : Agent) (currentRule : Rule) (agentProposingRule : Agent) : float=
-    let a_ii = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion chair.ID).Value
-    let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule.ID).Value
+    let a_ii = chair.SelfConfidence
+    let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule).Value
     let (_, currentOpinionOnRule) = List.filter (fun (rule, _) -> currentRule = rule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
     a_ij * chair.Susceptibility + a_ii * currentOpinionOnRule
 
@@ -79,7 +79,7 @@ let doesTheChairUseVeto (chair : Agent) (agentProposingRule : Agent)
     let (_, oldRuleOpinion) = List.filter (fun (rule, _) -> rule = currentRule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
     let (_, newRuleOpinion) = List.filter (fun (rule, _) -> rule = newRule) chair.DecisionOpinions.Value.OverallRuleOpinion |> List.head
     let opinionDifferenceBetweenRuleChange = oldRuleOpinion - newRuleOpinion
-    let a_ii = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion chair.ID).Value
-    let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule.ID).Value
+    let a_ii = chair.SelfConfidence
+    let a_ij = (lookUpInTuple chair.DecisionOpinions.Value.AllOtherAgentsOpinion agentProposingRule).Value
     let b_t = 1.0 - opinionDifferenceBetweenRuleChange * a_ii - a_ij * chair.Susceptibility
     b_t > threshold
