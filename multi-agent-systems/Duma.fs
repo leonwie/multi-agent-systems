@@ -1,5 +1,6 @@
 module Duma
 
+open System.Data
 open Types
 open Voting
 open Config
@@ -62,37 +63,29 @@ let voteOnChairCandidates (agent : Agent) (allCandidates : Agent list) : Agent l
     |> List.map fst // map agent * float to agent    
 *)
 
+let private getRulesForTopic (chair : Agent) (rule : Rule) (rules : (Agent * Rule) list) : Agent =
+    let filteredRules =
+        match rule with
+        | Shelter(x) -> (List.filter (function (_, Shelter _) -> true | _ -> false) rules) |> List.map fst
+        | Food(x) ->  (List.filter (function (_, Shelter _) -> true | _ -> false) rules) |> List.map fst
+        | Work(x) -> (List.filter (function (_, Work _) -> true | _ -> false) rules) |> List.map fst
+        | Voting(x) -> (List.filter (function (_, Voting _) -> true | _ -> false) rules) |> List.map fst
+        | Sanction(x) -> (List.filter (function (_, Sanction _) -> true | _ -> false) rules) |> List.map fst
+    chairChoiceOfProposalForTopic chair filteredRules rule
+    
 let getPropositions (world : WorldState) (agents : Agent list) : Proposal list =
     // Get all the agents and the proposals they want to make, filter those allowed to make proposals
-    let propositions =
-        agents
-        |> List.collect (fun agent -> proposalOfRuleChangesForAgent agent world) // Gets a list of rules to propose and agents
-        (* // Replace this with stuff that matches your implementation
-        |> chairChoiceOfProposalForTopic
-        |> doesTheChairUseVeto
-        
-        
-        |> List.fold (fun acc el ->
-            match el with // Filter out None types so that only the new rule propositions remain
-            | Some(x), l -> acc @ [x, l]
-            | None, _ -> acc
-        ) []  *)
-        
-        
-    // Turn from an (Agent * Rule list) list to an (Rule * Agent list) list (e.g. Proposal list)
-    propositions
-    |> List.fold (fun (acc : Proposal list) el ->
-        let rule = el |> fst
-        if List.contains rule (List.map fst acc)
-        then // This whole function can probably be implemented better...
-            let index = List.findIndex (fun el -> el |> fst = rule) acc
-            List.mapi (fun i el1 ->
-                if i = index
-                then rule, (el1 |> snd) @ [el |> snd]
-                else el1) acc
-        else acc @ [el |> fst, [el |> snd]]
-    ) []
-
+    let proposalOfRuleChanges = List.map (fun agent -> proposalOfRuleChangesForAgent agent world) agents
+    let agentNewRules = List.filter (fun (_, list) -> not(List.isEmpty list)) proposalOfRuleChanges
+                        |> List.map (fun (agent, rules) -> (agent, List.head rules))
+    let agentOldRules = List.map (fun (rule, _, _) -> (getRulesForTopic world.CurrentChair.Value rule agentNewRules, rule))
+                            world.CurrentRuleSet |> List.sort
+    let newRules = List.filter (fun (agent, _) -> List.contains agent (List.map fst agentOldRules))
+                       agentNewRules |> List.sort
+    let zipped = List.zip agentOldRules newRules
+    let updatedProposals = List.filter (fun ((agent, oldRule), (_, newRule)) ->
+        not(doesTheChairUseVeto world.CurrentChair.Value agent oldRule newRule vetoThreshold)) zipped
+    List.map (fun ((agent, _), (_, newRule)) -> (newRule, [agent])) updatedProposals
 
 let chairVote (world : WorldState) (agents : Agent list) : WorldState =
     // Vote on the new chair person
@@ -100,7 +93,7 @@ let chairVote (world : WorldState) (agents : Agent list) : WorldState =
     then // Get the opinions of each agent and carry out a vote on the chairman
         let candidates = 
             agents // Does an agent nominate itself
-            |> List.filter (fun agent -> doesAgentNominateItselfForChair agent world.RuleSet nominationThreshold)
+            |> List.filter (fun agent -> doesAgentNominateItselfForChair agent world.CurrentRuleSet nominationThreshold)
         let newChair =
             agents
             |> List.map (fun agent -> agentVoteForChair candidates agent)
@@ -146,7 +139,8 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
                     fun el ->
                         match el with
                         | Some(y) -> y
-                        | None -> failwithf "This shouldn't happen since the List should either be all None (already dealt with) or all Some"
+                        | None -> failwithf "This shouldn't happen since the List should either be all None
+                                                                                      (already dealt with) or all Some"
                     ) x |> Some
         let rulesToVoteOn1 =
             rulesToVoteOn

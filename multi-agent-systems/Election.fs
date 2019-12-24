@@ -52,14 +52,14 @@ let private proposalOfRuleChangesForOneTopic (agent : Agent) (currentRule : Rule
     if num > currentOpinionOnRule then (pastRule, num - currentOpinionOnRule) else (currentRule, 0.0)
 
 // Returns a Rule list with either 1 element or empty - run this for every agent
-let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : Rule list =
+let proposalOfRuleChangesForAgent (agent : Agent) (state : WorldState) : (Agent * Rule list) =
     let currentRules = List.map (fun (rule, _, _) -> rule) state.CurrentRuleSet
     let scores = List.map (proposalOfRuleChangesForOneTopic agent) currentRules
     let ruleProposals = List.filter (fun (_, y) -> y <> 0.0) scores
     match List.length ruleProposals with
-    | 0 -> []
-    | 1 -> [ruleProposals |> List.head |> fst]
-    | _ -> [List.sortBy (fun (_, y) -> -y) ruleProposals |> List.head |> fst]
+    | 0 -> (agent, [])
+    | 1 -> (agent, [ruleProposals |> List.head |> fst])
+    | _ -> (agent, [List.sortBy (fun (_, y) -> -y) ruleProposals |> List.head |> fst])
     
 // F_j=a_ij∙μ_Xi+O_ik∙a_ii
 let private choiceOfProposalForOneAgent (chair : Agent) (currentRule : Rule) (agentProposingRule : Agent) : float=
