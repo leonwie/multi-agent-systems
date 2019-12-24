@@ -1,6 +1,7 @@
 ﻿module multi_agent_systems.Opinion
 open Config
 open Types
+open Decision
 
 let rec private lookForAgentByID (agentList : Agent list) (id : int) : Agent option =
     match agentList with
@@ -73,9 +74,27 @@ let updateSocialGoodForEveryCurrentRule (agents : Agent list) (state : WorldStat
             (y, (oldSocialGood * (float)lastUpdate + socialGood) / (float)(lastUpdate + 1), lastUpdate + 1)) state.CurrentRuleSet
     {state with CurrentRuleSet = updatedRules}
 
-// sec 3.3 in Overleaf
-//let normaliseTheArrays = failwithf "This is still to be implemented."
+let private normaliseTheAgentArraysPerAgent (agent : Agent) : Agent =
+    let rewardList = List.map (fun (_, reward, _) -> reward) agent.DecisionOpinions.Value.RewardPerRule
+    let restList = List.map (fun (rule, _, time) -> (rule, time)) agent.DecisionOpinions.Value.RewardPerRule
+    let updatedPayoff = List.map (fun ((rule, time), reward) -> (rule, reward, time)) (List.zip restList rewardList) 
+    let rewardList = List.map (fun (_, reward) -> reward) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
+    let ruleList = List.map (fun (rule, _) -> rule) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
+    let updatedCurrentRules = List.zip ruleList rewardList 
+    let updatedDecision = {agent.DecisionOpinions.Value with RewardPerRule = updatedPayoff; PersonalCurrentRulesOpinion = updatedCurrentRules}
+    {agent with DecisionOpinions = Some updatedDecision}
 
+// sec 3.3 in Overleaf    
+let normaliseTheAgentArrays (agents : Agent list) : Agent list =
+    List.map normaliseTheAgentArraysPerAgent agents 
+// sec 3.3 in Overleaf
+let normaliseTheSocialGood (state : WorldState) : WorldState =
+    let socialGoodList = List.map (fun (_, socialGood, _) -> socialGood) state.CurrentRuleSet
+    let restList = List.map (fun (rule, _, time) -> (rule, time)) state.CurrentRuleSet
+    let normalisedSocialGood = standardize socialGoodList
+    let updatedSocialGood = List.map (fun ((rule, time), socialGood) -> (rule, socialGood, time)) (List.zip restList normalisedSocialGood) 
+    {state with CurrentRuleSet = updatedSocialGood}
+    
 let private updateAggregationArray (state : WorldState) (agent : Agent)  : Agent =
     let susceptibilityMetric = List.map (fun (rule, opinion) -> (rule, opinion * agent.Susceptibility)) agent.DecisionOpinions.Value.PersonalCurrentRulesOpinion
     let rewardMetric = List.map (fun (rule, reward) -> (rule, reward * agent.Egotism)) (List.map (fun(rule, value, _) -> (rule, value)) agent.DecisionOpinions.Value.RewardPerRule)
