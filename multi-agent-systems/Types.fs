@@ -96,10 +96,14 @@ and Agent =
         BuildingAptitude : float;
         HuntingAptitude : float;
         SelfConfidence : float;
-        
         R : float list;
         Rsharing : float list;
         S : float list;
+
+        LastCrimeDate : int;
+        AccessToFood : bool;
+        Alive: bool;
+        TodaysEnergyObtained : float;
     }
 
 type WorldState =

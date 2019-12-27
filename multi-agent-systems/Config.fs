@@ -43,3 +43,10 @@ let nominationThreshold = 0.5
 
 // New Spec
 let ExplorationDecay = 0.5
+
+
+// For Sanctions
+let InfamyStep = 0.1
+let MinimumFoodForOligarchy = 0.5
+let CrimeDiscoveryRate = 0.5
+let WorkExemptionThreshold = 0.3

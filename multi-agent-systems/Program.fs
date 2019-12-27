@@ -2,6 +2,7 @@
 open Agent
 open Types
 open Activities
+open Sanctions
 open Hunt
 open Build
 open Config
@@ -37,9 +38,11 @@ let main argv =
     let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =
         if currentWorld.CurrentDay = maxSimulationTurn then currentWorld
         else
+            let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
+            let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
             let agentsWithJobs = 
-                agents 
+                livingAgents 
                 |> jobAllocation;
 
             let builders = 
@@ -49,8 +52,7 @@ let main argv =
             // Update shelter
             let currentWorld = newWorldShelters currentWorld builders
 
-            // Assign shelter
-            let agents = assignShelters currentWorld agents
+    
 
             let hunters =
                 agentsWithJobs
@@ -71,17 +73,29 @@ let main argv =
 
             let energyGained = hareCaptured * rabbosEnergyValue + stagCaptured * staggiEnergyValue
 
-            // Resorce Allocation
+            // Sanction
+            // Note that no sanction happens the first day, because no allocation
+            // has happened yet
+            let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld livingAgents energyGained
+            let livingAgents = 
+                livingAgents 
+                |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
+                |> sanction currentWorld
 
-            // To ensure consistency of agent definition, use oldAgents first
-            let currentWorld = newWorldShelters currentWorld agentsWithJobs
-            
+            // After sanction, agent may die
+            let deadAgents = deadAgents @ (livingAgents |> List.filter (fun el -> el.Alive = false))
+            let livingAgents = livingAgents |> List.filter (fun el -> el.Alive = true)
 
-            // event resolution
-            let agentsWithNewEnergy = 
-                agentsWithJobs
+            // Resource Allocation
+            let livingAgents =
+                livingAgents
+                |> foodAllocation idealEnergyAssignment
                 |> assignShelters currentWorld
+                |> assignShelters currentWorld
+            // End-of-turn energy decay
                 |> List.map (fun el -> newAgentEnergy el)
+            // End-of-turn infamy decay
+                |> infamyDecay currentWorld
 
 
             let currentWorld = 
@@ -90,9 +104,9 @@ let main argv =
                                     NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
             // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
-            printfn "Living Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy > 0.0))
+            printfn "Living Agents: %A" (livingAgents |> List.filter (fun el -> el.Energy > 0.0))
             printfn "Current world status: %A" currentWorld
-            loop currentWorld agentsWithNewEnergy
+            loop currentWorld (livingAgents @ deadAgents)
 
     
     let finalWorld = loop currentWorld agents;

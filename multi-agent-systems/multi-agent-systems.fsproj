@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Config.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Sanctions.fs" />
     <Compile Include="Voting.fs" />
     <Compile Include="Election.fs" />
     <Compile Include="Agent.fs" />
