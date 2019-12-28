@@ -73,30 +73,26 @@ let main argv =
 
             let energyGained = hareCaptured * rabbosEnergyValue + stagCaptured * staggiEnergyValue
 
-            // Sanction
-            // Note that no sanction happens the first day, because no allocation
-            // has happened yet
             let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld livingAgents energyGained
-            let livingAgents = 
-                livingAgents 
-                |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
-                |> sanction currentWorld
-
-            // After sanction, agent may die
-            let deadAgents = deadAgents @ (livingAgents |> List.filter (fun el -> el.Alive = false))
-            let livingAgents = livingAgents |> List.filter (fun el -> el.Alive = true)
 
             // Resource Allocation
             let livingAgents =
                 livingAgents
-                |> foodAllocation idealEnergyAssignment
+                |> allocateFood idealEnergyAssignment
                 |> assignShelters currentWorld
-                |> assignShelters currentWorld
+            // Sanction 
+                |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
+                |> sanction currentWorld
             // End-of-turn energy decay
                 |> List.map (fun el -> newAgentEnergy el)
             // End-of-turn infamy decay
                 |> infamyDecay currentWorld
 
+
+
+            // After sanction, agent may die
+            let deadAgents = deadAgents @ (livingAgents |> List.filter (fun el -> el.Alive = false))
+            let livingAgents = livingAgents |> List.filter (fun el -> el.Alive = true)
 
             let currentWorld = 
                 {currentWorld with CurrentDay = currentWorld.CurrentDay + 1; 

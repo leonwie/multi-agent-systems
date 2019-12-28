@@ -49,12 +49,8 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
 
     (targetEnergyList, targetWorkStatus)
 
-// Selfish hunters should have hidden their games in another function
-// Therefore this allocation will strictly happen according to rule
-// NOTE Please someone verify that this has been understood correctly
-//
-//
-let foodAllocation (targetEnergyList: float list) (agents: Agent list): Agent list = 
+// Allocate food according to precomputed assignment
+let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list = 
     List.zip agents targetEnergyList
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
