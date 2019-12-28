@@ -106,44 +106,14 @@ let main argv =
             // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
             printfn "Living Agents: %A" (livingAgents |> List.filter (fun el -> el.Energy > 0.0))
             printfn "Current world status: %A" currentWorld
-            loop currentWorld (livingAgents @ deadAgents)
-
+            
+            if livingAgents.Length = 0 || currentWorld.CurrentDay = 20 then
+                currentWorld
+            else
+                loop currentWorld (livingAgents @ deadAgents)
     
     let finalWorld = loop currentWorld agents;
 
     printfn "Final world status: %A" finalWorld;
     
     0
-
-
-//open multi_agent_systems
-
-//[<EntryPoint>]
-//let main argv =
-//    // Config tested with arguments "--number-days 20 --number-profiles 2"
-//    let agents = Parsing.parse argv
-
-//    let whatToDo (agents : Agent list) =
-//        agents
-//        |> List.map (fun el ->
-//            "\n" + (string)el.ID +
-//            " will do " + (el.TodaysActivity |> fst |> string) +
-//            " and expend " + (el.TodaysActivity |> snd |> string) + " energy."
-//        )
-
-//    let allAgents =
-//        agents 
-//        |> jobAllocation
-
-//    let builders =
-//        allAgents
-//        |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
-
-//    let hunters =
-//        allAgents
-//        |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
-    
-//    printfn "%A" agents
-//    printfn "%A" (whatToDo allAgents)
-    
-//    0 // return an integer exit code
