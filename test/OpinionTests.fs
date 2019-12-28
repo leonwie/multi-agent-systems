@@ -1,4 +1,5 @@
-﻿module multi_agent_systems.tests.OpinionTests
+module Tests
+
 open NUnit.Framework
 
 [<TestFixture>]
@@ -10,4 +11,3 @@ type TestClass () =
 
     [<Test>]
      member this.FailEveryTime() = Assert.True(false)
-     

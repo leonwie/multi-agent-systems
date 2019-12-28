@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\clara\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\clara\\.nuget\\packages"
+    ]
+  }
+}
