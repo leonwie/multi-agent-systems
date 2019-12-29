@@ -2,7 +2,8 @@
 
 type Activity =
     | NONE
-    | HUNTING
+    | STAG
+    | HARE
     | BUILDING
 
 type Fauna =

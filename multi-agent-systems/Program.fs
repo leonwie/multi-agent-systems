@@ -41,10 +41,19 @@ let main argv =
         else
             let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
             let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
-
+            
+            // Work allocation
             let agentsWithJobs = 
                 livingAgents 
-                |> jobAllocation;
+                |> List.map (fun el -> 
+                    let decision, payoff = workAllocation el currentWorld // To verify
+                    match decision with
+                    | 0 -> {el with TodaysActivity = NONE, 1.0}
+                    | 1 -> {el with TodaysActivity = STAG, payoff}
+                    | 2 -> {el with TodaysActivity = HARE, payoff}
+                    | 3 -> {el with TodaysActivity = BUILDING, 1.0}
+                    | _ -> failwith("Invalid decision")
+                )
 
             let builders = 
                 agentsWithJobs
@@ -53,25 +62,19 @@ let main argv =
             // Update shelter
             let currentWorld = newWorldShelters currentWorld builders
 
-    
-
-            let hunters =
-                agentsWithJobs
-                |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
-
             let slackers = 
                 agentsWithJobs
                 |> List.filter (fun el -> fst el.TodaysActivity = NONE)
 
             let hareHunters = 
-                hunters
-                |> List.filter (fun el -> el.ID % 2 = 0) // Placeholder for job allocation
+                agentsWithJobs
+                |> List.filter (fun el -> fst el.TodaysActivity = HARE)
                 |> capHare
                 |> shareFood currentWorld
                 
             let stagHunters = 
-                hunters
-                |> List.filter (fun el -> el.ID % 2 <> 0) // Placeholder for job allocation
+                agentsWithJobs
+                |> List.filter (fun el -> fst el.TodaysActivity = STAG)
                 |> capStag
                 |> shareFood currentWorld
 
