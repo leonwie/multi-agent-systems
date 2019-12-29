@@ -50,6 +50,7 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         AccessToFood = true;
         Alive = true;
         TodaysEnergyObtained = 0.0;
+        TodaysFoodCaptured = 0.0;
     }
 
 let private initialRewardRule = List.map (fun (y, _, _) -> (y, 0.5, 0)) initialiseAllRules

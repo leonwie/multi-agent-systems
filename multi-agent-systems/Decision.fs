@@ -38,28 +38,28 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
     let choicesWithoutMax = match bestOptions |> List.length with
                             | 1 -> indexedChoices |> List.filter (fun x -> snd x <> maxim)
                             | _ -> indexedChoices
-    printfn "choices : %A" choicesWithoutMax
-    printfn "best options %A" bestOptions
+    //printfn "choices : %A" choicesWithoutMax
+    //printfn "best options %A" bestOptions
     let softmax x = exp (x / worldProp.Tau)
     // choices instead of choicesWithoutMax
     let newChoices = List.map (fun x -> fst x, softmax (snd x)) choicesWithoutMax
     let softmaxMapping = newChoices |> List.map (fun x -> fst x, (snd x) / (List.sumBy snd newChoices))
     let rndNo = generateRandom 1
-    printfn "first random no %A" rndNo
+    //printfn "first random no %A" rndNo
     let explore (list:(int*float) list) =
         let rnd = generateRandom 1
-        printfn "second random no %A" rnd
+        //printfn "second random no %A" rnd
         let indexedRanges = list |> List.fold (fun acc x -> List.append (fst acc) [(snd acc),(snd acc) + (snd x), fst x], (snd acc) + (snd x)) (List.empty,0.0)
         let predicate (x:(float*float*int)) = match x with
                                               | low, high, index when low <= rnd.Head && high > rnd.Head -> true
                                               //| sol when sol >= fst (snd x) && sol <  snd (snd x) -> true
                                               | _ -> false
-        printfn "ranges: %A" indexedRanges
+        //printfn "ranges: %A" indexedRanges
         match fst indexedRanges |> List.filter predicate |> List.tryHead with
         | Some (_,_,id) -> id
         | _ -> failwith("random number out of range")
    // printfn "exploration result %A" (explore softmaxMapping)
-    printfn "epsilon = %A" epsilon
+    //printfn "epsilon = %A" epsilon
     match rndNo with
     | head::_ when head < epsilon -> fst bestOptions.Head
     | _ -> explore softmaxMapping

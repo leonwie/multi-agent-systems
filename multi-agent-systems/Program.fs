@@ -1,5 +1,4 @@
 ﻿module Program
-open Agent
 open Types
 open Activities
 open Sanctions
@@ -33,6 +32,7 @@ let main argv =
             BuildingAverageTotalReward = 0.0;
             HuntingAverageTotalReward = 0.0;
         }
+
     
     let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
@@ -49,30 +49,42 @@ let main argv =
         // Update shelter
         let currentWorld = newWorldShelters currentWorld builders
 
+
+
         let hunters =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
 
-        let hareCaptured = 
+        let slackers = 
+            agentsWithJobs
+            |> List.filter (fun el -> fst el.TodaysActivity = NONE)
+
+        let hareHunters = 
             hunters
-            |> List.map (fun el -> 
-                rand.Next() 
-                |> float
-                |> capHare rabbosMinRequirement rabbosProbability)// PlaceHolder for agent decision
+            |> List.filter (fun el -> el.ID % 2 = 0) // Placeholder for job allocation
+            |> capHare
+            |> shareFood currentWorld
+            
+        let stagHunters = 
+            hunters
+            |> List.filter (fun el -> el.ID % 2 <> 0) // Placeholder for job allocation
+            |> capStag
+            |> shareFood currentWorld
+
+        let energyForAllocation = 
+            hareHunters @ stagHunters
+            // Discounts agents who do not share food without sanctioning them
+            |> List.map (fun el -> el.TodaysFoodCaptured - el.TodaysEnergyObtained)
             |> List.sum
+            
+        // Re-concatenate the individually processed groups
+        let agentsAfterWorking = hareHunters @ stagHunters @ builders @ slackers
 
-        let stagCaptured = 
-            hunters
-            |> List.map (fun el -> rand.Next() |> float) // PlaceHolder for agent decisions
-            |> capStag staggiMinIndividual staggiMinCollective staggiProbability
-
-        let energyGained = hareCaptured * rabbosEnergyValue + stagCaptured * staggiEnergyValue
-
-        let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld livingAgents energyGained
+        let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld agentsAfterWorking energyForAllocation
 
         // Resource Allocation
-        let livingAgents =
-            livingAgents
+        let agentsAfterResorceAllocation =
+            agentsAfterWorking
             |> allocateFood idealEnergyAssignment
             |> assignShelters currentWorld
         // Sanction 
@@ -83,24 +95,34 @@ let main argv =
         // End-of-turn infamy decay
             |> infamyDecay currentWorld
 
+
+
         // After sanction, agent may die
-        let deadAgents = deadAgents @ (livingAgents |> List.filter (fun el -> el.Alive = false))
-        let livingAgents = livingAgents |> List.filter (fun el -> el.Alive = true)
+        let deadAgentsAfterToday = deadAgents @ (agentsAfterResorceAllocation |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
+        let livingAgentsAfterToday = 
+            agentsAfterResorceAllocation 
+            |> List.filter (fun el -> el.Alive = true && el.Energy > 0.0)
+        // Reset food captured field associated with current day
+        // TODO if we need to record agent state for each day,
+        // we must do it before reset here
+            |> List.map (fun el -> 
+                {el with TodaysFoodCaptured = 0.0; TodaysEnergyObtained = 0.0}
+            )
 
         let currentWorld = 
             {currentWorld with CurrentDay = currentWorld.CurrentDay + 1; 
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare; 
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-        // printfn "Dead Agents: %A" (agentsWithNewEnergy |> List.filter (fun el -> el.Energy <= 0.0))
-        printfn "Living Agents: %A" (livingAgents |> List.filter (fun el -> el.Energy > 0.0))
+        printfn "Living Agents: %A" livingAgentsAfterToday
         printfn "Current world status: %A" currentWorld
-        
-        if livingAgents.Length = 0 || currentWorld.CurrentDay = 20 || currentWorld.CurrentDay = maxSimulationTurn then
+        printfn "End of DAY: %A" currentWorld.CurrentDay
+
+        if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = 200 || currentWorld.CurrentDay = maxSimulationTurn then
             currentWorld
         else
-            loop currentWorld (livingAgents @ deadAgents)
-    
+            loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday)
+
     let finalWorld = loop currentWorld agents;
 
     printfn "Final world status: %A" finalWorld;

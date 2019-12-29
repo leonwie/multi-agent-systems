@@ -64,9 +64,9 @@ let runOffRound2 (votes : 'a list list) : 'a  =
 // Instant Runoff
 let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
     // Count the number of first place votes everyone has
-    let countVotes (votes : 'a list list) (remaining'as : 'a list) : ('a * int) list =
+    let countVotes (votes : 'a list list) (remainingcandidates : 'a list) : ('a * int) list =
         let initialAcc = 
-            remaining'as
+            remainingcandidates
             |> List.map (fun el -> el, 0)
         votes
         |> List.filter (fun list -> not (List.isEmpty list))
@@ -82,19 +82,19 @@ let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
         |> List.minBy snd
         |> fst
 
-    // Return the list of 'as without the round loser   
+    // Return the list of candidates without the round loser   
     let newRanks (allVotes : 'a list list) (roundLoser : 'a) : 'a list list =
         allVotes
         |> List.map (List.filter (fun el -> el <> roundLoser))
 
     // Recursively run the rounds
-    let rec runoff (votes : 'a list list) (remaining'as : 'a list ) : 'a =
-        match countVotes votes remaining'as with
+    let rec runoff (votes : 'a list list) (remainingCandidates : 'a list ) : 'a =
+        match countVotes votes remainingCandidates with
         | [(x, _)] -> x
         | list -> 
             let loser = roundLoser list
             let nextRoundRanks = newRanks votes loser
-            let remaining = List.filter (fun el -> el <> loser) remaining'as
+            let remaining = List.filter (fun el -> el <> loser) remainingCandidates
             runoff nextRoundRanks remaining
 
     runoff votes allCandidates

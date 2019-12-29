@@ -104,6 +104,7 @@ and Agent =
         AccessToFood : bool;
         Alive: bool;
         TodaysEnergyObtained : float;
+        TodaysFoodCaptured: float;
     }
 
 type WorldState =
