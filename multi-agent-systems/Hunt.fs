@@ -16,7 +16,7 @@ let capHare (agents: Agent list) : Agent list =
     let numHareCaptured (agent: Agent) =
         let maxHare =
             snd agent.TodaysActivity
-            |> (/) rabbosMinRequirement
+            |> fun x -> x / rabbosMinRequirement
             |> floor
             |> int
 
@@ -49,10 +49,11 @@ let capStag (agents : Agent list) : Agent list =
         agents
         |> List.map (fun el -> snd el.TodaysActivity)
 
+    
     let maxNumStag =
         actProfile
         |> List.sum
-        |> (/) staggiMinCollective
+        |> fun x -> x / staggiMinCollective
         |> floor
         |> int
 
@@ -63,7 +64,7 @@ let capStag (agents : Agent list) : Agent list =
 
     let avgStagEnergy = 
         if meetStagCondition actProfile then numStag else 0.0
-        |> (/) (List.length agents |> float)
+        |> fun x -> x / (List.length agents |> float)
 
     agents
     |> List.map (fun el -> {el with TodaysFoodCaptured = avgStagEnergy})
@@ -71,7 +72,7 @@ let capStag (agents : Agent list) : Agent list =
 let regenRate (rate : float) (totNum: int) (maxCapacity: int) : int =
     totNum
     |> float
-    |> (/) (maxCapacity |> float)
+    |> fun x -> x / (maxCapacity |> float)
     |> fun x -> 1.0 - x
     |> (*) rate
     |> (*) (totNum |> float)

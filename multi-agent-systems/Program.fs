@@ -82,13 +82,13 @@ let main argv =
                 |> List.sum
                 
             // Re-concatenate the individually processed groups
-            let livingAgents = hareHunters @ stagHunters @ builders @ slackers
+            let agentsAfterWorking = hareHunters @ stagHunters @ builders @ slackers
 
-            let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld livingAgents energyForAllocation
+            let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld agentsAfterWorking energyForAllocation
 
             // Resource Allocation
-            let livingAgents =
-                livingAgents
+            let agentsAfterResorceAllocation =
+                agentsAfterWorking
                 |> allocateFood idealEnergyAssignment
                 |> assignShelters currentWorld
             // Sanction 
@@ -102,9 +102,9 @@ let main argv =
 
 
             // After sanction, agent may die
-            let deadAgents = deadAgents @ (livingAgents |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
-            let livingAgents = 
-                livingAgents 
+            let deadAgentsAfterToday = deadAgents @ (agentsAfterResorceAllocation |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
+            let livingAgentsAfterToday = 
+                agentsAfterResorceAllocation 
                 |> List.filter (fun el -> el.Alive = true && el.Energy > 0.0)
             // Reset food captured field associated with current day
             // TODO if we need to record agent state for each day,
@@ -118,13 +118,13 @@ let main argv =
                                     NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare; 
                                     NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-            printfn "Living Agents: %A" livingAgents
+            printfn "Living Agents: %A" livingAgentsAfterToday
             printfn "Current world status: %A" currentWorld
             
-            if livingAgents.Length = 0 || currentWorld.CurrentDay = 20 then
+            if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = 20 then
                 currentWorld
             else
-                loop currentWorld (livingAgents @ deadAgents)
+                loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday)
     
     let finalWorld = loop currentWorld agents;
 
