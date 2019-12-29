@@ -14,7 +14,7 @@ let standardize (distributions : float list) : float list =
     //printf "distr %A" distributions
     let allEqual = distributions |> Seq.windowed(2) |> Seq.forall(fun arr -> arr.[0] = arr.[1])
     if allEqual then
-        List.map (fun _ -> 0.0) distributions
+        List.map (fun _ -> 0.5) distributions
     else    
         let mean = List.average distributions
         let len = List.length distributions |> float
