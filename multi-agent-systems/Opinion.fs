@@ -116,11 +116,13 @@ let private updateOpinion (agent : Agent) (rewardPerDay : float) (averageReward 
     (otherAgentOpinion |> fst, newOpinion)        
 
 let private updateWorkingAgentsOpinion (state : WorldState) (agent : Agent) (workingAgents : (Agent * float) list) : (Agent * float) list =
-    let huntingAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = HUNTING) workingAgents
+    let hareAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = HARE) workingAgents
+    let stagAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = STAG) workingAgents
     let buildingAgents = List.filter (fun (ag, _) -> ag.TodaysActivity |> fst = BUILDING) workingAgents
-    let huntingList = List.map (updateOpinion agent state.HuntingRewardPerDay state.HuntingAverageTotalReward) huntingAgents
+    let hareList = List.map (updateOpinion agent state.HuntingRewardPerDay state.HuntingAverageTotalReward) hareAgents
+    let stagList = List.map (updateOpinion agent state.HuntingRewardPerDay state.HuntingAverageTotalReward) stagAgents
     let buildingList = List.map (updateOpinion agent state.BuildingRewardPerDay state.BuildingAverageTotalReward) buildingAgents
-    huntingList @ buildingList
+    hareList @ stagList @ buildingList
 
 let private updateNonWorking (agent : Agent) (otherAgent : Agent * float) : (Agent * float) =
     let opinion = otherAgent |> snd
