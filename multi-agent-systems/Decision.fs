@@ -1,4 +1,4 @@
-﻿module multi_agent_systems.Decision
+﻿module Decision
 open Types
 
 //#light
@@ -10,16 +10,21 @@ let rand = System.Random()
 let generateRandom length =
     let seed = System.Random()
     List.init length (fun _ -> seed.NextDouble())
-let standardize (distributions : float list) = //: float list * float * float =
-    let mean = List.average distributions
-    let len = List.length distributions |> float
-    let standardDeviation = (/) (List.sumBy (fun x -> (x - mean)*(x - mean)) distributions) len |> sqrt
-    List.map (fun x -> (x - mean)/(4.0*standardDeviation)+0.5) distributions
-    |> List.map (fun x -> match x with
-                                | s when s < 0.0 -> 0.0
-                                | s when s > 1.0 -> 1.0
-                                | s -> s )  //, mean, standardDeviation, len, standardDeviation
-//standardize [0.1; 0.2; 0.3; 0.4; 0.9; 0.95; 0.99; 0.88; 0.97]                        
+let standardize (distributions : float list) : float list =
+    //printf "distr %A" distributions
+    let allEqual = distributions |> Seq.windowed(2) |> Seq.forall(fun arr -> arr.[0] = arr.[1])
+    if allEqual then
+        List.map (fun _ -> 0.0) distributions
+    else    
+        let mean = List.average distributions
+        let len = List.length distributions |> float
+        let standardDeviation = (/) (List.sumBy (fun x -> (x - mean)*(x - mean)) distributions) len |> sqrt
+        List.map (fun x -> (x - mean)/(4.0*standardDeviation)+0.5) distributions
+        |> List.map (fun x -> match x with
+                                    | s when s < 0.0 -> 0.0
+                                    | s when s > 1.0 -> 1.0
+                                    | s -> s )
+    
 let worldProp : WorldProperties = {
         // just some random values I used for testing
         Tau = 10.0

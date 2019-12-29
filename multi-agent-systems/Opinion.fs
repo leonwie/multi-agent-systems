@@ -1,5 +1,4 @@
-﻿module multi_agent_systems.Opinion
-open System.Data
+﻿module Opinion
 open Config
 open Types
 open Decision
@@ -13,7 +12,7 @@ let private median list =
     (sorted.[firstHalf] + sorted.[secondHalf] |> float) / 2.
 
 // Calculated g_i aka g_agent where i = agent.ID
-let g (agent : Agent) : float = max (1.0 - 1.2 * agent.Susceptibility) 0.0
+let private g (agent : Agent) : float = max (1.0 - 1.2 * agent.Susceptibility) 0.0
 
 let private findAgentByID (id : int) (agents : Agent list) : Agent =
     List.filter (fun agent -> agent.ID = id) agents |> List.head
@@ -43,7 +42,7 @@ let private updateRewardPerRule (agent : Agent) (newRewardForAgent : float) (rul
     | t -> (ruleC, (currentReward * (float)t + newRewardForAgent) / (float)(t + 1), t + 1)
     
 let private updateReward (state : WorldState) (agent : Agent) : Agent =
-    let newRewardForAgent = (float)agent.Gain - agent.EnergyConsumed - agent.EnergyDeprecation
+    let newRewardForAgent = (float) agent.Gain - agent.EnergyConsumed - agent.EnergyDeprecation
     let currentRules = List.map (fun (rules, _, _) -> rules) state.CurrentRuleSet
     let updatedRewards = List.map (updateRewardPerRule agent newRewardForAgent) currentRules
     let filteredRewards = List.filter (fun (rule, _, _) -> not(List.contains rule currentRules)) agent.DecisionOpinions.Value.RewardPerRule
@@ -67,6 +66,7 @@ let updateSocialGoodForEveryCurrentRule (agents : Agent list) (state : WorldStat
         then (y, socialGood, 1)
         else
             (y, (oldSocialGood * (float)lastUpdate + socialGood) / (float)(lastUpdate + 1), lastUpdate + 1)) state.CurrentRuleSet
+    printf "updatedRules %A" updatedRules
     {state with CurrentRuleSet = updatedRules}
 
 let private normaliseTheAgentArraysPerAgent (agent : Agent) : Agent =

@@ -91,3 +91,6 @@ let private initialiseDecisionOpinions (agents : Agent list) : Agent list =
 let initialiseAgentDecisions (agents : Agent list) : Agent list =
     let opinions = initialiseDecisionOpinions agents
     List.map (initialiseFriendsAndEnemies opinions) opinions
+
+let setNumberAgents (numberAgents : int) =
+    numAgents <- numberAgents

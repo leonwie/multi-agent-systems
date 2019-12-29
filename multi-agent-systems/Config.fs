@@ -2,7 +2,7 @@
 
 // This is the config, its the place where you canhnge the values for stuff
 
-let numAgents = 8
+let mutable numAgents = 8
 let numberOfRules = 5
 
 let shelterEnergySavings = 0.5

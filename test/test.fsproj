@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <Compile Include="OpinionTests.fs" />
+        <Compile Include="DecisionTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
