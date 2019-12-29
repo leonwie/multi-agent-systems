@@ -1,8 +1,9 @@
-﻿module multi_agent_systems.Decision
+﻿module Decision
 open Types
 
 //#light
 open System
+open System.Diagnostics
 open Types
 
 let rand = System.Random()
@@ -64,18 +65,23 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
     | head::_ when head < epsilon -> fst bestOptions.Head
     | _ -> explore softmaxMapping
 //RLalg [0.1; 0.15; 0.2 0.15; 0.1; 0.1] 10.0 
-let workAllocation (agent:Agent) (world:WorldState) =
+let workAllocation (agent:Agent) (world:WorldState) : Agent =
    // let reward = float agent.Gain - agent.EnergyConsumed
     let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
     let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
-    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R agent.S
-    RLalg opinion world
-
-let foodSharing (agent:Agent) (world:WorldState) =
+    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R world.S
+    match RLalg opinion world with
+    | 0 -> {agent with TodaysActivity = Activity.HUNTING, agent.EnergyConsumed}
+    | 1 -> {agent with TodaysActivity = Activity.BUILDING, agent.EnergyConsumed}
+    | 2 -> {agent with TodaysActivity = Activity.NONE, 0.0}
+    | _ -> failwith "no other options for work allocation"
+let foodSharing (agent:Agent) (world:WorldState) : Agent =
     match agent.Egotism - agent.Idealism with
-    | negative when negative < 0.0 -> 1 // assuming the second entry in the list of payoffs is for sharing 
-    | _ -> RLalg agent.Rsharing world // return 1 for sharing and 0 for keeping all food 
- 
+    | negative when negative < 0.0 -> {agent with TodaysSharing = Sharing.SHARING, agent.Gain} // assuming the second entry in the list of payoffs is for sharing 
+    | _ -> match RLalg agent.Rsharing world with
+            | 0 -> {agent with TodaysSharing = Sharing.SHARING, agent.Gain} // return 1 for sharing and 0 for keeping all food 
+            | 1 -> {agent with TodaysSharing = Sharing.KEEPING, 0.0}
+            | _ -> failwith "no other options for sharing"
                    
 
 //let computeSocialGood (agents : Agent list) (world : WorldState) =

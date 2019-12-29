@@ -30,20 +30,20 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Idealism = idealism;                    // in [0, 1]
        
         EnergyDeprecation = 0.0;
-        Gain = 0;
+        Gain = 0.0;
         EnergyConsumed = 0.0;
         Infamy = 0.0;
         Energy = 100.0;
         
         TodaysActivity = Activity.NONE, 0.0;
+        TodaysSharing = Sharing.SHARING, 0.0;
         AccessToShelter = None;
         BuildingAptitude = 0.0;
         HuntingAptitude = 0.0;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
         
-        R = [0.5; 0.5];
-        S = [0.5; 0.5];
+        R = [0.5; 0.5; 0.5]; // hunt; build; do nothing
         Rsharing = [0.5; 0.5];
     }
 

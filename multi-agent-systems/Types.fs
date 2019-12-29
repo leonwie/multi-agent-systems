@@ -5,6 +5,9 @@ type Activity =
     | HUNTING
     | BUILDING
 
+type Sharing =
+    | SHARING
+    | KEEPING
 type Fauna =
     | Rabbos
     | Staggi
@@ -88,7 +91,7 @@ and Agent =
         Idealism : float;
         Egotism : float;
 
-        Gain : int;
+        Gain : float;
         EnergyDeprecation : float;
         EnergyConsumed : float;
         Infamy : float;
@@ -96,6 +99,7 @@ and Agent =
         DecisionOpinions : Opinions option;
 
         TodaysActivity : Activity * float;
+        TodaysSharing : Sharing * float;
         AccessToShelter : float option;
         BuildingAptitude : float;
         HuntingAptitude : float;
@@ -103,7 +107,6 @@ and Agent =
         
         R : float list;
         Rsharing : float list;
-        S : float list;
     }
 
 type WorldState =
@@ -122,6 +125,8 @@ type WorldState =
         NumStag : int;
         CurrentRuleSet : RuleSet;
         AllRules : RuleSet;
+        
+        S : float list;
     }
 
 type WorldProperties =

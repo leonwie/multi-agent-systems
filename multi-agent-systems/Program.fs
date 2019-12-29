@@ -29,6 +29,8 @@ let main argv =
             NumStag = 15;
             CurrentRuleSet = initialiseRuleSet;
             AllRules = initialiseAllRules;
+            
+            S = [0.5; 0.5];
         }
 
     
