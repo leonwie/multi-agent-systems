@@ -3,7 +3,7 @@ open Types
 
 let rand = System.Random()
 // Generate count random numbers in [0,1]
-let generateRandom length =
+let generateRandom (length) =
     let seed = System.Random()
     List.init length (fun _ -> seed.NextDouble())
 let standardize (distributions : float list) : float list =
@@ -44,10 +44,10 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
     // choices instead of choicesWithoutMax
     let newChoices = List.map (fun x -> fst x, softmax (snd x)) choicesWithoutMax
     let softmaxMapping = newChoices |> List.map (fun x -> fst x, (snd x) / (List.sumBy snd newChoices))
-    let rndNo = generateRandom 1
+    let rndNo = generateRandom (1)
     //printfn "first random no %A" rndNo
     let explore (list:(int*float) list) =
-        let rnd = generateRandom 1
+        let rnd = generateRandom (1)
         //printfn "second random no %A" rnd
         let indexedRanges = list |> List.fold (fun acc x -> List.append (fst acc) [(snd acc),(snd acc) + (snd x), fst x], (snd acc) + (snd x)) (List.empty,0.0)
         let predicate (x:(float*float*int)) = match x with

@@ -101,7 +101,7 @@ type TestClass () =
     [<Test>]
     member this.updateRewardsForEveryRuleForAgentTest() =
         let before = List.map (fun agent -> agent.DecisionOpinions.Value.RewardPerRule) this.agents
-        let updatedAgents = updateRewardsForEveryRuleForAgent this.agents this.state
+        let updatedAgents = updateRewardsForEveryRuleForAgent this.state this.agents 
         let after = List.map (fun agent -> agent.DecisionOpinions.Value.RewardPerRule) updatedAgents
         printf "BEFORE%A\n" before
         printf "AFTER%A" after
@@ -117,7 +117,7 @@ type TestClass () =
     [<Test>]
     member this.normaliseTests() =
         let gainAgents = List.map (fun agent -> {agent with Gain = 4}) this.agents
-        let updatedAgents = updateRewardsForEveryRuleForAgent gainAgents this.state
+        let updatedAgents = updateRewardsForEveryRuleForAgent this.state gainAgents 
         let updatedWorld = updateSocialGoodForEveryCurrentRule updatedAgents this.state
         let newAgents = normaliseTheAgentArrays updatedAgents
         let newState = normaliseTheSocialGood updatedWorld
@@ -129,7 +129,7 @@ type TestClass () =
     [<Test>]
     member this.updateAggregationArrayForAgentTest() =
         let before = List.map (fun agent -> agent.DecisionOpinions.Value.OverallRuleOpinion) this.agents
-        let updatedAgents = updateAggregationArrayForAgent this.agents this.state
+        let updatedAgents = updateAggregationArrayForAgent this.state this.agents 
         let after = List.map (fun agent -> agent.DecisionOpinions.Value.OverallRuleOpinion) updatedAgents
         printf "BEFORE%A\n" before.[0]
         printf "AFTER%A" after.[0]

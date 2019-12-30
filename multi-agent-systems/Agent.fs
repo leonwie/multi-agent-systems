@@ -1,4 +1,6 @@
 ﻿module Agent
+open System
+open System
 open Config
 open Types
 
@@ -7,8 +9,7 @@ let rand = System.Random()
 
 // Generate count random numbers in [0,1]
 let generateRandom count =
-    let rnd = System.Random()
-    List.init count (fun _ -> rnd.NextDouble())
+    List.init count (fun _ -> rand.NextDouble())
 
 // Look up friendToFind in the Friends & Enemies lists of agent
 let private lookUp (agents : Agent list) (agent : Agent) (friendToFind : Agent) : bool * bool =
@@ -55,16 +56,17 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
 
 let private initialRewardRule = List.map (fun (y, _, _) -> (y, 0.5, 0)) initialiseAllRules
 
-let private initialOverallRuleOpinion = List.map (fun (y, _, _) ->
+let private initialOverallRuleOpinion () =
+    List.map (fun (y, _, _) ->
     (y,((generateRandom 1) |> List.head) * (0.6 - 0.4) + 0.4)) initialiseAllRules
 
 // Private function to create the opinion type with only one way friends/enemies
 let private createOpinions (opinions : (Agent * float) list) : Opinions =
     {
-        InitialRuleOpinion = initialOverallRuleOpinion
+        InitialRuleOpinion = initialOverallRuleOpinion ()
         RewardPerRule = initialRewardRule
-        PersonalCurrentRulesOpinion = initialOverallRuleOpinion
-        OverallRuleOpinion = initialOverallRuleOpinion
+        PersonalCurrentRulesOpinion = initialOverallRuleOpinion ()
+        OverallRuleOpinion = initialOverallRuleOpinion ()
         AllOtherAgentsOpinion = opinions
         Friends = List.filter (fun (_, op) -> op > 0.5) opinions |> List.map fst
         Enemies = List.filter (fun (_, op) -> op < 0.1) opinions |> List.map fst
@@ -88,10 +90,11 @@ let private initialiseDecisionOpinions (agents : Agent list) : Agent list =
      updatedOpinions |>
      List.map (fun (agent, newOpinion) -> {agent with DecisionOpinions = Some newOpinion})
 
-// Public function for post agent creation - intialises decisions
-let initialiseAgentDecisions (agents : Agent list) : Agent list =
-    let opinions = initialiseDecisionOpinions agents
-    List.map (initialiseFriendsAndEnemies opinions) opinions
-
 let setNumberAgents (numberAgents : int) =
     numAgents <- numberAgents
+    
+// Public function for post agent creation - initialises decisions
+let initialiseAgentDecisions (agents : Agent list) : Agent list =
+    setNumberAgents(agents.Length)
+    let opinions = initialiseDecisionOpinions agents
+    List.map (initialiseFriendsAndEnemies opinions) opinions

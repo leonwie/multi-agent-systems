@@ -5,6 +5,8 @@ open Sanctions
 open Hunt
 open Build
 open Config
+open Duma
+open Opinion
 
 [<EntryPoint>]
 let main argv =
@@ -38,6 +40,10 @@ let main argv =
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
+        // Duma session
+        let currentWorld = fullDuma livingAgents currentWorld
+        
+        // Work allocation
         let agentsWithJobs = 
             livingAgents 
             |> jobAllocation;
@@ -45,11 +51,6 @@ let main argv =
         let builders = 
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
-
-        // Update shelter
-        let currentWorld = newWorldShelters currentWorld builders
-
-
 
         let hunters =
             agentsWithJobs
@@ -71,12 +72,16 @@ let main argv =
             |> capStag
             |> shareFood currentWorld
 
+        // Food energy for allocation
         let energyForAllocation = 
             hareHunters @ stagHunters
             // Discounts agents who do not share food without sanctioning them
             |> List.map (fun el -> el.TodaysFoodCaptured - el.TodaysEnergyObtained)
             |> List.sum
             
+        // Update shelter
+        let currentWorld = newWorldShelters currentWorld builders
+
         // Re-concatenate the individually processed groups
         let agentsAfterWorking = hareHunters @ stagHunters @ builders @ slackers
 
@@ -95,12 +100,21 @@ let main argv =
         // End-of-turn infamy decay
             |> infamyDecay currentWorld
 
-
-
+        // Opinion, Payoff, Social Good updates
+        let opinionChangesAgents = agentsAfterResorceAllocation
+                                     |> updateRuleOpinion
+                                     |> updateRewardsForEveryRuleForAgent currentWorld
+        let currentWorld = normaliseTheSocialGood (updateSocialGoodForEveryCurrentRule  opinionChangesAgents currentWorld)
+        
+        let normalisedAgentArrays = normaliseTheAgentArrays opinionChangesAgents
+                                     |> updateAggregationArrayForAgent currentWorld
+                                     |> workOpinions currentWorld
+                                     |> selfConfidenceUpdate
+            
         // After sanction, agent may die
-        let deadAgentsAfterToday = deadAgents @ (agentsAfterResorceAllocation |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
+        let deadAgentsAfterToday = deadAgents @ (normalisedAgentArrays |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
         let livingAgentsAfterToday = 
-            agentsAfterResorceAllocation 
+            normalisedAgentArrays 
             |> List.filter (fun el -> el.Alive = true && el.Energy > 0.0)
         // Reset food captured field associated with current day
         // TODO if we need to record agent state for each day,
@@ -114,8 +128,8 @@ let main argv =
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare; 
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-        printfn "Living Agents: %A" livingAgentsAfterToday
-        printfn "Current world status: %A" currentWorld
+        //printfn "Living Agents: %A" livingAgentsAfterToday
+        //printfn "Current world status: %A" currentWorld
         printfn "End of DAY: %A" currentWorld.CurrentDay
 
         if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = 200 || currentWorld.CurrentDay = maxSimulationTurn then

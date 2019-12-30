@@ -55,7 +55,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then {agent with Energy = agent.Energy + energy;
-                            TodaysEnergyObtained = agent.TodaysEnergyObtained + energy}    
+                         TodaysEnergyObtained = agent.TodaysEnergyObtained + energy}    
         else agent
     )
 
@@ -87,7 +87,7 @@ let sanction (world: WorldState) (agents: Agent list) : Agent list =
             | NoFoodAndShelter -> {el with AccessToFood = false;
                                             AccessToShelter = None}
             | Exile -> {el with Alive = false}
-            | _ -> failwith "Invalid maximumm punishment setting"
+            | _ -> failwith "Invalid maximum punishment setting"
     )
 
 

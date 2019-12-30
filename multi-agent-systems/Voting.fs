@@ -1,7 +1,5 @@
 ﻿module Voting
 
-open Types
-
 // All votes are submitted as a list, even if there is only one value in the list
 
 // Borda Count
