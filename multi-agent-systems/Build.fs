@@ -83,5 +83,7 @@ let assignShelters (currentWorld : WorldState) (agents : Agent list) : Agent lis
 
 let newAgentEnergy (agent : Agent) : Agent =
     match agent.AccessToShelter with
-    | None -> {agent with Energy = agent.Energy - rb} // rb is base energy lost
-    | Some(quality) -> {agent with Energy = agent.Energy - (1.0 - quality * ep) * rb} // ep is max shelter energy preservation
+    | None -> {agent with Energy = agent.Energy - rb; EnergyDeprecation = rb} // rb is base energy lost
+    | Some(quality) -> 
+        let energyDepletion = (1.0 - quality * ep) * rb
+        {agent with Energy = agent.Energy - energyDepletion; EnergyDeprecation = energyDepletion} // ep is max shelter energy preservation
