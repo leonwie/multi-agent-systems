@@ -40,6 +40,9 @@ let main argv =
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
+        // Duma session
+        let currentWorld = fullDuma livingAgents currentWorld
+        
         // Work allocation
         let agentsWithJobs =
             livingAgents
@@ -52,14 +55,7 @@ let main argv =
                 | 3 -> {el with TodaysActivity = BUILDING, 1.0}
                 | _ -> failwith("Invalid decision")
             )
-        // Duma session
-        let currentWorld = fullDuma livingAgents currentWorld
-        
-        // Work allocation
-        let agentsWithJobs = 
-            livingAgents 
-            |> jobAllocation;
-
+            
         let builders =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
