@@ -83,7 +83,7 @@ let main argv =
         let energyForAllocation = 
             hareHunters @ stagHunters
             // Discounts agents who do not share food without sanctioning them
-            |> List.map (fun el -> el.TodaysFoodCaptured - el.TodaysEnergyObtained)
+            |> List.map (fun el -> el.HuntedFood - el.Gain)
             |> List.sum
             
         // Re-concatenate the individually processed groups
@@ -124,7 +124,7 @@ let main argv =
         // TODO if we need to record agent state for each day,
         // we must do it before reset here
             |> List.map (fun el ->
-                {el with TodaysFoodCaptured = 0.0; TodaysEnergyObtained = 0.0}
+                {el with HuntedFood = 0.0; Gain = 0.0}
             )
 
         let currentWorld =

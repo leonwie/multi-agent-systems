@@ -30,11 +30,12 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Egotism = egotism;                      // in [0, 1]
         Idealism = idealism;                    // in [0, 1]
        
-        EnergyDeprecation = 0.0;
-        Gain = 0;
-        EnergyConsumed = 0.0;
+        EnergyDeprecation = 0.0;                // end-of-turn energy loss
+        Gain = 0.0;                               // energy received for the day
+        EnergyConsumed = 0.0;                   // energy spent on work
         Infamy = 0.0;
         Energy = 100.0;
+        HuntedFood = 0.0;                       // Food from hunting (non-zero for hunters only)
         
         TodaysActivity = Activity.NONE, 0.0;
         AccessToShelter = None;
@@ -50,8 +51,6 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         LastCrimeDate = 0;
         AccessToFood = true;
         Alive = true;
-        TodaysEnergyObtained = 0.0;
-        TodaysFoodCaptured = 0.0;
     }
 
 let private initialRewardRule = List.map (fun (y, _, _) -> (y, 0.5, 0)) initialiseAllRules
