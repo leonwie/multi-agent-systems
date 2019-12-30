@@ -55,7 +55,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then {agent with Energy = agent.Energy + energy;
-                            Gain = agent.Gain + energy}    
+                            Gain = agent.Gain + energy}
         else agent
     )
 
