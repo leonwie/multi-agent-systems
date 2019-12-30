@@ -85,11 +85,12 @@ and Agent =
         Idealism : float;
         Egotism : float;
 
-        Gain : int;
+        Gain : float;
         EnergyDeprecation : float;
         EnergyConsumed : float;
         Infamy : float;
         Energy : float;
+        HuntedFood : float;
         DecisionOpinions : Opinions option;
 
         TodaysActivity : Activity * float;
@@ -104,8 +105,6 @@ and Agent =
         LastCrimeDate : int;
         AccessToFood : bool;
         Alive: bool;
-        TodaysEnergyObtained : float;
-        TodaysFoodCaptured: float;
     }
 
 type WorldState =

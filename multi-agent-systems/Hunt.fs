@@ -33,7 +33,7 @@ let capHare (agents: Agent list) : Agent list =
             numHareCaptured el
             |> (*) rabbosEnergyValue
 
-        {el with TodaysFoodCaptured = totalHareEnergy}
+        {el with HuntedFood = totalHareEnergy}
     )
 
 // Check if stag hunt meets criteria for success
@@ -69,7 +69,7 @@ let capStag (agents : Agent list) : Agent list =
             |> fun x -> x / (List.length agents |> float)
 
         agents
-        |> List.map (fun el -> {el with TodaysFoodCaptured = avgStagEnergy})
+        |> List.map (fun el -> {el with HuntedFood = avgStagEnergy})
 
 let regenRate (rate : float) (totNum: int) (maxCapacity: int) : int =
     totNum
@@ -88,7 +88,7 @@ let shareFood (world: WorldState) (agents: Agent list) : Agent list =
     // Share food based on decision-making
     |> List.map (fun el ->
         match foodSharing el world with
-        | 0 -> {el with TodaysEnergyObtained = el.TodaysFoodCaptured}
+        | 0 -> {el with Gain = el.HuntedFood}
         | _ -> el
     )
     

@@ -55,7 +55,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then {agent with Energy = agent.Energy + energy;
-                         TodaysEnergyObtained = agent.TodaysEnergyObtained + energy}    
+                            Gain = agent.Gain + energy}    
         else agent
     )
 
@@ -98,7 +98,7 @@ let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWo
     let checkFoodAllocation (agents: Agent list) = 
         List.zip agents expectedEnergyGain
         |> List.map (fun (agent, gain) ->
-            if agent.TodaysEnergyObtained > gain && rand.NextDouble() < CrimeDiscoveryRate 
+            if agent.Gain > gain && rand.NextDouble() < CrimeDiscoveryRate 
                 then {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
             else agent
         )
