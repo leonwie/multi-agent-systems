@@ -132,7 +132,7 @@ let main argv =
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-        //printfn "Living Agents: %A" livingAgentsAfterToday
+        //printfn "Living Agents: %A" (List.map (fun ag -> (ag.ID, ag.Energy)) livingAgentsAfterToday)
         //printfn "Current world status: %A" currentWorld
         printfn "End of DAY: %A" currentWorld.CurrentDay
 
@@ -144,5 +144,6 @@ let main argv =
     let finalWorld = loop currentWorld agents;
 
     printfn "Final world status: %A" finalWorld;
+    printfn "Last day %A" finalWorld.CurrentDay
 
     0
