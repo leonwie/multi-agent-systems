@@ -47,16 +47,6 @@ let allSanctionVotes : Punishment list = [
     Increment;
     Decrement;
 ]
-
-//let voteOnProposals (world : WorldState) (agent : Agent)
-//    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
-//    : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
-//    // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
-//    match world.CurrentVotingRule with
-//       | Borda -> bordaVote
-//       | Approval -> approvalVote
-//       | InstantRunoff -> instantRunoffVote agents
-//       | Plurality -> pluralityVote
     
 let private getAgentToSpeakForTopic (chair : Agent) (currentRuleInTopic : Rule) (newRules : (Agent * Rule) list) : Agent list =
     let filteredRules =
@@ -92,14 +82,19 @@ let chairVote (world : WorldState) (agents : Agent list) : WorldState =
         let candidates = 
             agents // Does an agent nominate itself
             |> List.filter (fun agent -> doesAgentNominateItselfForChair agent world.CurrentRuleSet nominationThreshold)
-        let newChair =
+        let agentsVotesForChair =
             agents
             |> List.map (fun agent -> agentVoteForChair candidates agent)
-            |> match world.CurrentVotingRule with
-               | Borda -> bordaVote
-               | Approval -> approvalVote
-               | InstantRunoff -> instantRunoffVoteA agents
-               | Plurality -> pluralityVote
+            |> List.filter (fun list -> not (List.isEmpty list))
+        let newChair =
+            if agentsVotesForChair.Length > 0 then    
+                match world.CurrentVotingRule with
+                   | Borda -> bordaVote agentsVotesForChair
+                   | Approval -> approvalVote agentsVotesForChair
+                   | InstantRunoff -> instantRunoffVoteA agents agentsVotesForChair
+                   | Plurality -> pluralityVote agentsVotesForChair
+            // if none has been chosen, choose a random one for the live agents       
+            else agents.[rand.Next(0, agents.Length - 1)]      
         let chair = List.filter (fun agent -> agent.ID = newChair.ID) agents |> List.head       
         {world with CurrentChair = Some chair; TimeToNewChair = 7}
     else {world with TimeToNewChair = world.TimeToNewChair - 1}
@@ -173,6 +168,8 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
             removeNone e
     // Apply current voting system to each of the voting options
     let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
+        if candidates.Length <= 0 then
+            failwith "Candidate list is empty in Duma.newRules\n"
         match world.CurrentVotingRule with
         | Borda ->
             bordaVote candidates

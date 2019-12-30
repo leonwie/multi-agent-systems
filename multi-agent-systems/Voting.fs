@@ -5,6 +5,8 @@ open Types
 
 // Borda Count
 let bordaVote (rankings : 'a list list) : 'a  =
+    if rankings.IsEmpty then
+        failwith "rankings list should never be empty in Voting.bordaVote"
     // Get rankings for one list
     let getRanking (ranks : 'a list) : ('a * int) list =
         let n = List.length ranks
@@ -16,6 +18,8 @@ let bordaVote (rankings : 'a list list) : 'a  =
         rankings
         |> List.map getRanking
 
+    if borda.IsEmpty then
+        failwith "borda list should never be empty in Voting.bordaVote"
     // Sum all the rankings and return the candiate with the highest score
     borda   
     |> List.reduce (fun acc el1 -> 
@@ -26,7 +30,10 @@ let bordaVote (rankings : 'a list list) : 'a  =
 
 // Plurality voting
 let pluralityVote (votes : 'a list list) : 'a  =
+    if votes.IsEmpty then
+        failwith "votes list should never be empty in Voting.pluralityVote"
     votes
+    |> List.filter (fun list -> not (List.isEmpty list))
     |> List.map List.head
     |> List.countBy id
     |> List.maxBy snd
@@ -35,6 +42,8 @@ let pluralityVote (votes : 'a list list) : 'a  =
 
 // Approval Voting
 let approvalVote (votes : 'a list list) : 'a  =
+    if votes.IsEmpty then
+        failwith "votes list should never be empty in Voting.approvalVote"
     votes
     |> List.concat
     |> List.countBy id
@@ -56,6 +65,8 @@ let runOffRound1 (votes : 'a list list) : 'a * 'a =
 // Runoff Round 2 voting
 // This will need to be in a conditional since it only happens if there is no majority in round 1
 let runOffRound2 (votes : 'a list list) : 'a  =
+    if votes.Length <= 0 then
+        failwith "votes list is empty in Voting.runOffRound2"
     votes
     |> pluralityVote // Round 2 is just plurality so reuse that
 
@@ -127,9 +138,9 @@ let instantRunoffVoteA (allCandidates : Agent list) (votes : Agent list list) : 
 
     // Return the list of candidates without the round loser   
     let newRanks (allVotes : Agent list list) (roundLoser : Agent) : Agent list list =
-        printf "\nallvotes1 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) allVotes)
-        printf "\nLoser %A" roundLoser.ID
-        printf "\nallvotes2 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) (allVotes |> List.map (List.filter (fun el -> el.ID <> roundLoser.ID))))
+        //printf "\nallvotes1 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) allVotes)
+        //printf "\nLoser %A" roundLoser.ID
+        //printf "\nallvotes2 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) (allVotes |> List.map (List.filter (fun el -> el.ID <> roundLoser.ID))))
         allVotes
         |> List.map (List.filter (fun el -> el.ID <> roundLoser.ID))
 
@@ -140,10 +151,10 @@ let instantRunoffVoteA (allCandidates : Agent list) (votes : Agent list list) : 
         | list -> 
             let loser = roundLoser list
             let nextRoundRanks = newRanks votes loser
-            printf "\nnextRoundRanks: %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) nextRoundRanks)
+            //printf "\nnextRoundRanks: %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) nextRoundRanks)
             let remaining = List.filter (fun el -> el <> loser) remainingCandidates
-            printf "\nLoser: %A" loser.ID
-            printf "\nRemaining: %A" (List.map (fun el -> el.ID) remaining)
+            //printf "\nLoser: %A" loser.ID
+            //printf "\nRemaining: %A" (List.map (fun el -> el.ID) remaining)
             runoff nextRoundRanks remaining
 
     runoff votes allCandidates
