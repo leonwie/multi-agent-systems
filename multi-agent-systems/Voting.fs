@@ -1,4 +1,5 @@
 ﻿module Voting
+open Types
 
 // All votes are submitted as a list, even if there is only one value in the list
 
@@ -66,11 +67,15 @@ let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
         let initialAcc = 
             remainingcandidates
             |> List.map (fun el -> el, 0)
+        //printf "all: %A" initialAcc
         votes
         |> List.filter (fun list -> not (List.isEmpty list))
         |> List.fold (fun acc rank -> 
             let firstPlace = List.head rank
-            let index = List.findIndex (fun el -> fst el = firstPlace) acc
+            //printf "firstplace type: %A" (typedefof<Agent>, firstPlace.GetType())
+            let index = List.findIndex (fun el -> 
+                //printf "firstPlace: %A\nel: %A" firstPlace (el |> fst)
+                (fst el) = firstPlace) acc
             List.mapi (fun i el -> if i = index then fst el, (snd el) + 1 else el) acc
             ) initialAcc 
 
@@ -93,6 +98,52 @@ let instantRunoffVote (allCandidates : 'a list) (votes : 'a list list) : 'a  =
             let loser = roundLoser list
             let nextRoundRanks = newRanks votes loser
             let remaining = List.filter (fun el -> el <> loser) remainingCandidates
+            runoff nextRoundRanks remaining
+
+    runoff votes allCandidates
+
+let instantRunoffVoteA (allCandidates : Agent list) (votes : Agent list list) : Agent  =
+    // Count the number of first place votes everyone has
+    let countVotes (votes : Agent list list) (remainingcandidates : Agent list) : (Agent * int) list =
+        let initialAcc = 
+            remainingcandidates
+            |> List.map (fun el -> el, 0)
+        //printf "all: %A" initialAcc
+        votes
+        |> List.filter (fun list -> not (List.isEmpty list))
+        |> List.fold (fun acc rank -> 
+            let firstPlace = List.head rank
+            let index = List.findIndex (fun el -> 
+                //printf "\nfirstPlace: %A\nel: %A" firstPlace.ID (el |> fst).ID
+                (fst el).ID = firstPlace.ID) acc
+            List.mapi (fun i el -> if i = index then fst el, (snd el) + 1 else el) acc
+            ) initialAcc 
+
+    // Get the 'a with the least number of first place votes
+    let roundLoser (count : (Agent * int) list) : Agent =
+        count
+        |> List.minBy snd
+        |> fst
+
+    // Return the list of candidates without the round loser   
+    let newRanks (allVotes : Agent list list) (roundLoser : Agent) : Agent list list =
+        printf "\nallvotes1 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) allVotes)
+        printf "\nLoser %A" roundLoser.ID
+        printf "\nallvotes2 %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) (allVotes |> List.map (List.filter (fun el -> el.ID <> roundLoser.ID))))
+        allVotes
+        |> List.map (List.filter (fun el -> el.ID <> roundLoser.ID))
+
+    // Recursively run the rounds
+    let rec runoff (votes : Agent list list) (remainingCandidates : Agent list ) : Agent =
+        match countVotes votes remainingCandidates with
+        | [(x, _)] -> x
+        | list -> 
+            let loser = roundLoser list
+            let nextRoundRanks = newRanks votes loser
+            printf "\nnextRoundRanks: %A" (List.map (fun el1 -> List.map (fun el2 -> el2.ID) el1) nextRoundRanks)
+            let remaining = List.filter (fun el -> el <> loser) remainingCandidates
+            printf "\nLoser: %A" loser.ID
+            printf "\nRemaining: %A" (List.map (fun el -> el.ID) remaining)
             runoff nextRoundRanks remaining
 
     runoff votes allCandidates

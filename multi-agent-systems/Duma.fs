@@ -98,7 +98,7 @@ let chairVote (world : WorldState) (agents : Agent list) : WorldState =
             |> match world.CurrentVotingRule with
                | Borda -> bordaVote
                | Approval -> approvalVote
-               | InstantRunoff -> instantRunoffVote agents
+               | InstantRunoff -> instantRunoffVoteA agents
                | Plurality -> pluralityVote
         let chair = List.filter (fun agent -> agent.ID = newChair.ID) agents |> List.head       
         {world with CurrentChair = Some chair; TimeToNewChair = 7}
