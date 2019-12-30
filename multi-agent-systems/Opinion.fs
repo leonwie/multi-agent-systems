@@ -26,7 +26,8 @@ let private computePartialSums (agent : Agent) (agents : Agent list) (index : in
 let private updateRuleOpinionPerAgent (agents : Agent list) (agent : Agent) : Agent =
     // g * X(0)
     let initialRuleOpinions = List.map (fun (rule, opinion) -> (rule, g agent * opinion)) agent.DecisionOpinions.Value.InitialRuleOpinion
-    let partialSums = List.collect (fun index -> computePartialSums agent agents index)[0..numAgents - 1]
+    let liveAgentsIndex = List.map (fun agent -> agent.ID) agents
+    let partialSums = List.collect (fun index -> computePartialSums agent agents index) liveAgentsIndex
     let reduced = partialSums |> List.groupBy fst |> List.map (fun (x,y) -> x, (List.sum (List.map snd y)))
     let ruleChange =  List.map (fun (rule, value) -> (rule, (1.0 - g agent) * value)) reduced
     let sum = initialRuleOpinions @ ruleChange

@@ -136,7 +136,7 @@ let main argv =
         //printfn "Current world status: %A" currentWorld
         printfn "End of DAY: %A" currentWorld.CurrentDay
 
-        if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = 200 || currentWorld.CurrentDay = maxSimulationTurn then
+        if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = 400 || currentWorld.CurrentDay = maxSimulationTurn then
             currentWorld
         else
             loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday)

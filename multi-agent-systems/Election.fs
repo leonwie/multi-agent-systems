@@ -32,7 +32,7 @@ let doesAgentNominateItselfForChair (agent : Agent) (ruleSet : RuleSet) (thresho
 let agentVoteForChair (candidates : Agent list) (agent : Agent) : Agent list =
     let opinions = agent.DecisionOpinions.Value.AllOtherAgentsOpinion 
     let orderedAgentPreference = List.map fst (List.sortBy (fun (_, y) -> -y) opinions)
-    List.filter (fun el -> not(List.contains el candidates)) orderedAgentPreference
+    List.filter (fun el -> List.contains el.ID (List.map (fun cand -> cand.ID) candidates)) orderedAgentPreference
 
 let private checkOptionsPastRules (rules : Rule list)  (pastOpinions : (Rule * float) list) (currentRule : Rule) (currentOpinion : float) : (Rule * float) =
     let pastRules = List.filter (fun (rule, _) -> rule <> currentRule && List.contains rule rules) pastOpinions
