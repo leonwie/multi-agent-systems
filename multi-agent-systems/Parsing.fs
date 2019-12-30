@@ -20,7 +20,8 @@ with
 
 let parseActivity = function
    | "NONE" -> Types.NONE
-   | "HUNTING" -> Types.HUNTING 
+   | "STAG" -> Types.STAG
+   | "HARE" -> Types.HARE
    | "BUILDING" -> Types.BUILDING
    | activity -> failwith (sprintf "Wrong activity type! Only supported: NONE, HUNTING, BUILDING. Activity your agent has : %s" activity)
 

@@ -38,6 +38,7 @@ let capHare (agents: Agent list) : Agent list =
 
 // Check if stag hunt meets criteria for success
 let meetStagCondition (actProfile : float list): bool =
+
     let minEnergy actProfile = List.min actProfile >= staggiMinIndividual
     let thresholdEnergy actProfile = List.sum actProfile >= staggiMinCollective
     minEnergy actProfile && thresholdEnergy actProfile
@@ -45,29 +46,30 @@ let meetStagCondition (actProfile : float list): bool =
 // determines how many stags are captured based on input list of energy allocated to hunt
 let capStag (agents : Agent list) : Agent list =
 
-    let actProfile = 
+    if agents.Length = 0 then agents
+    else
+        let actProfile = 
+            agents
+            |> List.map (fun el -> snd el.TodaysActivity)
+
+        let maxNumStag =
+            actProfile
+            |> List.sum
+            |> fun x -> x / staggiMinCollective
+            |> floor
+            |> int
+
+        let numStag =
+            seq {for _ in 1 .. maxNumStag -> 1}
+            |> Seq.map (fun _ -> if failHunt staggiProbability then 0.0 else 1.0)
+            |> Seq.sum
+
+        let avgStagEnergy = 
+            if meetStagCondition actProfile then numStag else 0.0
+            |> fun x -> x / (List.length agents |> float)
+
         agents
-        |> List.map (fun el -> snd el.TodaysActivity)
-
-    
-    let maxNumStag =
-        actProfile
-        |> List.sum
-        |> fun x -> x / staggiMinCollective
-        |> floor
-        |> int
-
-    let numStag =
-        seq {for _ in 1 .. maxNumStag -> 1}
-        |> Seq.map (fun _ -> if failHunt staggiProbability then 0.0 else 1.0)
-        |> Seq.sum
-
-    let avgStagEnergy = 
-        if meetStagCondition actProfile then numStag else 0.0
-        |> fun x -> x / (List.length agents |> float)
-
-    agents
-    |> List.map (fun el -> {el with TodaysFoodCaptured = avgStagEnergy})
+        |> List.map (fun el -> {el with TodaysFoodCaptured = avgStagEnergy})
 
 let regenRate (rate : float) (totNum: int) (maxCapacity: int) : int =
     totNum

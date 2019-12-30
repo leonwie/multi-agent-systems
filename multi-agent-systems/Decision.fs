@@ -68,7 +68,9 @@ let workAllocation (agent:Agent) (world:WorldState) =
     let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
     let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
     let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R agent.S
-    RLalg opinion world
+    let decision = RLalg opinion world
+    // Return decision with associated payoff
+    (decision, agent.R.Item(decision))
 
 let foodSharing (agent:Agent) (world:WorldState) =
     match agent.Egotism - agent.Idealism with

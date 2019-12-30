@@ -1,6 +1,6 @@
 ﻿module Program
 open Types
-open Activities
+open Decision
 open Sanctions
 open Hunt
 open Build
@@ -12,7 +12,7 @@ open Opinion
 let main argv =
     // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
     let agents = Parsing.parse argv
-    
+
     let currentWorld =
         {
             Buildings = List.Empty;
@@ -35,11 +35,23 @@ let main argv =
             HuntingAverageTotalReward = 0.0;
         }
 
-    
+
     let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
+        // Work allocation
+        let agentsWithJobs =
+            livingAgents
+            |> List.map (fun el ->
+                let decision, payoff = workAllocation el currentWorld // To verify
+                match decision with
+                | 0 -> {el with TodaysActivity = NONE, 1.0}
+                | 1 -> {el with TodaysActivity = STAG, payoff}
+                | 2 -> {el with TodaysActivity = HARE, payoff}
+                | 3 -> {el with TodaysActivity = BUILDING, 1.0}
+                | _ -> failwith("Invalid decision")
+            )
         // Duma session
         let currentWorld = fullDuma livingAgents currentWorld
         
@@ -48,27 +60,26 @@ let main argv =
             livingAgents 
             |> jobAllocation;
 
-        let builders = 
+        let builders =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = BUILDING)
 
-        let hunters =
-            agentsWithJobs
-            |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
+        // Update shelter
+        let currentWorld = newWorldShelters currentWorld builders
 
-        let slackers = 
+        let slackers =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = NONE)
 
-        let hareHunters = 
-            hunters
-            |> List.filter (fun el -> el.ID % 2 = 0) // Placeholder for job allocation
+        let hareHunters =
+            agentsWithJobs
+            |> List.filter (fun el -> fst el.TodaysActivity = HARE)
             |> capHare
             |> shareFood currentWorld
-            
-        let stagHunters = 
-            hunters
-            |> List.filter (fun el -> el.ID % 2 <> 0) // Placeholder for job allocation
+
+        let stagHunters =
+            agentsWithJobs
+            |> List.filter (fun el -> fst el.TodaysActivity = STAG)
             |> capStag
             |> shareFood currentWorld
 
@@ -79,9 +90,6 @@ let main argv =
             |> List.map (fun el -> el.TodaysFoodCaptured - el.TodaysEnergyObtained)
             |> List.sum
             
-        // Update shelter
-        let currentWorld = newWorldShelters currentWorld builders
-
         // Re-concatenate the individually processed groups
         let agentsAfterWorking = hareHunters @ stagHunters @ builders @ slackers
 
@@ -92,7 +100,7 @@ let main argv =
             agentsAfterWorking
             |> allocateFood idealEnergyAssignment
             |> assignShelters currentWorld
-        // Sanction 
+        // Sanction
             |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
             |> sanction currentWorld
         // End-of-turn energy decay
@@ -119,13 +127,13 @@ let main argv =
         // Reset food captured field associated with current day
         // TODO if we need to record agent state for each day,
         // we must do it before reset here
-            |> List.map (fun el -> 
+            |> List.map (fun el ->
                 {el with TodaysFoodCaptured = 0.0; TodaysEnergyObtained = 0.0}
             )
 
-        let currentWorld = 
-            {currentWorld with CurrentDay = currentWorld.CurrentDay + 1; 
-                                NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare; 
+        let currentWorld =
+            {currentWorld with CurrentDay = currentWorld.CurrentDay + 1;
+                                NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
         //printfn "Living Agents: %A" livingAgentsAfterToday
@@ -140,5 +148,5 @@ let main argv =
     let finalWorld = loop currentWorld agents;
 
     printfn "Final world status: %A" finalWorld;
-    
+
     0

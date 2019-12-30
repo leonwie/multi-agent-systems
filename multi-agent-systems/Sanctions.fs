@@ -41,9 +41,9 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
         |> List.map (fun el ->
             match world.CurrentWorkRule with
             | Everyone -> 
-                HUNTING // Indicate that agent will have activity
+                BUILDING // Indicate that agent will have activity
             | Strongest -> 
-                if el.Energy >= WorkExemptionThreshold then HUNTING else NONE
+                if el.Energy >= WorkExemptionThreshold then BUILDING else NONE
             | _ -> NONE // No expectation on working
         )
 
