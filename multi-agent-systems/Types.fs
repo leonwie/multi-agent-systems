@@ -95,8 +95,6 @@ and Agent =
 
         TodaysActivity : Activity * float;
         AccessToShelter : float option;
-        BuildingAptitude : float;
-        HuntingAptitude : float;
         SelfConfidence : float;
         R : float list;
         Rsharing : float list;

@@ -39,8 +39,6 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         
         TodaysActivity = Activity.NONE, 0.0;
         AccessToShelter = None;
-        BuildingAptitude = 0.0;
-        HuntingAptitude = 0.0;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
 
