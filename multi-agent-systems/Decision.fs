@@ -1,4 +1,5 @@
 ﻿module Decision
+open Election
 open Types
 
 let rand = System.Random()
@@ -75,4 +76,4 @@ let workAllocation (agent:Agent) (world:WorldState) =
 let foodSharing (agent:Agent) (world:WorldState) =
     match agent.Egotism - agent.Idealism with
     | negative when negative < 0.0 -> 1 // assuming the second entry in the list of payoffs is for sharing 
-    | _ -> RLalg agent.Rsharing world // return 1 for sharing and 0 for keeping all food 
+    | _ -> RLalg agent.Rsharing world // return 1 for sharing and 0 for keeping all food

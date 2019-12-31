@@ -67,7 +67,6 @@ let PunishmentList = [Sanction(NoFoodAndShelter); Sanction(Increment); Sanction(
 let VotingSystemList = [Voting(Approval); Voting(InstantRunoff); Voting(Borda); Voting(Plurality)]
 let WorkAllocationList = [Work(Everyone); Work(ByChoice); Work(Strongest)]
 
-
 type Opinions =
     {
         RewardPerRule : (Rule * float * LastUpdate) list;        // reward per rule - has all rules
@@ -104,7 +103,7 @@ and Agent =
         AccessToFood : bool;
         Alive: bool;
     }
-
+    
 type WorldState =
     {
         Buildings : float list;

@@ -8,12 +8,28 @@ open Config
 open Duma
 open Opinion
 open System.IO
+open System.IO
+open System.IO
 
 [<EntryPoint>]
 let main argv =
     // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24"
     let agents = Parsing.parse argv
 
+    let printAgents (agents : Agent list) =
+        List.map (fun agent -> (("ID: ", agent.ID), ("Energy: ", agent.Energy), ("Susceptibility: ", agent.Susceptibility),
+                                ("Idealism: ", agent.Idealism), ("Egotism: ", agent.Egotism),
+                                ("Gain: ", agent.Gain), ("EnergyConsumed: ", agent.EnergyConsumed), ("EnergyDeprecation: ", agent.EnergyDeprecation),
+                                ("HuntedFood: ", agent.HuntedFood), ("Activity: ", agent.TodaysActivity), ("ShelterAccess: ", agent.AccessToShelter),
+                                ("SelfConfidence: ", agent.SelfConfidence), ("LastCrimeDate: ", agent.LastCrimeDate), ("FoodAccess: ", agent.AccessToFood),
+                                ("Alive: ", agent.Alive), ("OverallRuleOpinion: ", agent.DecisionOpinions.Value.OverallRuleOpinion),
+                                ("OtherAgentsOpinion: ", List.map (fun (ag, opin) -> ag.ID, opin) agent.DecisionOpinions.Value.AllOtherAgentsOpinion))) agents
+
+    let printWorld (world : WorldState) =
+        (("Buildings: ", world.Buildings), ("Time to new chair: ", world.TimeToNewChair), ("CurrentRules: ", world.CurrentRuleSet),
+         ("CurrentDay: ", world.CurrentDay), ("CurrentChair: ", world.CurrentChair.Value.ID), ("NumHare: ", world.NumHare), ("NumStag: ", world.NumStag),
+         ("AllRules: ", world.AllRules))
+        
     let currentWorld =
         {
             Buildings = List.Empty;
@@ -37,7 +53,7 @@ let main argv =
         }
 
 
-    let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState=
+    let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) : WorldState=
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
@@ -133,17 +149,32 @@ let main argv =
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-        //printfn "Living Agents: %A" (List.map (fun ag -> (ag.ID, ag.Susceptibility, ag.Egotism, ag.Idealism, ag.Energy)) livingAgentsAfterToday)
-        //printfn "Current world status: %A" currentWorld
+        writer.Write ("Living Agents in day ")
+        writer.Write (currentWorld.CurrentDay)
+        writer.WriteLine (printAgents livingAgentsAfterToday)
+        writer.Write("World Status in day ")
+        writer.Write (currentWorld.CurrentDay)
+        writer.WriteLine (printWorld currentWorld)
+        writer.Write("END OF DAY ")
+        writer.Write (currentWorld.CurrentDay)
+
+        //printfn "Living Agents: %A" (printAgents livingAgentsAfterToday)
+        //printfn "Current world status: %A" (printWorld currentWorld)
         printfn "End of DAY: %A" currentWorld.CurrentDay
+        writer.WriteLine ()
+        writer.WriteLine ()
 
         if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = maxSimulationTurn then
             currentWorld
         else
-            loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday)
+            loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) writer
 
-    let finalWorld = loop currentWorld agents
-    printfn "Final world status: %A" finalWorld;
+    let writer = new StreamWriter("..\..\..\output.txt")
+    let finalWorld = loop currentWorld agents writer
+    printfn "Final world status: %A" (printWorld finalWorld);
     printfn "Last day %A" finalWorld.CurrentDay
+    writer.Write("Final world: ")
+    writer.WriteLine(finalWorld)
+    writer.Close
 
     0
