@@ -10,13 +10,13 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
         |> List.sumBy (fun el -> snd el.TodaysActivity)
 
     // How many new shelters are built
-    let sheltersBuilt (shelterCost : int) (energySpent : float) : int =
-        (energySpent |> int) / shelterCost // Integer division so no need for floor
+    let sheltersBuilt (shelterCost : float) (energySpent : float) : int =
+        (energySpent |> int) / (int)shelterCost // Integer division so no need for floor
 
     let newSheltersBuilt =
         builders
         |> energySpentBuildingShelter
-        |> sheltersBuilt costOfBuilding     
+        |> sheltersBuilt eb     
 
     let shelterAfterDecay (curQuality : float) (numShelters : int) (qualityDecayRate : float) (numMaintainers : int) (maintainCost : float) (energyPerShelter : float) : float =
         numMaintainers 
