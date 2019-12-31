@@ -11,9 +11,6 @@ open Config
 // This means returning expected energy gain and a job allocation
 // Since sanction does not check for job type as long as there is a job
 // Actual job allocation does not matter
-
-
-// CAUTION: NO SPECS ABOUT AGENT DECISION ON JOB OR ENERGY TO SHARE
 let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: float): float list * Activity list = 
 
     let totalEnergy = 

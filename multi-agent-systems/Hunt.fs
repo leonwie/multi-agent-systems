@@ -15,7 +15,10 @@ let capHare (agents: Agent list) : Agent list =
     
     let numHareCaptured (agent: Agent) =
         let maxHare =
-            snd agent.TodaysActivity
+            agent.TodaysHuntOption
+            |> float
+            |> (*) 0.1
+            |> (*) (float costOfHunting)    // Proportion of energy spent on hare
             |> fun x -> x / rabbosMinRequirement
             |> floor
             |> int
@@ -50,7 +53,13 @@ let capStag (agents : Agent list) : Agent list =
     else
         let actProfile = 
             agents
-            |> List.map (fun el -> snd el.TodaysActivity)
+            |> List.map (fun el -> 
+                el.TodaysHuntOption
+                |> float
+                |> (*) 0.1
+                |> fun x -> 1.0 - x
+                |> (*) (float costOfHunting)    // Proportion of energy spent on stag
+            )
 
         let maxNumStag =
             actProfile
@@ -88,25 +97,8 @@ let shareFood (world: WorldState) (agents: Agent list) : Agent list =
     // Share food based on decision-making
     |> List.map (fun el ->
         match foodSharing el world with
-        | 0 -> {el with Gain = el.HuntedFood}
-        | _ -> el
+        | 0 -> {el with Gain = el.HuntedFood;
+                        Energy = el.Energy + el.HuntedFood}
+        | _ -> {el with Gain = 0.0}
     )
     
-
-// NOTE Final version implemented in Decision.fs
-
-//let agentAction (ego : float) (suscept : float) (idealism : float) (paySocList : float list) (payIndivList : float list) : int * float =
-//    let equation (paySoc : float) (payIndiv : float) =
-//        idealism * paySoc + ego * payIndiv
-//        |> (/)(idealism * suscept)
-
-//    let combine xs ys =
-//        List.zip xs ys
-
-//    combine paySocList payIndivList
-//    |> List.map (fun (x,y) -> equation x y)
-//    |> Seq.mapi (fun i v -> i, v)
-//    |> Seq.maxBy snd
-
-//agentAction 5.0 3.0 2.0 [2.0;3.0][4.0;3.0]
-//|> printfn "%A"

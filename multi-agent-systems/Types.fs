@@ -2,8 +2,7 @@
 
 type Activity =
     | NONE
-    | STAG
-    | HARE
+    | HUNTING
     | BUILDING
 
 type Fauna =
@@ -96,9 +95,11 @@ and Agent =
         TodaysActivity : Activity * float;
         AccessToShelter : float option;
         SelfConfidence : float;
+        TodaysHuntOption : int;
+
         R : float list;
+        RhuntingEnergySplit : float list;
         Rsharing : float list;
-        S : float list;
 
         LastCrimeDate : int;
         AccessToFood : bool;
@@ -126,7 +127,12 @@ type WorldState =
         HuntingRewardPerDay : float;
         BuildingAverageTotalReward : float;
         HuntingAverageTotalReward : float;
-    }
+
+        S : float list;     // Social good per work
+        // Social good of each of the 11 options of hunting energy split types
+        // 1st entry: full energy to stag -> last entry: full energy to hare
+        ShuntingEnergySplit : float list;   
+        }
 
 type WorldProperties =
     {

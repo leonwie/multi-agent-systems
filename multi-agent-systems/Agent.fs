@@ -1,6 +1,5 @@
 ﻿module Agent
 open System
-open System
 open Config
 open Types
 
@@ -38,12 +37,16 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         HuntedFood = 0.0;                       // Food from hunting (non-zero for hunters only)
         
         TodaysActivity = Activity.NONE, 0.0;
+        TodaysHuntOption = 0;                   // Hunting energy split option, valid for hunters only
         AccessToShelter = None;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
 
-        R = [0.5; 0.5; 0.5; 0.5];    // NONE, STAG, HARE, BUILDING
-        S = [0.5; 0.5; 0.5; 0.5];
+        // 11 options of hunting energy split types
+        // 1st entry: full energy to stag -> last entry: full energy to hare
+        RhuntingEnergySplit = List.init 11 (fun _ -> 0.5);
+        R = [0.5; 0.5; 0.5];    // NONE, HUNT, BUILDING
+
         Rsharing = [0.5; 0.5];
 
         LastCrimeDate = 0;

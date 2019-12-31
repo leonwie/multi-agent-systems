@@ -28,9 +28,9 @@ let worldProp : WorldProperties = {
 }
 
 let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau = //(world : WorldState) =
-    //let epsilon = exp (- (float world.CurrentDay)/world.Gamma)
+
     let epsilon = exp (- (float world.CurrentDay) / worldProp.Gamma)
-    //let input = 
+
     let maxim = List.max choices
     let indexedChoices = choices |> List.mapi (fun id x -> (id,x))
     let bestOptions = indexedChoices |> List.filter (fun x -> (snd x) = maxim)
@@ -64,14 +64,18 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
     match rndNo with
     | head::_ when head < epsilon -> fst bestOptions.Head
     | _ -> explore softmaxMapping
-//RLalg [0.1; 0.15; 0.2 0.15; 0.1; 0.1] 10.0 
+
 let workAllocation (agent:Agent) (world:WorldState) =
     let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
     let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
-    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R agent.S
-    let decision = RLalg opinion world
-    // Return decision with associated payoff
-    (decision, agent.R.Item(decision))
+    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R world.S
+    RLalg opinion world // Return decision
+
+let huntStrategyDecision (agent:Agent) (world:WorldState) =
+    let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
+    let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
+    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.RhuntingEnergySplit world.ShuntingEnergySplit
+    RLalg opinion world // Return decision
 
 let foodSharing (agent:Agent) (world:WorldState) =
     match agent.Egotism - agent.Idealism with

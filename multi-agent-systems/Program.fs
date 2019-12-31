@@ -8,8 +8,6 @@ open Config
 open Duma
 open Opinion
 open System.IO
-open System.IO
-open System.IO
 
 [<EntryPoint>]
 let main argv =
@@ -50,6 +48,8 @@ let main argv =
             HuntingRewardPerDay = 0.0;
             BuildingAverageTotalReward = 0.0;
             HuntingAverageTotalReward = 0.0;
+            S = [0.5; 0.5; 0.5];
+            ShuntingEnergySplit = List.init 11 (fun _ -> 0.5);
         }
 
 
@@ -64,12 +64,14 @@ let main argv =
         let agentsWithJobs =
             livingAgents
             |> List.map (fun el ->
-                let decision, payoff = workAllocation el currentWorld // To verify
+                let decision = workAllocation el currentWorld // To verify
                 match decision with
                 | 0 -> {el with TodaysActivity = NONE, 1.0}
-                | 1 -> {el with TodaysActivity = STAG, payoff}
-                | 2 -> {el with TodaysActivity = HARE, payoff}
-                | 3 -> {el with TodaysActivity = BUILDING, 1.0}
+                | 1 -> 
+                    let huntingStrategy = huntStrategyDecision el currentWorld
+                    {el with TodaysActivity = HUNTING, 1.0;
+                                TodaysHuntOption = huntingStrategy}
+                | 2 -> {el with TodaysActivity = BUILDING, 1.0}
                 | _ -> failwith("Invalid decision")
             )
             
@@ -84,27 +86,22 @@ let main argv =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = NONE)
 
-        let hareHunters =
+        let hunters =
             agentsWithJobs
-            |> List.filter (fun el -> fst el.TodaysActivity = HARE)
+            |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
             |> capHare
-            |> shareFood currentWorld
-
-        let stagHunters =
-            agentsWithJobs
-            |> List.filter (fun el -> fst el.TodaysActivity = STAG)
             |> capStag
             |> shareFood currentWorld
 
         // Food energy for allocation
         let energyForAllocation = 
-            hareHunters @ stagHunters
+            hunters
             // Discounts agents who do not share food without sanctioning them
             |> List.map (fun el -> el.HuntedFood - el.Gain)
             |> List.sum
             
         // Re-concatenate the individually processed groups
-        let agentsAfterWorking = hareHunters @ stagHunters @ builders @ slackers
+        let agentsAfterWorking = hunters @ builders @ slackers
 
         let idealEnergyAssignment, idealWorkStatus = idealAllocation currentWorld agentsAfterWorking energyForAllocation
 
