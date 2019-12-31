@@ -37,12 +37,12 @@ let maxNumHare = 30
 let vetoThreshold = 2.0
 let nominationThreshold = 0.5
 
-// New Spec
-let ExplorationDecay = 0.5
-
-
 // For Sanctions
 let InfamyStep = 0.1
 let MinimumFoodForOligarchy = 0.5
 let CrimeDiscoveryRate = 0.5
 let WorkExemptionThreshold = 0.3
+
+// Constants for decision making
+let Tau = 10.0
+let Gamma = 5.0

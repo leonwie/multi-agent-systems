@@ -1,5 +1,5 @@
 ﻿module Decision
-open Election
+open Config
 open Types
 
 let rand = System.Random()
@@ -20,16 +20,10 @@ let standardize (distributions : float list) : float list =
                                     | s when s < 0.0 -> 0.0
                                     | s when s > 1.0 -> 1.0
                                     | s -> s )
-    
-let worldProp : WorldProperties = {
-        // just some random values I used for testing
-        Tau = 10.0
-        Gamma = 5.0
-}
 
 let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau = //(world : WorldState) =
 
-    let epsilon = exp (- (float world.CurrentDay) / worldProp.Gamma)
+    let epsilon = exp (- (float world.CurrentDay) / Gamma)
 
     let maxim = List.max choices
     let indexedChoices = choices |> List.mapi (fun id x -> (id,x))
@@ -41,7 +35,7 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
                             | _ -> indexedChoices
     //printfn "choices : %A" choicesWithoutMax
     //printfn "best options %A" bestOptions
-    let softmax x = exp (x / worldProp.Tau)
+    let softmax x = exp (x / Tau)
     // choices instead of choicesWithoutMax
     let newChoices = List.map (fun x -> fst x, softmax (snd x)) choicesWithoutMax
     let softmaxMapping = newChoices |> List.map (fun x -> fst x, (snd x) / (List.sumBy snd newChoices))
