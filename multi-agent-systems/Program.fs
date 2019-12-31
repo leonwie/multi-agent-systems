@@ -16,14 +16,14 @@ let main argv =
     // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24"
     let agents = Parsing.parse argv
 
-    let printAgents (agents : Agent list) =
-        List.map (fun agent -> (("ID: ", agent.ID), ("Energy: ", agent.Energy), ("Susceptibility: ", agent.Susceptibility),
-                                ("Idealism: ", agent.Idealism), ("Egotism: ", agent.Egotism),
-                                ("Gain: ", agent.Gain), ("EnergyConsumed: ", agent.EnergyConsumed), ("EnergyDeprecation: ", agent.EnergyDeprecation),
-                                ("HuntedFood: ", agent.HuntedFood), ("Activity: ", agent.TodaysActivity), ("ShelterAccess: ", agent.AccessToShelter),
-                                ("SelfConfidence: ", agent.SelfConfidence), ("LastCrimeDate: ", agent.LastCrimeDate), ("FoodAccess: ", agent.AccessToFood),
-                                ("Alive: ", agent.Alive), ("OverallRuleOpinion: ", agent.DecisionOpinions.Value.OverallRuleOpinion),
-                                ("OtherAgentsOpinion: ", List.map (fun (ag, opin) -> ag.ID, opin) agent.DecisionOpinions.Value.AllOtherAgentsOpinion))) agents
+    let printAgent (agent : Agent) =
+        ("ID: ", agent.ID), ("Energy: ", agent.Energy), ("Susceptibility: ", agent.Susceptibility),
+        ("Idealism: ", agent.Idealism), ("Egotism: ", agent.Egotism),
+        ("Gain: ", agent.Gain), ("EnergyConsumed: ", agent.EnergyConsumed), ("EnergyDeprecation: ", agent.EnergyDeprecation),
+        ("HuntedFood: ", agent.HuntedFood), ("Activity: ", agent.TodaysActivity), ("ShelterAccess: ", agent.AccessToShelter),
+        ("SelfConfidence: ", agent.SelfConfidence), ("LastCrimeDate: ", agent.LastCrimeDate), ("FoodAccess: ", agent.AccessToFood),
+        ("Alive: ", agent.Alive), ("OverallRuleOpinion: ", agent.DecisionOpinions.Value.OverallRuleOpinion),
+        ("OtherAgentsOpinion: ", List.map (fun (ag, opin) -> ag.ID, opin) agent.DecisionOpinions.Value.AllOtherAgentsOpinion)
 
     let printWorld (world : WorldState) =
         (("Buildings: ", world.Buildings), ("Time to new chair: ", world.TimeToNewChair), ("CurrentRules: ", world.CurrentRuleSet),
@@ -151,10 +151,14 @@ let main argv =
 
         writer.Write ("Living Agents in day ")
         writer.Write (currentWorld.CurrentDay)
-        writer.WriteLine (printAgents livingAgentsAfterToday)
+        List.map (fun agent -> writer.Write (printAgent agent)) livingAgentsAfterToday
+        writer.WriteLine ()
+        writer.WriteLine ()
         writer.Write("World Status in day ")
         writer.Write (currentWorld.CurrentDay)
-        writer.WriteLine (printWorld currentWorld)
+        writer.Write (printWorld currentWorld)
+        writer.WriteLine ()
+        writer.WriteLine ()
         writer.Write("END OF DAY ")
         writer.Write (currentWorld.CurrentDay)
 
