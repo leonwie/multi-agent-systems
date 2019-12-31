@@ -196,4 +196,6 @@ let updateAverageTotalRewards (agents: Agent list) (state: WorldState): WorldSta
     {state with HuntingAverageTotalReward = 
                     getCumulativeAverage state.CurrentDay state.HuntingAverageTotalReward totalHuntingRewardCurrentDay;
                 BuildingAverageTotalReward =                
-                    getCumulativeAverage state.CurrentDay state.BuildingAverageTotalReward totalBuildingRewardCurrentDay}
+                    getCumulativeAverage state.CurrentDay state.BuildingAverageTotalReward totalBuildingRewardCurrentDay
+                HuntingRewardPerDay = totalHuntingRewardCurrentDay
+                BuildingRewardPerDay = totalBuildingRewardCurrentDay}
