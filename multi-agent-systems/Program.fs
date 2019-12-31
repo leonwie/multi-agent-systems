@@ -130,7 +130,9 @@ let main argv =
                                      |> selfConfidenceUpdate
             
         // After sanction, agent may die
-        let deadAgentsAfterToday = deadAgents @ (normalisedAgentArrays |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
+        let deadAgentsAfterToday = 
+            deadAgents @ (normalisedAgentArrays |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
+            |> List.map (fun agent -> {agent with Alive = false})
         let livingAgentsAfterToday = 
             normalisedAgentArrays 
             |> List.filter (fun el -> el.Alive = true && el.Energy > 0.0)
