@@ -168,4 +168,32 @@ let selfConfidenceUpdate (agents : Agent list) : Agent list =
     let zipped = List.zip agents normalised
     let updatedSelfConfidence = List.map (fun (agent, relativeWellb) -> (agent, 0.5 * agent.Egotism + 0.5 * relativeWellb)) zipped
     List.map (fun (agent, selfConfidence) -> {agent with SelfConfidence = selfConfidence}) updatedSelfConfidence
+  
+  
+// Based on individual reward payoff in Section 5.2
+let getCurrentDayReward (agents: Agent list) : float list =
+    agents
+    |> List.map (fun agent -> agent.Gain - agent.EnergyConsumed - agent.EnergyDeprecation)
+
+
+let updateAverageTotalRewards (agents: Agent list) (state: WorldState): WorldState = 
+    let totalHuntingRewardCurrentDay = 
+        agents
+        |> List.filter (fun agent -> fst agent.TodaysActivity = HUNTING)
+        |> getCurrentDayReward
+        |> List.sum
     
+    let totalBuildingRewardCurrentDay =
+        agents
+        |> List.filter (fun agent -> fst agent.TodaysActivity = BUILDING)
+        |> getCurrentDayReward
+        |> List.sum
+
+    let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: float) = 
+        prevAverage * ((currentDay - 1) |> float) + todaysVal
+        |> fun x -> x / (currentDay |> float)
+
+    {state with HuntingAverageTotalReward = 
+                    getCumulativeAverage state.CurrentDay state.HuntingAverageTotalReward totalHuntingRewardCurrentDay;
+                BuildingAverageTotalReward =                
+                    getCumulativeAverage state.CurrentDay state.BuildingAverageTotalReward totalBuildingRewardCurrentDay}

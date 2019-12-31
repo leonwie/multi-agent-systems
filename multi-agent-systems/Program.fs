@@ -52,7 +52,6 @@ let main argv =
             ShuntingEnergySplit = List.init 11 (fun _ -> 0.5);
         }
 
-
     let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) : WorldState=
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
@@ -147,6 +146,7 @@ let main argv =
             {currentWorld with CurrentDay = currentWorld.CurrentDay + 1;
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
+            |> updateAverageTotalRewards agents
 
         writer.Write ("Living Agents in day ")
         writer.Write (currentWorld.CurrentDay)
