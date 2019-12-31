@@ -73,7 +73,7 @@ let infamyDecay (world: WorldState) (agents: Agent list) : Agent list =
 let sanction (world: WorldState) (agents: Agent list) : Agent list = 
     agents
     |> List.map (fun el ->
-        if el.Infamy <= 0.2 then {el with AccessToShelter = Some 1.0;
+        if el.Infamy <= 0.2 then {el with AccessToShelter = el.AccessToShelter;
                                             AccessToFood = true}
         elif el.Infamy <= 0.5 then {el with AccessToShelter = None;
                                             AccessToFood = true}
