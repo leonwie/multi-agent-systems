@@ -7,10 +7,11 @@ open Build
 open Config
 open Duma
 open Opinion
+open System.IO
 
 [<EntryPoint>]
 let main argv =
-    // Agent parsing - test with command line args "--number-days 20 --number-profiles 2"
+    // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24"
     let agents = Parsing.parse argv
 
     let currentWorld =
@@ -36,7 +37,7 @@ let main argv =
         }
 
 
-    let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState =
+    let rec loop (currentWorld : WorldState) (agents : Agent list) : WorldState=
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
@@ -132,7 +133,7 @@ let main argv =
                                 NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
                                 NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
 
-        //printfn "Living Agents: %A" (List.map (fun ag -> (ag.ID, ag.Energy)) livingAgentsAfterToday)
+        //printfn "Living Agents: %A" (List.map (fun ag -> (ag.ID, ag.Susceptibility, ag.Egotism, ag.Idealism, ag.Energy)) livingAgentsAfterToday)
         //printfn "Current world status: %A" currentWorld
         printfn "End of DAY: %A" currentWorld.CurrentDay
 
@@ -141,8 +142,7 @@ let main argv =
         else
             loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday)
 
-    let finalWorld = loop currentWorld agents;
-
+    let finalWorld = loop currentWorld agents
     printfn "Final world status: %A" finalWorld;
     printfn "Last day %A" finalWorld.CurrentDay
 

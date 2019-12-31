@@ -3,6 +3,7 @@ open NUnit.Framework
 open Types
 open Opinion
 open Agent
+open Config
 
 [<TestFixture>]
 type TestClass () =
@@ -19,7 +20,7 @@ type TestClass () =
 
     [<SetUp>]
     member this.SetUp () =
-        setNumberAgents(24)
+        numAgents <- 24
         this.agents <- initialiseBalancedAgents 24
         this.state <- currentWorld
         
@@ -116,7 +117,7 @@ type TestClass () =
     
     [<Test>]
     member this.normaliseTests() =
-        let gainAgents = List.map (fun agent -> {agent with Gain = 4}) this.agents
+        let gainAgents = List.map (fun agent -> {agent with Gain = 4.0}) this.agents
         let updatedAgents = updateRewardsForEveryRuleForAgent this.state gainAgents 
         let updatedWorld = updateSocialGoodForEveryCurrentRule updatedAgents this.state
         let newAgents = normaliseTheAgentArrays updatedAgents

@@ -2,7 +2,9 @@
 
 // This is the config, its the place where you canhnge the values for stuff
 
-let mutable numAgents = 8
+
+let mutable maxSimulationTurn = -1 // Set in Parsing as a cmd arg; Negative value corresponds to infinity
+let mutable numAgents = 0
 let numberOfRules = 5
 
 let staggiEnergyValue = 200.0
@@ -30,12 +32,10 @@ let es = 35.0 // energy cost per worker to build one shelter
 let ep = 0.8 // maximum shelter energy preservation
 let rb = 5.0 //base energy decay rate
 
-let maxSimulationTurn = -1 // Negative value corresponds to infinity
-
 let maxNumStag = 30
 let maxNumHare = 30
 
-let vetoThreshold = 1.0
+let vetoThreshold = 2.0
 let nominationThreshold = 0.5
 
 // New Spec

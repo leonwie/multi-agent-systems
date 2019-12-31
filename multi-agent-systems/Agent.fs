@@ -81,17 +81,16 @@ let private initialiseFriendsAndEnemies (agents : Agent list) (agent : Agent)  :
 
 // Private function to create and return the DecisionOptions type
 let private initialiseDecisionOpinions (agents : Agent list) : Agent list =
+     if (agents.Length <> numAgents) then
+         failwith "The number of agents specified in the command line is different from the
+                number of agents specified in the profile files. Please make it consistent!"
      let allAgentOpinions = List.map (fun _ -> List.zip agents (generateRandom numAgents)) agents
      let opinions = List.map createOpinions allAgentOpinions
      let updatedOpinions = List.zip (List.map id agents) opinions
      updatedOpinions |>
      List.map (fun (agent, newOpinion) -> {agent with DecisionOpinions = Some newOpinion})
 
-let setNumberAgents (numberAgents : int) =
-    numAgents <- numberAgents
-    
 // Public function for post agent creation - initialises decisions
 let initialiseAgentDecisions (agents : Agent list) : Agent list =
-    setNumberAgents(agents.Length)
     let opinions = initialiseDecisionOpinions agents
     List.map (initialiseFriendsAndEnemies opinions) opinions
