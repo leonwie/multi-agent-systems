@@ -232,7 +232,7 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     match newSanction with
     | x when x = Some(Increment) ->
         {newWorld with
-            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize + 0.1;
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 1.1;
             AllRules = setAllRules world;
             CurrentRuleSet = setRuleSet world (applyOptionRule newShelterRule world.CurrentShelterRule)
                                  (applyOptionRule newFoodRule world.CurrentFoodRule)
@@ -241,7 +241,7 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
         }
     | x when x = Some(Decrement) ->
         {newWorld with
-            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize - 0.1;
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 0.9;
             AllRules = setAllRules world;
             CurrentRuleSet = setRuleSet world (applyOptionRule newShelterRule world.CurrentShelterRule)
                                  (applyOptionRule newFoodRule world.CurrentFoodRule)
