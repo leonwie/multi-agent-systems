@@ -39,3 +39,11 @@ Developed with __dotnetcore 3.0__ (might be compatible w other versions)
 # 3. Modify other program variables:
 
 In Config.fs there are other config variables that can be changed for testing & experimenting in dev stages. They are not meant to be modified during the runtime when a user runs the simulation.
+
+# 4. See the output:
+
+There are 2 ways at the moment:
+
+* With printf see the output in terminal
+
+* The agent and world states are printed every day in a file called output.txt which is in multi-agent-systems\multi-agent-systems. It appears after running the program at least once
