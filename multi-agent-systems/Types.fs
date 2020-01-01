@@ -97,9 +97,10 @@ and Agent =
         SelfConfidence : float;
         TodaysHuntOption : int;
 
-        R : float list;
-        RhuntingEnergySplit : float list;
-        Rsharing : float list;
+        R : (float * LastUpdate) list;
+        RhuntingEnergySplit : (float * LastUpdate) list;
+        Rsharing : (float * LastUpdate) list;
+        FoodShared : bool;
 
         LastCrimeDate : int;
         AccessToFood : bool;

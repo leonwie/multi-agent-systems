@@ -62,19 +62,19 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
 let workAllocation (agent:Agent) (world:WorldState) =
     let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
     let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
-    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.R world.S
+    let opinion = List.map2 (fun x y -> ego*x + ideal*y) (agent.R |> List.map(fun el -> fst el)) world.S
     RLalg opinion world // Return decision
 
 let huntStrategyDecision (agent:Agent) (world:WorldState) =
     let ego = agent.Egotism / (agent.Egotism + agent.Idealism)
     let ideal = agent.Idealism / (agent.Egotism + agent.Idealism)
-    let opinion = List.map2 (fun x y -> ego*x + ideal*y) agent.RhuntingEnergySplit world.ShuntingEnergySplit
+    let opinion = List.map2 (fun x y -> ego*x + ideal*y) (agent.RhuntingEnergySplit |> List.map(fun el -> fst el)) world.ShuntingEnergySplit
     RLalg opinion world // Return decision
 
 let foodSharing (agent:Agent) (world:WorldState) =
     match agent.Egotism - agent.Idealism with
     | negative when negative < 0.0 -> 1 // assuming the second entry in the list of payoffs is for sharing 
-    | _ -> RLalg agent.Rsharing world // return 1 for sharing and 0 for keeping all food
+    | _ -> RLalg (agent.Rsharing |> List.map(fun el -> fst el)) world // return 1 for sharing and 0 for keeping all food
 
 // Helper function to compute cumulative average value for reward and social good updating
 let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: float) = 
@@ -83,3 +83,49 @@ let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: floa
     | _ -> 
         prevAverage * (currentDay |> float) + todaysVal
         |> fun x -> x / ((currentDay + 1) |> float)
+
+let updateWorkRewardMatrices (agents: Agent list) : Agent list =
+
+    let normalise (reward: (float * LastUpdate) list) =
+        let normalisedRewards =
+            reward
+            |> List.map (fun el -> fst el)
+            |> standardize
+
+        List.zip normalisedRewards (List.map (fun el -> snd el) reward)
+
+    agents
+    |> List.map (fun agent -> 
+        let todaysReward = agent.Gain - agent.EnergyConsumed - agent.EnergyDeprecation
+        let updatedReward = 
+            List.zip [NONE; HUNTING; BUILDING] agent.R
+            |> List.map (fun (activity, reward)->
+                if activity = fst agent.TodaysActivity 
+                    then (getCumulativeAverage (snd reward) (fst reward) todaysReward, snd reward + 1)
+                else reward
+            )
+            |> normalise
+            
+
+        let updateHuntingOptionReward =
+            List.zip [for i in 0..10 -> i] agent.RhuntingEnergySplit
+            |> List.map (fun (option, reward) ->
+                if option = agent.TodaysHuntOption
+                    then (getCumulativeAverage (snd reward) (fst reward) todaysReward, snd reward + 1)
+                else reward
+            )
+            |> normalise
+
+        let updateFoodSharingReward =
+            List.zip [false; true] agent.Rsharing
+            |> List.map (fun (shared, reward) ->
+                if shared = agent.FoodShared
+                    then (getCumulativeAverage (snd reward) (fst reward) todaysReward, snd reward + 1)
+                else reward
+            )   
+            |> normalise
+
+        {agent with R = updatedReward; 
+                    RhuntingEnergySplit = updateHuntingOptionReward
+                    Rsharing = updateFoodSharingReward}
+    )

@@ -44,10 +44,11 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
 
         // 11 options of hunting energy split types
         // 1st entry: full energy to stag -> last entry: full energy to hare
-        RhuntingEnergySplit = List.init 11 (fun _ -> 0.5);
-        R = [0.5; 0.5; 0.5];    // NONE, HUNT, BUILDING
+        RhuntingEnergySplit = List.init 11 (fun _ -> (0.5, 0));
+        R = [(0.5, 0); (0.5, 0); (0.5, 0)];    // NONE, HUNT, BUILDING
 
-        Rsharing = [0.5; 0.5];
+        Rsharing = [(0.5, 0); (0.5, 0)];
+        FoodShared = false;     // Only meaningful for hunters
 
         LastCrimeDate = 0;
         AccessToFood = true;

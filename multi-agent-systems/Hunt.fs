@@ -99,6 +99,7 @@ let shareFood (world: WorldState) (agents: Agent list) : Agent list =
         match foodSharing el world with
         | 0 -> {el with Gain = el.HuntedFood;
                         Energy = el.Energy + el.HuntedFood}
-        | _ -> {el with Gain = 0.0}
+        | _ -> {el with Gain = 0.0;
+                        FoodShared = true}
     )
     

@@ -121,6 +121,7 @@ let main argv =
         // Work allocation
         let agentsWithJobs =
             livingAgents
+            |> List.map (fun el -> {el with FoodShared = false}) // Reset foodsharingn status for agents
             |> List.map (fun el ->
                 let decision = workAllocation el currentWorld // To verify
                 match decision with
@@ -175,6 +176,8 @@ let main argv =
             |> List.map (fun el -> newAgentEnergy el)
         // End-of-turn infamy decay
             |> infamyDecay currentWorld
+        // Update reward matrices for works
+            |> updateWorkRewardMatrices
 
         // Opinion, Payoff, Social Good updates
         let opinionChangesAgents = agentsAfterResorceAllocation
