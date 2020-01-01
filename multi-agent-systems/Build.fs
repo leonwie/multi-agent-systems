@@ -31,7 +31,7 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
     let newBuildings = 
         currentWorld.Buildings
         |> List.map (fun el -> shelterAfterDecay el (List.length currentWorld.Buildings) rg (List.length builders) em es) // Existing buildings decay
-        |> List.filter (fun el -> el <> 0.0) // If shelter health at 0 then its gone
+        |> List.filter (fun el -> el >= 0.0) // If shelter health at 0 then its gone
         |> List.append (List.init newSheltersBuilt (fun _ -> 1.0)) // All new shelters have 100 health
    
     {currentWorld with Buildings = newBuildings}
