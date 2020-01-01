@@ -11,11 +11,12 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
 
     // How many new shelters are built
     let sheltersBuilt (shelterCost : float) (energySpent : float) : int =
-        (energySpent / shelterCost) 
+        let multiplier = 10.0
+        (energySpent * multiplier / shelterCost) 
         |> floor
         |> int 
 
-    let newSheltersBuilt =
+    let newSheltersBuilt (builders : Agent list) =
         builders
         |> energySpentBuildingShelter
         |> sheltersBuilt eb     
@@ -32,6 +33,11 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
             min (List.length builders / 2) (List.length currentWorld.Buildings)
         let newBuilders = 
             builders.[numMaintainers..]
+        //printfn "numMaintainers: %A" numMaintainers
+        //printfn "numBuildings : %A" (List.length currentWorld.Buildings)
+        //printfn "agents building new: %A" (List.map (fun el -> el.ID, el.TodaysActivity) newBuilders)
+        //printfn "buildings: %A" currentWorld.Buildings
+
         currentWorld.Buildings
         |> List.map (fun el -> shelterAfterDecay el (List.length currentWorld.Buildings) rg numMaintainers em es) // Existing buildings decay
         |> List.filter (fun el -> el >= 0.1) // If shelter health at 0 then its gone
