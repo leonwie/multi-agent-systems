@@ -84,6 +84,8 @@ let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: floa
         prevAverage * (currentDay |> float) + todaysVal
         |> fun x -> x / ((currentDay + 1) |> float)
 
+
+// Upddate work reward matrices at end-of-turn
 let updateWorkRewardMatrices (agents: Agent list) : Agent list =
 
     let normalise (reward: (float * LastUpdate) list) =
@@ -100,10 +102,13 @@ let updateWorkRewardMatrices (agents: Agent list) : Agent list =
         let updatedReward = 
             List.zip [NONE; HUNTING; BUILDING] agent.R
             |> List.map (fun (activity, reward)->
+                // Update reward if activity is chosen otherwise keep last reward
+                // snd reward tracks last time the activity is chosen
                 if activity = fst agent.TodaysActivity 
                     then (getCumulativeAverage (snd reward) (fst reward) todaysReward, snd reward + 1)
                 else reward
             )
+            // Normalise new reward matrices
             |> normalise
             
 

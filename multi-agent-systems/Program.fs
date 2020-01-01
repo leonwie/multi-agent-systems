@@ -63,7 +63,7 @@ let main argv =
                 let targets = 
                     agents
                     |> List.filter (fun el -> fst el.TodaysActivity = activity)
-                if targets = [] then prevVal
+                if targets = [] then prevVal    // If no agent carries out action, social good not changed
                 else
                     targets
                     |> List.map (fun el -> el.Gain - 2.0 * el.EnergyConsumed - 2.0 * el.EnergyDeprecation)
