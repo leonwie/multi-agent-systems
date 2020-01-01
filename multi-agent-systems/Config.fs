@@ -22,7 +22,7 @@ let rabbosMeanRegenRate = 0.1
 let foodSaturation = 40
 
 
-let costOfHunting = 30
+let costOfWorking = 30.0
 
 let eb = 10.0 // energy cost per worker to build
 let em = 2.5 // energy cost per worker to maintain

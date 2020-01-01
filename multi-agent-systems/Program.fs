@@ -8,6 +8,7 @@ open Config
 open Duma
 open Opinion
 open System.IO
+open Agent
 
 [<EntryPoint>]
 let main argv =
@@ -172,6 +173,8 @@ let main argv =
         // Sanction
             |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
             |> sanction currentWorld
+        // Energy decay due to working
+            |> reduceEnergyForWorking
         // End-of-turn energy decay
             |> List.map (fun el -> newAgentEnergy el)
         // End-of-turn infamy decay
@@ -213,7 +216,7 @@ let main argv =
         writer.Write("END OF DAY ")
         writer.Write (currentWorld.CurrentDay)
 
-        //printfn "Living Agents: %A" (printAgents livingAgentsAfterToday)
+        printfn "Living Agents: %A" (printAgent (List.head livingAgentsAfterToday))
         //printfn "Current world status: %A" (printWorld currentWorld)
         printfn "End of DAY: %A" currentWorld.CurrentDay
         writer.WriteLine ()

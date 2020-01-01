@@ -99,3 +99,10 @@ let initialiseAgentDecisions (agents : Agent list) : Agent list =
     let opinions = initialiseDecisionOpinions agents
     List.map (initialiseFriendsAndEnemies opinions) opinions
 
+let reduceEnergyForWorking (agents: Agent list) : Agent list =
+    agents
+    |> List.map (fun el -> 
+        if fst el.TodaysActivity = NONE then el
+        else {el with Energy = el.Energy - costOfWorking;
+                        EnergyConsumed = costOfWorking}
+    )
