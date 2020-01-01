@@ -1,4 +1,4 @@
-﻿module Build
+module Build
 
 open Types
 open Config
@@ -11,7 +11,9 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
 
     // How many new shelters are built
     let sheltersBuilt (shelterCost : float) (energySpent : float) : int =
-        (energySpent |> int) / (int)shelterCost // Integer division so no need for floor
+        (energySpent / shelterCost) 
+        |> floor
+        |> int 
 
     let newSheltersBuilt =
         builders
@@ -19,21 +21,22 @@ let newWorldShelters (currentWorld : WorldState) (builders : Agent list) : World
         |> sheltersBuilt eb     
 
     let shelterAfterDecay (curQuality : float) (numShelters : int) (qualityDecayRate : float) (numMaintainers : int) (maintainCost : float) (energyPerShelter : float) : float =
-        numMaintainers 
-        |> float
-        |> (*) maintainCost 
-        |> (/) (numShelters |> float) 
-        |> (/) energyPerShelter
-        |> floor
-        |> (+) (curQuality * (1.0 - qualityDecayRate))
+        (numMaintainers |> float) * (maintainCost / ((numShelters |> float) * energyPerShelter))
+        //|> floor
+        //|> (+) (curQuality * (1.0 - qualityDecayRate))
+        |> (+) (curQuality - qualityDecayRate)
         |> min 1.0
 
     let newBuildings = 
+        let numMaintainers =
+            min (List.length builders / 2) (List.length currentWorld.Buildings)
+        let newBuilders = 
+            builders.[numMaintainers..]
         currentWorld.Buildings
-        |> List.map (fun el -> shelterAfterDecay el (List.length currentWorld.Buildings) rg (List.length builders) em es) // Existing buildings decay
-        |> List.filter (fun el -> el >= 0.0) // If shelter health at 0 then its gone
-        |> List.append (List.init newSheltersBuilt (fun _ -> 1.0)) // All new shelters have 100 health
-   
+        |> List.map (fun el -> shelterAfterDecay el (List.length currentWorld.Buildings) rg numMaintainers em es) // Existing buildings decay
+        |> List.filter (fun el -> el >= 0.1) // If shelter health at 0 then its gone
+        |> List.append (List.init (newSheltersBuilt newBuilders) (fun _ -> 1.0)) // All new shelters have 100 health
+
     {currentWorld with Buildings = newBuildings}
 
 
