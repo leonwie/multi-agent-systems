@@ -75,3 +75,11 @@ let foodSharing (agent:Agent) (world:WorldState) =
     match agent.Egotism - agent.Idealism with
     | negative when negative < 0.0 -> 1 // assuming the second entry in the list of payoffs is for sharing 
     | _ -> RLalg agent.Rsharing world // return 1 for sharing and 0 for keeping all food
+
+// Helper function to compute cumulative average value for reward and social good updating
+let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: float) = 
+    match currentDay with
+    | 0 -> todaysVal
+    | _ -> 
+        prevAverage * (currentDay |> float) + todaysVal
+        |> fun x -> x / ((currentDay + 1) |> float)

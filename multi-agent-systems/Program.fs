@@ -52,6 +52,65 @@ let main argv =
             ShuntingEnergySplit = List.init 11 (fun _ -> 0.5);
         }
 
+    let updateEndOfDayState (agents: Agent list) (state: WorldState) : WorldState = 
+        let updateNoneAgentStates (currentWorld: WorldState) : WorldState =
+            {currentWorld with CurrentDay = currentWorld.CurrentDay + 1;
+                                NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
+                                NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
+        
+        let updateSocialGoodForWork (state: WorldState) : WorldState =
+            let socialGood (prevVal: float) (activity: Activity) : float = 
+                let targets = 
+                    agents
+                    |> List.filter (fun el -> fst el.TodaysActivity = activity)
+                if targets = [] then prevVal
+                else
+                    targets
+                    |> List.map (fun el -> el.Gain - 2.0 * el.EnergyConsumed - 2.0 * el.EnergyDeprecation)
+                    |> List.sum
+                    |> fun x -> x / (agents.Length |> float)
+
+            let updatedS =
+                List.zip [NONE; HUNTING; BUILDING] state.S
+                |> List.map (fun (work, s) ->
+                    work
+                    |> socialGood s
+                    |> getCumulativeAverage state.CurrentDay s
+                )
+                |> standardize
+
+            {state with S = updatedS}
+            
+        let updateSocialGoodForHunters (state: WorldState) : WorldState =
+            let socialGood (prevVal: float) (option: int) : float = 
+                let targets = 
+                    agents
+                    |> List.filter (fun el -> el.TodaysHuntOption = option)
+                
+                if targets = [] then prevVal
+                else
+                    targets
+                    |> List.map (fun el -> el.Gain - 2.0 * el.EnergyConsumed - 2.0 * el.EnergyDeprecation)
+                    |> List.sum
+                    |> fun x -> x / (agents.Length |> float)
+
+            let updatedS =
+                List.zip [for i in 0..10 -> i] state.ShuntingEnergySplit
+                |> List.map (fun (option, s) ->
+                    option
+                    |> socialGood s
+                    |> getCumulativeAverage state.CurrentDay s
+                )
+                |> standardize
+
+            {state with ShuntingEnergySplit = updatedS}
+        
+        state
+        |> updateAverageTotalRewards agents
+        |> updateSocialGoodForWork
+        |> updateSocialGoodForHunters
+        |> updateNoneAgentStates
+
     let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) : WorldState=
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
@@ -135,18 +194,8 @@ let main argv =
         let livingAgentsAfterToday = 
             normalisedAgentArrays 
             |> List.filter (fun el -> el.Alive = true && el.Energy > 0.0)
-        // Reset food captured field associated with current day
-        // TODO if we need to record agent state for each day,
-        // we must do it before reset here
-            |> List.map (fun el ->
-                {el with HuntedFood = 0.0; Gain = 0.0}
-            )
 
-        let currentWorld =
-            {currentWorld with CurrentDay = currentWorld.CurrentDay + 1;
-                                NumHare = currentWorld.NumHare + regenRate rabbosMeanRegenRate currentWorld.NumHare maxNumHare;
-                                NumStag = currentWorld.NumStag + regenRate staggiMeanRegenRate currentWorld.NumStag maxNumStag}  // Regeneration
-            |> updateAverageTotalRewards agents
+        let currentWorld = updateEndOfDayState agents currentWorld
 
         writer.Write ("Living Agents in day ")
         writer.Write (currentWorld.CurrentDay)

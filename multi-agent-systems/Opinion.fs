@@ -189,9 +189,6 @@ let updateAverageTotalRewards (agents: Agent list) (state: WorldState): WorldSta
         |> getCurrentDayReward
         |> List.sum
 
-    let getCumulativeAverage (currentDay: int) (prevAverage: float) (todaysVal: float) = 
-        prevAverage * ((currentDay - 1) |> float) + todaysVal
-        |> fun x -> x / (currentDay |> float)
 
     {state with HuntingAverageTotalReward = 
                     getCumulativeAverage state.CurrentDay state.HuntingAverageTotalReward totalHuntingRewardCurrentDay;
