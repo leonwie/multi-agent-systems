@@ -216,16 +216,16 @@ let main argv =
         writer.Write("END OF DAY ")
         writer.Write (currentWorld.CurrentDay)
 
-        printfn "Living Agents: %A" (printAgent (List.head livingAgentsAfterToday))
-        //printfn "Current world status: %A" (printWorld currentWorld)
-        printfn "End of DAY: %A" currentWorld.CurrentDay
-        writer.WriteLine ()
-        writer.WriteLine ()
-
         if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = maxSimulationTurn then
             currentWorld
         else
+            printfn "Living Agents: %A" (printAgent (List.head livingAgentsAfterToday))
+            //printfn "Current world status: %A" (printWorld currentWorld)
+            printfn "End of DAY: %A" currentWorld.CurrentDay
+            writer.WriteLine ()
+            writer.WriteLine ()
             loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) writer
+
 
     let writer = new StreamWriter("..\..\..\output.txt")
     let finalWorld = loop currentWorld agents writer
