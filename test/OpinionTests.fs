@@ -44,6 +44,8 @@ type TestClass () =
             HuntingRewardPerDay = 0.0;
             BuildingAverageTotalReward = 0.0;
             HuntingAverageTotalReward = 0.0;
+            S = [0.5; 0.5; 0.5];
+            ShuntingEnergySplit = List.init 11 (fun _ -> 0.5);
         }
 
     let idealistAgent id =
