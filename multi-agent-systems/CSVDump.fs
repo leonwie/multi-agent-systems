@@ -49,7 +49,10 @@ open Types
 //                     [ID]Access To Food,
 //                     [ID]Alive,"
 
-let csvdump (world : WorldState) (agents : Agent list) (csvwriter : StreamWriter) : WorldState = 
+let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : StreamWriter) : WorldState = 
+
+    let agents = List.sortBy (fun elem -> elem.ID) unsortedAgents
+
     // world state dump
     csvwriter.Write("\n")
     csvwriter.Write(world.Buildings)
@@ -99,8 +102,6 @@ let csvdump (world : WorldState) (agents : Agent list) (csvwriter : StreamWriter
 
     // dump for a single agent
     let agentDump _ (agent : Agent) : WorldState =
-        csvwriter.Write(agent.ID)
-        csvwriter.Write(",")
         csvwriter.Write(agent.Susceptibility)
         csvwriter.Write(",")
         csvwriter.Write(agent.Idealism)
