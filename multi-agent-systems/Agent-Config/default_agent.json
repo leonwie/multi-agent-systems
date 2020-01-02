@@ -1,7 +1,7 @@
 {
   "Profile": "Agent",
   "IDRange": [0, 1, 2],
-  "Susceptibility" : 0.5,
-  "Idealism" : 0.5,
-  "Egotism" : 0.5
+  "Susceptibility" : [0.5, 0.5, 0.5],
+  "Idealism" : [0.5, 0.5, 0.5],
+  "Egotism" : [0.5, 0.5, 0.5]
 }

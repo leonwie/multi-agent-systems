@@ -11,9 +11,6 @@ open Config
 // This means returning expected energy gain and a job allocation
 // Since sanction does not check for job type as long as there is a job
 // Actual job allocation does not matter
-
-
-// CAUTION: NO SPECS ABOUT AGENT DECISION ON JOB OR ENERGY TO SHARE
 let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: float): float list * Activity list = 
 
     let totalEnergy = 
@@ -41,9 +38,9 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
         |> List.map (fun el ->
             match world.CurrentWorkRule with
             | Everyone -> 
-                HUNTING // Indicate that agent will have activity
+                BUILDING // Indicate that agent will have activity
             | Strongest -> 
-                if el.Energy >= WorkExemptionThreshold then HUNTING else NONE
+                if el.Energy >= WorkExemptionThreshold then BUILDING else NONE
             | _ -> NONE // No expectation on working
         )
 
@@ -55,7 +52,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then {agent with Energy = agent.Energy + energy;
-                            TodaysEnergyObtained = agent.TodaysEnergyObtained + energy}    
+                            Gain = agent.Gain + energy}
         else agent
     )
 
@@ -76,7 +73,7 @@ let infamyDecay (world: WorldState) (agents: Agent list) : Agent list =
 let sanction (world: WorldState) (agents: Agent list) : Agent list = 
     agents
     |> List.map (fun el ->
-        if el.Infamy <= 0.2 then {el with AccessToShelter = Some 1.0;
+        if el.Infamy <= 0.2 then {el with AccessToShelter = el.AccessToShelter;
                                             AccessToFood = true}
         elif el.Infamy <= 0.5 then {el with AccessToShelter = None;
                                             AccessToFood = true}
@@ -87,7 +84,7 @@ let sanction (world: WorldState) (agents: Agent list) : Agent list =
             | NoFoodAndShelter -> {el with AccessToFood = false;
                                             AccessToShelter = None}
             | Exile -> {el with Alive = false}
-            | _ -> failwith "Invalid maximumm punishment setting"
+            | _ -> failwith "Invalid maximum punishment setting"
     )
 
 
@@ -98,7 +95,7 @@ let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWo
     let checkFoodAllocation (agents: Agent list) = 
         List.zip agents expectedEnergyGain
         |> List.map (fun (agent, gain) ->
-            if agent.TodaysEnergyObtained > gain && rand.NextDouble() < CrimeDiscoveryRate 
+            if agent.Gain > gain && rand.NextDouble() < CrimeDiscoveryRate 
                 then {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
             else agent
         )

@@ -48,11 +48,11 @@ type Rule =
 type SocialGood = float
 type LastUpdate = int
 type RuleSet = (Rule * SocialGood * LastUpdate) list
-let initialiseRuleSet = [(Shelter(Random), 0.5, 0); (Food(Communism), 0.5, 0); (Work(Everyone), 0.5, 0);
+let initialiseRuleSet = [(Shelter(ShelterRule.Random), 0.5, 0); (Food(FoodRule.Communism), 0.5, 0); (Work(Everyone), 0.5, 0);
                          (Voting(Borda), 0.5, 0); (Sanction(Exile), 0.5, 0)]
-let initialiseAllRules = [(Shelter(Random), 0.5, 0); (Shelter(Random), 0.5, 0);
-                          (Shelter(Meritocracy), 0.5, 0); (Shelter(Socialism), 0.5, 0);
-                          (Food(Communism), 0.5, 0); (Food(FoodRule.Oligarchy), 0.5, 0);
+let initialiseAllRules = [(Shelter(ShelterRule.Random), 0.5, 0); (Shelter(ShelterRule.Oligarchy), 0.5, 0); 
+                          (Shelter(ShelterRule.Meritocracy), 0.5, 0); (Shelter(ShelterRule.Socialism), 0.5, 0);
+                          (Food(FoodRule.Communism), 0.5, 0); (Food(FoodRule.Oligarchy), 0.5, 0);
                           (Food(FoodRule.Socialism), 0.5, 0); (Food(FoodRule.Meritocracy), 0.5, 0);
                           (Work(Everyone), 0.5, 0); (Work(ByChoice), 0.5, 0);
                           (Work(Strongest), 0.5, 0); (Voting(Borda), 0.5, 0);
@@ -60,13 +60,13 @@ let initialiseAllRules = [(Shelter(Random), 0.5, 0); (Shelter(Random), 0.5, 0);
                           (Voting(Plurality), 0.5, 0); (Sanction(Exile), 0.5, 0);
                           (Sanction(NoFoodAndShelter), 0.5, 0); (Sanction(Increment), 0.5, 0);
                           (Sanction(Decrement), 0.5, 0);]
-let ShelterRuleList = [Shelter(Random); Shelter(Random); Shelter(Meritocracy); Shelter(Socialism)]
+let ShelterRuleList = [Shelter(ShelterRule.Random); Shelter(ShelterRule.Oligarchy); Shelter(ShelterRule.Meritocracy); Shelter(ShelterRule.Socialism)]
 let FoodRuleList = [Food(FoodRule.Communism); Food(FoodRule.Meritocracy); Food(FoodRule.Oligarchy); Food(FoodRule.Socialism)]
 let PunishmentList = [Sanction(NoFoodAndShelter); Sanction(Increment); Sanction(Decrement); Sanction(Exile)]
 let VotingSystemList = [Voting(Approval); Voting(InstantRunoff); Voting(Borda); Voting(Plurality)]
 let WorkAllocationList = [Work(Everyone); Work(ByChoice); Work(Strongest)]
 
-
+// All agents in Opinions are shallow copies, ONLY REFER THEM BY ID, do NOT use any other fields from the copies
 type Opinions =
     {
         RewardPerRule : (Rule * float * LastUpdate) list;        // reward per rule - has all rules
@@ -84,28 +84,30 @@ and Agent =
         Idealism : float;
         Egotism : float;
 
-        Gain : int;
+        Gain : float;
         EnergyDeprecation : float;
         EnergyConsumed : float;
         Infamy : float;
         Energy : float;
+        HuntedFood : float;
         DecisionOpinions : Opinions option;
 
         TodaysActivity : Activity * float;
         AccessToShelter : float option;
-        BuildingAptitude : float;
-        HuntingAptitude : float;
         SelfConfidence : float;
-        R : float list;
-        Rsharing : float list;
-        S : float list;
+        TodaysHuntOption : int;
+
+        R : (float * LastUpdate) list;
+        RhuntingEnergySplit : (float * LastUpdate) list;
+        Rsharing : (float * LastUpdate) list;
+        FoodShared : bool;
 
         LastCrimeDate : int;
         AccessToFood : bool;
         Alive: bool;
-        TodaysEnergyObtained : float;
     }
 
+// All agents in WorldState are shallow copies, ONLY REFER THEM BY ID, do NOT use any other fields from the copies    
 type WorldState =
     {
         Buildings : float list;
@@ -126,7 +128,12 @@ type WorldState =
         HuntingRewardPerDay : float;
         BuildingAverageTotalReward : float;
         HuntingAverageTotalReward : float;
-    }
+
+        S : float list;     // Social good per work
+        // Social good of each of the 11 options of hunting energy split types
+        // 1st entry: full energy to stag -> last entry: full energy to hare
+        ShuntingEnergySplit : float list;   
+        }
 
 type WorldProperties =
     {

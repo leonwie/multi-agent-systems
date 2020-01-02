@@ -2,11 +2,10 @@
 
 // This is the config, its the place where you canhnge the values for stuff
 
-let numAgents = 8
-let numberOfRules = 5
 
-let shelterEnergySavings = 0.5
-// let shelterDecayRate = 25.0 // Shelter lasts 4 days
+let mutable maxSimulationTurn = -1 // Set in Parsing as a cmd arg; Negative value corresponds to infinity
+let mutable numAgents = 0
+let numberOfRules = 5
 
 let staggiEnergyValue = 200.0
 let staggiProbability = 0.1 // likelihood is 1 in 10 intervals
@@ -22,31 +21,28 @@ let rabbosMeanRegenRate = 0.1
 
 let foodSaturation = 40
 
-let costOfBuilding = 50
-let costOfHunting = 30
 
+let costOfWorking = 30.0
 
-let eb = 0.0 // energy cost per worker to build
-let em = 0.0 // energy cost per worker to maintain
-let rg = 0.0 // shelter quality decay rate
-let es = 0.0 // energy cost per worker to build one shelter
-let ep = 0.0 // maximum shelter energy preservation
-let rb = 0.0 //base energy decay rate
-
-let maxSimulationTurn = -1 // Negative value corresponds to infinity
+let eb = 10.0 // energy cost per worker to build
+let em = 2.5 // energy cost per worker to maintain
+let rg = 0.05 // shelter quality decay rate
+let es = 35.0 // energy cost per worker to build one shelter
+let ep = 0.8 // maximum shelter energy preservation
+let rb = 5.0 //base energy decay rate
 
 let maxNumStag = 30
 let maxNumHare = 30
 
-let vetoThreshold = 0.5
+let vetoThreshold = 2.0
 let nominationThreshold = 0.5
-
-// New Spec
-let ExplorationDecay = 0.5
-
 
 // For Sanctions
 let InfamyStep = 0.1
 let MinimumFoodForOligarchy = 0.5
 let CrimeDiscoveryRate = 0.5
 let WorkExemptionThreshold = 0.3
+
+// Constants for decision making
+let Tau = 10.0
+let Gamma = 5.0

@@ -1,4 +1,5 @@
 ﻿module Agent
+open System
 open Config
 open Types
 
@@ -7,8 +8,7 @@ let rand = System.Random()
 
 // Generate count random numbers in [0,1]
 let generateRandom count =
-    let rnd = System.Random()
-    List.init count (fun _ -> rnd.NextDouble())
+    List.init count (fun _ -> rand.NextDouble())
 
 // Look up friendToFind in the Friends & Enemies lists of agent
 let private lookUp (agents : Agent list) (agent : Agent) (friendToFind : Agent) : bool * bool =
@@ -29,41 +29,45 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Egotism = egotism;                      // in [0, 1]
         Idealism = idealism;                    // in [0, 1]
        
-        EnergyDeprecation = 0.0;
-        Gain = 0;
-        EnergyConsumed = 0.0;
+        EnergyDeprecation = 0.0;                // end-of-turn energy loss
+        Gain = 0.0;                               // energy received for the day
+        EnergyConsumed = 0.0;                   // energy spent on work
         Infamy = 0.0;
         Energy = 100.0;
+        HuntedFood = 0.0;                       // Food from hunting (non-zero for hunters only)
         
         TodaysActivity = Activity.NONE, 0.0;
+        TodaysHuntOption = 0;                   // Hunting energy split option, valid for hunters only
         AccessToShelter = None;
-        BuildingAptitude = 0.0;
-        HuntingAptitude = 0.0;
         DecisionOpinions = None;
         SelfConfidence = 0.5;
 
-        R = [0.5; 0.5];
-        S = [0.5; 0.5];
-        Rsharing = [0.5; 0.5];
+        // 11 options of hunting energy split types
+        // 1st entry: full energy to stag -> last entry: full energy to hare
+        RhuntingEnergySplit = List.init 11 (fun _ -> (0.5, 0));
+        R = [(0.5, 0); (0.5, 0); (0.5, 0)];    // NONE, HUNT, BUILDING
+
+        Rsharing = [(0.5, 0); (0.5, 0)];
+        FoodShared = false;     // Only meaningful for hunters
 
         LastCrimeDate = 0;
         AccessToFood = true;
         Alive = true;
-        TodaysEnergyObtained = 0.0;
     }
 
 let private initialRewardRule = List.map (fun (y, _, _) -> (y, 0.5, 0)) initialiseAllRules
 
-let private initialOverallRuleOpinion = List.map (fun (y, _, _) ->
+let private initialOverallRuleOpinion () =
+    List.map (fun (y, _, _) ->
     (y,((generateRandom 1) |> List.head) * (0.6 - 0.4) + 0.4)) initialiseAllRules
 
 // Private function to create the opinion type with only one way friends/enemies
 let private createOpinions (opinions : (Agent * float) list) : Opinions =
     {
-        InitialRuleOpinion = initialOverallRuleOpinion
+        InitialRuleOpinion = initialOverallRuleOpinion ()
         RewardPerRule = initialRewardRule
-        PersonalCurrentRulesOpinion = initialOverallRuleOpinion
-        OverallRuleOpinion = initialOverallRuleOpinion
+        PersonalCurrentRulesOpinion = initialOverallRuleOpinion ()
+        OverallRuleOpinion = initialOverallRuleOpinion ()
         AllOtherAgentsOpinion = opinions
         Friends = List.filter (fun (_, op) -> op > 0.5) opinions |> List.map fst
         Enemies = List.filter (fun (_, op) -> op < 0.1) opinions |> List.map fst
@@ -81,13 +85,24 @@ let private initialiseFriendsAndEnemies (agents : Agent list) (agent : Agent)  :
 
 // Private function to create and return the DecisionOptions type
 let private initialiseDecisionOpinions (agents : Agent list) : Agent list =
+     if (agents.Length <> numAgents) then
+         failwith "The number of agents specified in the command line is different from the
+                number of agents specified in the profile files. Please make it consistent!"
      let allAgentOpinions = List.map (fun _ -> List.zip agents (generateRandom numAgents)) agents
      let opinions = List.map createOpinions allAgentOpinions
      let updatedOpinions = List.zip (List.map id agents) opinions
      updatedOpinions |>
      List.map (fun (agent, newOpinion) -> {agent with DecisionOpinions = Some newOpinion})
 
-// Public function for post agent creation - intialises decisions
+// Public function for post agent creation - initialises decisions
 let initialiseAgentDecisions (agents : Agent list) : Agent list =
     let opinions = initialiseDecisionOpinions agents
     List.map (initialiseFriendsAndEnemies opinions) opinions
+
+let reduceEnergyForWorking (agents: Agent list) : Agent list =
+    agents
+    |> List.map (fun el -> 
+        if fst el.TodaysActivity = NONE then el
+        else {el with Energy = el.Energy - costOfWorking;
+                        EnergyConsumed = costOfWorking}
+    )

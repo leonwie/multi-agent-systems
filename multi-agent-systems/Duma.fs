@@ -1,10 +1,13 @@
 module Duma
 
+open System
 open System.Data
 open Types
 open Voting
 open Config
+open Decision
 open Election
+open Opinion
 
 // To Do:
 //
@@ -44,69 +47,61 @@ let allSanctionVotes : Punishment list = [
     Increment;
     Decrement;
 ]
-
-
-let voteOnProposals (world : WorldState) (agent : Agent)
-    (toVote : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option)
-    : ShelterRule list option * WorkAllocation list option * FoodRule list option * VotingSystem list option * Punishment list option =
-    // Stuff to vote on will either be a list of values or a None if noone proposed a proposal change
-    failwithf "PLACEHOLDER FOR DECIDING WHAT RULES THE AGENT WILL VOTE FOR"
     
-(*
-let voteOnChairCandidates (agent : Agent) (allCandidates : Agent list) : Agent list =
-    match agent.DecisionOpinions with
-        | Some(opinions) -> opinions.OtherAgentsOpinion
-        | None -> failwithf "Should have opinions of other agents"
-    |> List.sortBy snd // sort list by size of opinion
-    |> List.rev // Get largest to smallest
-    |> List.filter (fun el -> List.contains (el |> fst) allCandidates) // filter by elements only in both lists
-    |> List.map fst // map agent * float to agent    
-*)
-
-let private getRulesForTopic (chair : Agent) (rule : Rule) (rules : (Agent * Rule) list) : Agent =
+let private getAgentToSpeakForTopic (chair : Agent) (currentRuleInTopic : Rule) (newRules : (Agent * Rule) list) : Agent list =
     let filteredRules =
-        match rule with
-        | Shelter(x) -> (List.filter (function (_, Shelter _) -> true | _ -> false) rules) |> List.map fst
-        | Food(x) ->  (List.filter (function (_, Shelter _) -> true | _ -> false) rules) |> List.map fst
-        | Work(x) -> (List.filter (function (_, Work _) -> true | _ -> false) rules) |> List.map fst
-        | Voting(x) -> (List.filter (function (_, Voting _) -> true | _ -> false) rules) |> List.map fst
-        | Sanction(x) -> (List.filter (function (_, Sanction _) -> true | _ -> false) rules) |> List.map fst
-    chairChoiceOfProposalForTopic chair filteredRules rule
+        match currentRuleInTopic with
+        | Shelter(x) -> (List.filter (function (_, Shelter _) -> true | _ -> false) newRules) |> List.map fst
+        | Food(x) ->  (List.filter (function (_, Food _) -> true | _ -> false) newRules) |> List.map fst
+        | Work(x) -> (List.filter (function (_, Work _) -> true | _ -> false) newRules) |> List.map fst
+        | Voting(x) -> (List.filter (function (_, Voting _) -> true | _ -> false) newRules) |> List.map fst
+        | Sanction(x) -> (List.filter (function (_, Sanction _) -> true | _ -> false) newRules) |> List.map fst
+    chairChoiceOfProposalForTopic chair filteredRules currentRuleInTopic
     
 let getPropositions (world : WorldState) (agents : Agent list) : Proposal list =
     // Get all the agents and the proposals they want to make, filter those allowed to make proposals
     let proposalOfRuleChanges = List.map (fun agent -> proposalOfRuleChangesForAgent agent world) agents
     let agentNewRules = List.filter (fun (_, list) -> not(List.isEmpty list)) proposalOfRuleChanges
                         |> List.map (fun (agent, rules) -> (agent, List.head rules))
-    let agentOldRules = List.map (fun (rule, _, _) -> (getRulesForTopic world.CurrentChair.Value rule agentNewRules, rule))
-                            world.CurrentRuleSet |> List.sort
+    let agentForTopic rule = getAgentToSpeakForTopic world.CurrentChair.Value rule agentNewRules
+    let agentOldRules = world.CurrentRuleSet
+                          |> List.filter (fun (rule, _, _) -> (agentForTopic rule).Length > 0)
+                          |> List.map (fun (rule, _, _) -> (agentForTopic rule |> List.head, rule))
+                          |> List.sort
     let newRules = List.filter (fun (agent, _) -> List.contains agent (List.map fst agentOldRules))
                        agentNewRules |> List.sort
     let zipped = List.zip agentOldRules newRules
     let updatedProposals = List.filter (fun ((agent, oldRule), (_, newRule)) ->
         not(doesTheChairUseVeto world.CurrentChair.Value agent oldRule newRule vetoThreshold)) zipped
     List.map (fun ((agent, _), (_, newRule)) -> (newRule, [agent])) updatedProposals
-
+    
 let chairVote (world : WorldState) (agents : Agent list) : WorldState =
     // Vote on the new chair person
-    if world.TimeToNewChair = 0 // Only change chaiman if necessary
+    if world.TimeToNewChair = 0 || world.CurrentChair.IsNone // Only change chaiman if necessary
     then // Get the opinions of each agent and carry out a vote on the chairman
         let candidates = 
             agents // Does an agent nominate itself
             |> List.filter (fun agent -> doesAgentNominateItselfForChair agent world.CurrentRuleSet nominationThreshold)
-        let newChair =
+        let agentsVotesForChair =
             agents
             |> List.map (fun agent -> agentVoteForChair candidates agent)
-            |> match world.CurrentVotingRule with
-               | Borda -> bordaVote
-               | Approval -> approvalVote
-               | InstantRunoff -> instantRunoffVote agents
-               | Plurality -> pluralityVote
-        {world with CurrentChair = Some newChair; TimeToNewChair = 7}
+            |> List.filter (fun list -> not (List.isEmpty list))
+        let newChair =
+            if agentsVotesForChair.Length > 0 then    
+                match world.CurrentVotingRule with
+                   | Borda -> bordaVote agentsVotesForChair
+                   | Approval -> approvalVote agentsVotesForChair
+                   | InstantRunoff -> instantRunoffVoteA agents agentsVotesForChair
+                   | Plurality -> pluralityVote agentsVotesForChair
+            // if none has been chosen, choose a random one for the live agents       
+            else agents.[rand.Next(0, agents.Length - 1)]      
+        let chair = List.filter (fun agent -> agent.ID = newChair.ID) agents |> List.head       
+        {world with CurrentChair = Some chair; TimeToNewChair = 7}
     else {world with TimeToNewChair = world.TimeToNewChair - 1}
 
 
-let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal list) : ShelterRule option * WorkAllocation option * FoodRule option * VotingSystem option * Punishment option =
+let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal list) : ShelterRule option * WorkAllocation option
+                                                            * FoodRule option * VotingSystem option * Punishment option =
     // Get the rules to vote on
     let rulesToVoteOn =
         proposals
@@ -154,7 +149,7 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
         agents
         |> List.map (fun agent ->
             rulesToVoteOn1
-            |> voteOnProposals world agent)
+            |> id)
         |> List.fold (fun acc el ->
             let acc1, acc2, acc3, acc4, acc5 = acc
             let el1, el2, el3, el4, el5 = el
@@ -173,6 +168,8 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
             removeNone e
     // Apply current voting system to each of the voting options
     let votingSystem (allCandidates : 'a list) (candidates : 'a list list) =
+        if candidates.Length <= 0 then
+            failwith "Candidate list is empty in Duma.newRules\n"
         match world.CurrentVotingRule with
         | Borda ->
             bordaVote candidates
@@ -198,8 +195,24 @@ let newRules (agents : Agent list) (world : WorldState) (proposals : Proposal li
     vote votingSystem allVotingSystems votingVotes,
     vote votingSystem allSanctionVotes sanctionVotes
 
+let private setRuleSet (world : WorldState) (shelterRule : ShelterRule) (foodRule : FoodRule) (workRule : WorkAllocation)
+                       (votingRule : VotingSystem) (sanctionRule : Punishment) : RuleSet =
+    let isNewRule rule =
+        match rule with
+        | Shelter(x) -> x = shelterRule
+        | Food(x) -> x = foodRule
+        | Work(x) -> x = workRule
+        | Voting(x) -> x = votingRule
+        | Sanction(x) -> x = sanctionRule
+    List.filter (fun (rule, _, _) -> isNewRule rule) world.AllRules
 
-let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule option * WorkAllocation option * FoodRule option * VotingSystem option * Punishment option) : WorldState =
+let private setAllRules (world : WorldState) : RuleSet =
+    let currentRules = List.map (fun (rule, _, _) -> rule) world.CurrentRuleSet
+    let allRulesMinusCurrent = List.filter (fun (rule, _, _) -> not(List.contains rule currentRules)) world.AllRules
+    world.CurrentRuleSet @ allRulesMinusCurrent
+    
+let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule option * WorkAllocation option *
+                                            FoodRule option * VotingSystem option * Punishment option) : WorldState =
     // Implement the new rules
     let newShelterRule, newWorkRule, newFoodRule, newVotingSystem, newSanction = rulesToImplement
     // If rule is None due to no vote on it, set it to the old rule
@@ -219,14 +232,31 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
     match newSanction with
     | x when x = Some(Increment) ->
         {newWorld with
-            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize + 0.1}
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 1.1;
+            AllRules = setAllRules world;
+            CurrentRuleSet = setRuleSet world (applyOptionRule newShelterRule world.CurrentShelterRule)
+                                 (applyOptionRule newFoodRule world.CurrentFoodRule)
+                                 (applyOptionRule newWorkRule world.CurrentWorkRule)
+                                 (applyOptionRule newVotingSystem world.CurrentVotingRule) world.CurrentMaxPunishment;
+        }
     | x when x = Some(Decrement) ->
         {newWorld with
-            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize - 0.1}
+            CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 0.9;
+            AllRules = setAllRules world;
+            CurrentRuleSet = setRuleSet world (applyOptionRule newShelterRule world.CurrentShelterRule)
+                                 (applyOptionRule newFoodRule world.CurrentFoodRule)
+                                 (applyOptionRule newWorkRule world.CurrentWorkRule)
+                                 (applyOptionRule newVotingSystem world.CurrentVotingRule) world.CurrentMaxPunishment;
+        }
     | _ -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
         {newWorld with
-            CurrentMaxPunishment =
-                applyOptionRule newSanction world.CurrentMaxPunishment
+            CurrentMaxPunishment = applyOptionRule newSanction world.CurrentMaxPunishment;
+            AllRules = setAllRules world;
+            CurrentRuleSet = setRuleSet world (applyOptionRule newShelterRule world.CurrentShelterRule)
+                                 (applyOptionRule newFoodRule world.CurrentFoodRule)
+                                 (applyOptionRule newWorkRule world.CurrentWorkRule)
+                                 (applyOptionRule newVotingSystem world.CurrentVotingRule)    
+                                 (applyOptionRule newSanction world.CurrentMaxPunishment);
         }
 
 
@@ -237,6 +267,6 @@ let fullDuma (agents : Agent list) (world : WorldState) : WorldState =
         |> chairVote world
     // Apply all the duma stuff returning a worldstate containing the new ruleset
     agents
-    |> getPropositions newWorld
-    |> newRules agents newWorld
-    |> implementNewRules newWorld
+        |> getPropositions newWorld
+        |> newRules agents newWorld
+        |> implementNewRules newWorld
