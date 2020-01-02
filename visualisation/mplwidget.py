@@ -1,6 +1,7 @@
 # mplwidget.py
 
 import matplotlib
+import pandas as pd
 matplotlib.use('Qt5Agg')
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
@@ -27,5 +28,18 @@ class MplWidget(QtWidgets.QWidget):
         self.vbl.addWidget(self.toolbar)
         self.setLayout(self.vbl)
 
-    def plot(self):
-        pass
+    def plot(self, data, x, y):
+        # do stuff to fig or axes to plot things
+        self.canvas.draw()
+
+    def defaultHealthPlot(self, data, numAgents):
+        self.fig.clear(keep_observers=True)
+        self.axes = self.fig.add_subplot(111)
+        for x in range(numAgents):
+            columnTitle = str(x) + "Energy"
+            df.plot(kind="scatter", x="Day", y=columnTitle, ax=self.axes)
+
+
+        
+
+        self.canvas.draw()

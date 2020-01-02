@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>985</width>
-    <height>802</height>
+    <width>997</width>
+    <height>828</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -35,7 +35,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>40</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -72,161 +72,200 @@
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="frame_2">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+        <widget class="QTabWidget" name="tabWidget_2">
+         <property name="currentIndex">
+          <number>1</number>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QFrame" name="frame_5">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <item>
-              <widget class="MplWidget" name="plotWidget" native="true"/>
-             </item>
-             <item>
-              <widget class="QFrame" name="frame_6">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>100</height>
-                </size>
-               </property>
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <item>
-                 <widget class="QLabel" name="minDay">
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSlider" name="horizontalSlider">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="tickPosition">
-                   <enum>QSlider::TicksAbove</enum>
-                  </property>
-                  <property name="tickInterval">
-                   <number>5</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="maxDay">
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="frame_7">
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_6">
-                   <item>
-                    <widget class="QLabel" name="dayLabel">
-                     <property name="text">
-                      <string>DAY</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="daySpinBox">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frame_3">
-            <property name="minimumSize">
-             <size>
-              <width>200</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QTabWidget" name="tabWidget">
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <widget class="QWidget" name="tab_3">
-                <attribute name="title">
-                 <string>Plot</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_10">
+         <widget class="QWidget" name="dumaTab">
+          <attribute name="title">
+           <string>Duma</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="standardPlotsTab">
+          <attribute name="title">
+           <string>Standard Plots</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="MplWidget" name="standardPlotWidget" native="true"/>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_2">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_15">
+              <item>
+               <widget class="QPushButton" name="defaultHealthPushButton">
+                <property name="text">
+                 <string>Average Health</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultShelterPushButton">
+                <property name="text">
+                 <string>Average Shelter</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultFoodPushButton">
+                <property name="text">
+                 <string>Food Gathered</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton1">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton2">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton3">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton4">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton5">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton6">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="defaultPushButton7">
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="exportAllPushButton">
+                <property name="text">
+                 <string>Export all</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="customPlotTab">
+          <attribute name="title">
+           <string>Custom Plot</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QFrame" name="frame_5">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="MplWidget" name="customPlotWidget" native="true"/>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_6">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
                  <item>
-                  <widget class="QFrame" name="frame_8">
+                  <widget class="QLabel" name="minDay">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="horizontalSlider">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksAbove</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>5</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="maxDay">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_7">
                    <property name="minimumSize">
                     <size>
-                     <width>0</width>
-                     <height>120</height>
+                     <width>60</width>
+                     <height>0</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>16777215</width>
-                     <height>120</height>
+                     <width>80</width>
+                     <height>16777215</height>
                     </size>
                    </property>
                    <property name="frameShape">
@@ -235,163 +274,19 @@
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <item>
-                     <widget class="QPushButton" name="addLogButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Add another log</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="addTraceButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Add agent to plot</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="gifButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Export GIF</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="exportAllButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Export standard</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="plotTypeGroup">
-                   <property name="title">
-                    <string>Plot Type</string>
+                   <property name="lineWidth">
+                    <number>0</number>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_8">
+                   <layout class="QVBoxLayout" name="verticalLayout_6">
                     <item>
-                     <widget class="QComboBox" name="plotTypeComboBox">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_7">
+                     <widget class="QLabel" name="dayLabel">
                       <property name="text">
-                       <string>Colour by...</string>
+                       <string>DAY</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QComboBox" name="colourComboBox">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QGroupBox" name="averageBox">
-                      <property name="title">
-                       <string>Average</string>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_9">
-                       <item>
-                        <widget class="QRadioButton" name="noneRadio">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>None</string>
-                         </property>
-                         <property name="checked">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QRadioButton" name="agentAverageRadio">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>Agent Average</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QRadioButton" name="timeAverageRadio">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>Time Average</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="axesGroup">
-                   <property name="title">
-                    <string>Axes</string>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_4">
-                    <item>
-                     <widget class="QLabel" name="label_2">
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>x parameter</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="xComboBox">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_3">
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>y parameter</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="yComboBox">
+                     <widget class="QSpinBox" name="daySpinBox">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -402,201 +297,410 @@
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="tab_4">
-                <attribute name="title">
-                 <string>Filters</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_11">
-                 <item>
-                  <widget class="QLabel" name="label_4">
-                   <property name="text">
-                    <string>Parameter</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="comboBox"/>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_5">
-                   <property name="text">
-                    <string>Filter by</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_9">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_12">
-                    <item>
-                     <widget class="QFrame" name="frame_10">
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_4">
-                       <item>
-                        <widget class="QSpinBox" name="filterNumSpinBox">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QComboBox" name="filterComboBox">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QFrame" name="frame_11">
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_13">
-                       <item>
-                        <widget class="QRadioButton" name="withRadioButton">
-                         <property name="text">
-                          <string>With</string>
-                         </property>
-                         <property name="checked">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QRadioButton" name="withoutRadioButton">
-                         <property name="text">
-                          <string>Without</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_2">
-                   <property name="text">
-                    <string>Add filter</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_3">
-                   <property name="text">
-                    <string>Clear all filters</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_6">
-                   <property name="text">
-                    <string>Active filters</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QTextBrowser" name="filterBrowser"/>
-                 </item>
-                </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_3">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QTabWidget" name="tabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="plotTab">
+                 <attribute name="title">
+                  <string>Plot</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_10">
+                  <item>
+                   <widget class="QPushButton" name="gifButton">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Export GIF</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="plotTypeGroup">
+                    <property name="title">
+                     <string>Plot Type</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_8">
+                     <item>
+                      <widget class="QComboBox" name="plotTypeComboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_11">
+                       <property name="text">
+                        <string>Select agent</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="agentComboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="addAgentPushButton">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Add agent to plot</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="clearAgentsPushButton">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Clear all agents</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_7">
+                       <property name="text">
+                        <string>Colour by...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="colourComboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QGroupBox" name="averageBox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>100</height>
+                        </size>
+                       </property>
+                       <property name="title">
+                        <string>Average</string>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_9">
+                        <item>
+                         <widget class="QRadioButton" name="noneRadio">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>None</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QRadioButton" name="agentAverageRadio">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Agent Average</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QRadioButton" name="timeAverageRadio">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Time Average</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="axesGroup">
+                    <property name="title">
+                     <string>Axes</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_4">
+                     <item>
+                      <widget class="QLabel" name="label_2">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>x parameter</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="xComboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_3">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>y parameter</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="yComboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="filtersTab">
+                 <attribute name="title">
+                  <string>Filters</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_11">
+                  <item>
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>Parameter</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox"/>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string>Filter by</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="frame_9">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_12">
+                     <item>
+                      <widget class="QFrame" name="frame_10">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <layout class="QHBoxLayout" name="horizontalLayout_4">
+                        <item>
+                         <widget class="QSpinBox" name="filterNumSpinBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QComboBox" name="filterComboBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frame_11">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_13">
+                        <item>
+                         <widget class="QRadioButton" name="withRadioButton">
+                          <property name="text">
+                           <string>With</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QRadioButton" name="withoutRadioButton">
+                          <property name="text">
+                           <string>Without</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="addFilterPushButton">
+                    <property name="text">
+                     <string>Add filter</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="clearFiltersPushButton">
+                    <property name="text">
+                     <string>Clear all filters</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>Active filters</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QTextBrowser" name="filterBrowser"/>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="statsTab">
+                 <attribute name="title">
+                  <string>Stats</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_14">
+                  <item>
+                   <widget class="QLabel" name="label_12">
+                    <property name="text">
+                     <string>Duma chair</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_13">
+                    <property name="font">
+                     <font>
+                      <pointsize>18</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>N/A</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>Number of dead agents</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_15">
+                    <property name="font">
+                     <font>
+                      <pointsize>18</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>N/A</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Mean/mode</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_9">
+                    <property name="font">
+                     <font>
+                      <pointsize>18</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>N/A</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>Current ruleset</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QTextBrowser" name="ruleBrowser"/>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
-               <widget class="QWidget" name="tab">
-                <attribute name="title">
-                 <string>Stats</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_14">
-                 <item>
-                  <widget class="QLabel" name="label_12">
-                   <property name="text">
-                    <string>Duma chair</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_13">
-                   <property name="font">
-                    <font>
-                     <pointsize>18</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
-                    <string>Number of dead agents</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_15">
-                   <property name="font">
-                    <font>
-                     <pointsize>18</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_8">
-                   <property name="text">
-                    <string>Mean/mode</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_9">
-                   <property name="font">
-                    <font>
-                     <pointsize>18</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_10">
-                   <property name="text">
-                    <string>Current ruleset</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QTextBrowser" name="ruleBrowser"/>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -609,7 +713,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>985</width>
+     <width>997</width>
      <height>22</height>
     </rect>
    </property>
@@ -670,78 +774,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>daySpinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>696</x>
-     <y>711</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>576</x>
-     <y>687</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>daySpinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>529</x>
-     <y>698</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>680</x>
-     <y>710</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>gifButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>exportGifSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>886</x>
-     <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>978</x>
-     <y>578</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>addLogButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>addLogSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>876</x>
-     <y>196</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>979</x>
-     <y>290</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>addTraceButton</sender>
+   <sender>addAgentPushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>addAgentSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>886</x>
-     <y>223</y>
+     <x>885</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -756,12 +796,60 @@
    <slot>noneAverageSelected()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>900</x>
-     <y>464</y>
+     <x>921</x>
+     <y>534</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
      <y>623</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>daySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>730</x>
+     <y>745</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>632</x>
+     <y>725</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gifButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportGifSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>885</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>978</x>
+     <y>578</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>daySpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>585</x>
+     <y>725</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>730</x>
+     <y>745</y>
     </hint>
    </hints>
   </connection>
@@ -772,8 +860,8 @@
    <slot>agentAverageSelected()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>900</x>
-     <y>493</y>
+     <x>921</x>
+     <y>556</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -788,8 +876,8 @@
    <slot>timeAverageSelected()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>900</x>
-     <y>522</y>
+     <x>921</x>
+     <y>578</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
@@ -804,8 +892,8 @@
    <slot>plotTypeSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>888</x>
-     <y>349</y>
+     <x>933</x>
+     <y>372</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -820,8 +908,8 @@
    <slot>xAxisSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>888</x>
-     <y>645</y>
+     <x>933</x>
+     <y>688</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -836,8 +924,8 @@
    <slot>yAxisSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>888</x>
-     <y>712</y>
+     <x>933</x>
+     <y>742</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -846,30 +934,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>exportAllButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>exportAllSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>886</x>
-     <y>276</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>981</x>
-     <y>224</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_2</sender>
+   <sender>addFilterPushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>addFilterSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>868</x>
-     <y>417</y>
+     <x>945</x>
+     <y>441</y>
     </hint>
     <hint type="destinationlabel">
      <x>879</x>
@@ -878,14 +950,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_3</sender>
+   <sender>clearFiltersPushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>removeAllFiltersSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>911</x>
-     <y>435</y>
+     <x>910</x>
+     <y>461</y>
     </hint>
     <hint type="destinationlabel">
      <x>782</x>
@@ -900,8 +972,8 @@
    <slot>filterParameterSelectedSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>876</x>
-     <y>202</y>
+     <x>875</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -916,12 +988,204 @@
    <slot>plotColourSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>838</x>
-     <y>394</y>
+     <x>933</x>
+     <y>480</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
      <y>335</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportAllPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportAllSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>949</x>
+     <y>733</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>974</x>
+     <y>802</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultHealthPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultHealthSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>854</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>992</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultShelterPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultShelterSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>923</x>
+     <y>240</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>994</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultFoodPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultFoodSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>878</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>993</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton1</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>837</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>990</x>
+     <y>380</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>917</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>992</x>
+     <y>431</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>877</x>
+     <y>457</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>991</x>
+     <y>484</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton4</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>872</x>
+     <y>507</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>992</x>
+     <y>549</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton5</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>847</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>990</x>
+     <y>604</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton6</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>898</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>993</x>
+     <y>654</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPushButton7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>defaultPlaceholderSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>859</x>
+     <y>680</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>994</x>
+     <y>745</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>dayChangedSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>450</x>
+     <y>722</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>501</x>
+     <y>797</y>
     </hint>
    </hints>
   </connection>
@@ -943,5 +1207,10 @@
   <slot>removeAllFiltersSlot()</slot>
   <slot>filterParameterSelectedSlot()</slot>
   <slot>plotColourSlot()</slot>
+  <slot>defaultFoodSlot()</slot>
+  <slot>defaultHealthSlot()</slot>
+  <slot>defaultShelterSlot()</slot>
+  <slot>defaultPlaceholderSlot()</slot>
+  <slot>dayChangedSlot(int)</slot>
  </slots>
 </ui>

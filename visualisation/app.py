@@ -18,19 +18,32 @@ class MainWindowUiClass(Ui_MainWindow):
         self.filterBrowser.append(msg)
 
     def refreshAll(self):
-        self.addLogButton.setEnabled(True)
-        self.addTraceButton.setEnabled(True)
+        self.addAgentPushButton.setEnabled(True)
         self.exportAllButton.setEnabled(True)
         self.gifButton.setEnabled(True)
         self.daySpinBox.setEnabled(True)
+        self.clearAgentsPushButton.setEnabled(True)
         self.plotTypeComboBox.setEnabled(True)
         self.colourComboBox.setEnabled(True)
         self.agentAverageRadio.setEnabled(True)
         self.timeAverageRadio.setEnabled(True)
         self.xComboBox.setEnabled(True)
         self.yComboBox.setEnabled(True)
+        self.filterComboBox.setEnabled(True)
+        self.comboBox.setEnabled(True)
         self.horizontalSlider.setEnabled(True)
-
+        self.xComboBox.clear()
+        self.xComboBox.addItems(self.model.getColumns())
+        self.yComboBox.clear()
+        self.yComboBox.addItems(self.model.getColumns())
+        self.comboBox.clear()
+        self.comboBox.addItems(self.model.getColumns())
+        self.filterComboBox.clear()
+        self.filterComboBox.addItems(["greater than", "equal to", "less than"])
+        self.plotTypeComboBox.clear()
+        self.plotTypeComboBox.addItems(["line", "bar", "pie", "scatter", "histogram"])
+        self.colourComboBox.clear()
+        self.colourComboBox.addItems(self.model.getColumns())
         self.lineEdit.setText(self.model.getFileName())
 
     #slots
@@ -64,6 +77,9 @@ class MainWindowUiClass(Ui_MainWindow):
         if fileName:
             self.model.setFileName(fileName)
             self.refreshAll()
+            
+    def dayChangedSlot(self, value):
+        self.model.updateDay(value)
 
     def noneAverageSelected(self):
         # can do push button setEnabled(True/False)
@@ -73,9 +89,6 @@ class MainWindowUiClass(Ui_MainWindow):
         pass
 
     def timeAverageSelected(self):
-        pass
-
-    def addLogSlot(self):
         pass
 
     def addAgentSlot(self):
@@ -101,15 +114,59 @@ class MainWindowUiClass(Ui_MainWindow):
 
     def addFilterSlot(self):
         # msg is the filter setting to print
+        # pull values
+        parameter = str(self.comboBox.currentText())
+        dataType = getattr(self.model.fileContent, parameter)
+        dataType = dataType.dtype
+        msg = parameter
+        if dataType == "object":
+            value = str(self.filterComboBox.currentText())
+            include = self.withRadioButton.isChecked()
+            msg += " == " if include else " != "
+            msg += value
+            self.model.addFilter(parameter, include=include, value=value)
+
+        else:
+            num = int(self.filterNumSpinBox.value())
+            greater = self.filterComboBox.currentIndex()
+            if greater == 0:
+                msg += " > "
+            elif greater == 1:
+                msg += " == "
+            else:
+                msg += " < " 
+            self.model.addFilter(parameter, num=num, greater=greater)
+        msg += "\n"
         self.filterPrint(msg)
         pass
 
     def removeAllFiltersSlot(self):
         self.textBrowser.clear()
-        pass
+        self.model.plotContent = self.model.getFileContents()
 
     def filterParameterSelectedSlot(self):
+        parameter = str(self.comboBox.currentText())
+        dataType = getattr(self.model.fileContent, parameter)
+        dataType = dataType.dtype
+        if dataType == "object":
+            self.filterComboBox.clear()
+            items = getattr(self.model.plotContent, parameter)
+            items = items.unique()
+            self.filterComboBox.addItems(items)
+            self.filterComboBox.setEnabled(True)
+            self.filterNumSpinBox.setEnabled(False)
+        else:
+            self.filterComboBox.clear()
+            self.filterComboBox.addItems(["greater than", "equal to", "less than"])
+            self.filterComboBox.setEnabled(True)
+            self.filterNumSpinBox.setEnabled(True)
+
+    # default plots
+
+    def defaultHealthSlot(self):
+        # self.x.defaultHealthPlot
         pass
+        
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
