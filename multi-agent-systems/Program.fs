@@ -147,12 +147,11 @@ let main argv =
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = NONE)
 
-        let hunters =
+        let hunters, currentWorld = 
             agentsWithJobs
             |> List.filter (fun el -> fst el.TodaysActivity = HUNTING)
-            |> capHare
-            |> capStag
-            |> shareFood currentWorld
+            |> hunt currentWorld
+
 
         // Food energy for allocation
         let energyForAllocation = 
