@@ -55,6 +55,8 @@ let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : Stre
 
     // world state dump
     csvwriter.Write("\n")
+    csvwriter.Write(world.CurrentDay)
+    csvwriter.Write(",")
     csvwriter.Write(world.Buildings)
     csvwriter.Write(",")
     let currentChair = match world.CurrentChair with
@@ -75,8 +77,6 @@ let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : Stre
     csvwriter.Write(world.CurrentMaxPunishment)
     csvwriter.Write(",")
     csvwriter.Write(world.CurrentSanctionStepSize)
-    csvwriter.Write(",")
-    csvwriter.Write(world.CurrentDay)
     csvwriter.Write(",")
     csvwriter.Write(world.NumHare)
     csvwriter.Write(",")

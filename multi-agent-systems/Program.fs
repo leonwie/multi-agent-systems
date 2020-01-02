@@ -231,7 +231,7 @@ let main argv =
                   csvwriter
 
     // csv file headings
-    let headings = "Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,CurrentDay,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
+    let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
     
     // agent headings duplicated for each agent
     let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
