@@ -19,6 +19,7 @@
     <Compile Include="Agent.fs" />
     <Compile Include="Parsing.fs" />
     <Compile Include="Duma.fs" />
+    <Compile Include="CSVDump.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

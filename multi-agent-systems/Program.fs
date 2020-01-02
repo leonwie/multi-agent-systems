@@ -9,6 +9,7 @@ open Duma
 open Opinion
 open System.IO
 open Agent
+open CSVDump
 
 [<EntryPoint>]
 let main argv =
@@ -112,7 +113,7 @@ let main argv =
         |> updateSocialGoodForHunters
         |> updateNoneAgentStates
 
-    let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) : WorldState=
+    let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) (csvwriter : StreamWriter) : WorldState =
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
@@ -217,22 +218,36 @@ let main argv =
         writer.Write (currentWorld.CurrentDay)
 
         if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = maxSimulationTurn then
-            currentWorld
+            csvdump currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) csvwriter
         else
             printfn "Living Agents: %A" (printAgent (List.head livingAgentsAfterToday))
             //printfn "Current world status: %A" (printWorld currentWorld)
             printfn "End of DAY: %A" currentWorld.CurrentDay
             writer.WriteLine ()
             writer.WriteLine ()
-            loop currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) writer
+            loop (csvdump currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) csvwriter)
+                 (livingAgentsAfterToday @ deadAgentsAfterToday)
+                  writer 
+                  csvwriter
+
+    // csv file headings
+    let headings = "Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,CurrentDay,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
+    
+    // agent headings duplicated for each agent
+    let agentHeadings = "[ID]ID,[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
 
 
     let writer = new StreamWriter("..\..\..\output.txt")
-    let finalWorld = loop currentWorld agents writer
+    let csvwriter = new System.IO.StreamWriter("""C:\Users\Alex\Desktop\test.csv""")
+    printfn "headings: %s" headings
+    csvwriter.Write(headings)
+    csvwriter.Write(List.fold (fun acc elem -> acc + agentHeadings.Replace("[ID]",string elem.ID)) "" agents)
+    let finalWorld = loop currentWorld agents writer csvwriter
     printfn "Final world status: %A" (printWorld finalWorld);
     printfn "Last day %A" finalWorld.CurrentDay
     writer.Write("Final world: ")
     writer.WriteLine(finalWorld)
-    writer.Close
+    writer.Close()
+    csvwriter.Close()
 
     0
