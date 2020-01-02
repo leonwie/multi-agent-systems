@@ -76,3 +76,6 @@ class Model:
 
     def getColumns(self):
         return self.columns
+    
+    def updateDay(self, value):
+        pass
