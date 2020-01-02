@@ -206,7 +206,7 @@ let main argv =
 
         writer.Write ("Living Agents in day ")
         writer.Write (currentWorld.CurrentDay)
-        List.map (fun agent -> writer.Write (printAgent agent)) livingAgentsAfterToday
+        List.map (fun agent -> writer.Write (printAgent agent)) livingAgentsAfterToday |> ignore
         writer.WriteLine ()
         writer.WriteLine ()
         writer.Write("World Status in day ")
@@ -238,7 +238,7 @@ let main argv =
 
 
     let writer = new StreamWriter("..\..\..\output.txt")
-    let csvwriter = new System.IO.StreamWriter("""C:\Users\Alex\Desktop\test.csv""")
+    let csvwriter = new System.IO.StreamWriter("..\..\..\test.csv")
     printfn "headings: %s" headings
     csvwriter.Write(headings)
     csvwriter.Write(List.fold (fun acc elem -> acc + agentHeadings.Replace("[ID]",string elem.ID)) "" agents)
