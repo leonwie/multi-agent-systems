@@ -166,6 +166,16 @@ class MainWindowUiClass(Ui_MainWindow):
     def defaultHealthSlot(self):
         # self.x.defaultHealthPlot
         pass
+
+    def defaultShelterSlot(self):
+        pass
+
+    def defaultFoodSlot(self):
+        pass
+
+    def defaultPlaceholderSlot(self):
+        pass
+
         
 
 def main():
